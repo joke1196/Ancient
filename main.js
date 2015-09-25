@@ -30,11 +30,13 @@ function draw() {
   //Creating a layout for the hex map
   var layout = Layout(layout_pointy, Point(30, 13), Point(300,500) );
   layout.origin;
-
+ //Creating the map
   var map  = getMap(layout);
   drawMap(map, ctx);
-  var tom = new Character("Tom", Hex(0, 0, 0), 20, 20);
+  //Creating a Character
+  var tom = new Character("Tom", Hex(0, 0, 0), 90, 140, "img/spriteSheet_test.png");
   tom.draw(layout, ctx);
+
 
 }
 
