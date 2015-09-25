@@ -198,17 +198,16 @@ function polygon_corners(layout, h)
 function getMap(layout)
 {
   var map = [];
-  for (var s = 0; s < MAP_WIDTH; s++) {
-      var s_offset = Math.floor(s/2);
-      for (var r = -s_offset; r < MAP_HEIGHT  - s_offset; r++) {
-          map.push(Hex(-r - s, r, s));
+  for (var q = 0; q < MAP_WIDTH; q++) {
+      var q_offset = Math.floor(q/2);
+      for (var s = -q_offset; s < MAP_HEIGHT  - q_offset; s++) {
+          map.push(Hex(q, -q-s,s));
       }
   }
 
   var polygon = [];
   for(var index in map){
      polygon.push(polygon_corners(layout, map[index]));
-
   }
 
   return polygon;
