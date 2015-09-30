@@ -3,13 +3,15 @@ var CHAR_WIDTH = 90;
 var CHAR_HEIGHT = 140;
 var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
+var RANGE = 3;
 
-function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, height = CHAR_HEIGHT){
+function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE){
   this.name = name;
   this.max_health = max_health;
   this.max_intel = max_intel;
   this.health = max_health;
   this.intel = max_intel;
+  this.range = range;
   this.position = hex;
   this.width = width;
   this.height = height;
