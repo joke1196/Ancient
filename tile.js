@@ -195,7 +195,7 @@ function polygon_corners(layout, h)
 
 //--------------------END CODE FROM REDBLOGAMES---------------------
 
-function getMap(layout)
+function getHexMap(layout)
 {
   var map = [];
   for (var q = 0; q < MAP_WIDTH; q++) {
@@ -215,7 +215,7 @@ function getMap(layout)
 
 }
 
-function drawMap(map, ctx)
+function drawHex(map, ctx)
 {
   for(var index in map){
     ctx.beginPath();

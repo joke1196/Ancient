@@ -1,9 +1,13 @@
 
 //GLOBALS
-var STAGE_HEIGHT = 600;
+var STAGE_HEIGHT = 800;
 var STAGE_WIDTH = STAGE_HEIGHT * 1.61803;
 var MAP_HEIGHT = 12;
 var MAP_WIDTH = 18;
+var HEX_HEIGHT = 50;
+var HEX_WIDTH = 23;
+var MAP_X = 300;
+var MAP_Y = 700;
 
 var canvas = null;
 var ctx = null;
@@ -28,13 +32,13 @@ function draw() {
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   //Creating a layout for the hex map
-  var layout = Layout(layout_pointy, Point(30, 13), Point(300,500) );
+  var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
   layout.origin;
  //Creating the map
-  var map  = getMap(layout);
-  drawMap(map, ctx);
+  var map  = getHexMap(layout);
+  drawHex(map, ctx);
   //Creating a Character
-  var tom = new Character("Tom", Hex(0, 0, 0), 90, 140, "img/spriteSheet_test.png");
+  var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png");
   tom.draw(layout, ctx);
 
 
