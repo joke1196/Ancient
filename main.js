@@ -38,8 +38,14 @@ function draw() {
   var map  = getHexMap(layout);
   drawHex(map, ctx);
   //Creating a Character
-  var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png");
+  var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3);
+  var john = new Character("John", Hex(5, -5, 0), 100, 100, "img/spriteSheet_test.png", 3);
   tom.draw(layout, ctx);
+  john.draw(layout, ctx);
+  //Example of command
+
+  tom.execute(new AttackCommand(tom.strength, john));
+  tom.execute(new HealCommand(tom.intel, tom));
 
 
 }
