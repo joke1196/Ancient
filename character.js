@@ -1,6 +1,8 @@
+//GLOBALS
 var CHAR_WIDTH = 90;
 var CHAR_HEIGHT = 140;
 var NUM_POS_SPRITE = 5;
+var ACTIONS_PER_TURN = 2;
 
 function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, height = CHAR_HEIGHT){
   this.name = name;
@@ -14,6 +16,7 @@ function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, he
   this.image = new Image();
   this.image.src = img;
   this.isAlive = true;
+  this.actionsLeft = ACTIONS_PER_TURN;
 
   var self = this; // added because of context problem
   this.setMaxHealth = function (new_max_health){
@@ -31,6 +34,10 @@ function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, he
 
   this.setIsAlive = function(new_state){
     self.isAlive = new_state;
+  }
+
+  this.decActionsNum = function(){
+    self.actionsLeft = actionsLeft - 1;
   }
 
   this.draw = function(layout, ctx){
