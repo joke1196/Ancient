@@ -53,6 +53,10 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
   this.execute = function(command){
     command.execute(command.value, command.target);
   }
+
+  this.move = function(hex_position){
+    self.position = hex_position;
+  }
   return this;
 }
 

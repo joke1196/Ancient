@@ -47,6 +47,10 @@ function draw() {
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
 
+  tom.move(Hex(2, -2, 0));
+  tom.draw(layout, ctx);
+
+
 
 }
 
