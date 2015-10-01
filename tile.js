@@ -195,19 +195,32 @@ function polygon_corners(layout, h)
 
 //--------------------END CODE FROM REDBLOGAMES---------------------
 
-function getHexMap(layout)
+function getHexMap(layout, mapArray)
 {
   var map = [];
-  for (var q = 0; q < MAP_WIDTH; q++) {
+  // for (var q = 0; q < MAP_WIDTH; q++) {
+  //     var q_offset = Math.floor(q/2);
+  //     for (var s = -q_offset; s < MAP_HEIGHT  - q_offset; s++) {
+  //         map.push(Hex(q, -q-s,s));
+  //     }
+  // }
+  if(mapArray == null){
+    console.log("ERROR : could not load map array");
+  }
+  for (var q = 0; q < 2; q++) {
       var q_offset = Math.floor(q/2);
-      for (var s = -q_offset; s < MAP_HEIGHT  - q_offset; s++) {
-          map.push(Hex(q, -q-s,s));
+      for (var s = -q_offset; s < 4  - q_offset; s++) {
+        if(mapArray[q][s] == 1){
+          map.push({hex : Hex(q, -q-s,s), isWalkable : false});
+        }else{
+          map.push({hex : Hex(q, -q-s,s), isWalkable : true});
+        }
       }
   }
 
   var polygon = [];
   for(var index in map){
-     polygon.push(polygon_corners(layout, map[index]));
+     polygon.push({ poly : polygon_corners(layout, map[index].hex), isWalkable : map[index].isWalkable});
   }
 
   return polygon;
@@ -220,9 +233,15 @@ function drawHex(map, ctx)
   for(var index in map){
     ctx.beginPath();
     for(var i = 0; i < 6; i++){
-      ctx.lineTo(map[index][i].x,map[index][i].y);
+      if(map[index].isWalkable){
+        ctx.fillStyle ="red";
+      }else{
+        ctx.fillStyle = "blue";
+      }
+      ctx.lineTo(map[index].poly[i].x,map[index].poly[i].y);
     }
     ctx.closePath();
     ctx.stroke();
+    ctx.fill();
   }
 }

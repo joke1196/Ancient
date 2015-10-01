@@ -35,20 +35,22 @@ function draw() {
   var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
   layout.origin;
  //Creating the map
-  var map  = getHexMap(layout);
-  drawHex(map, ctx);
+  // var map  = getHexMap(layout, []);
+  // drawHex(map, ctx);
   //Creating a Character
   var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3);
   var john = new Character("John", Hex(5, -5, 0), 100, 100, "img/spriteSheet_test.png", 3);
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
-  //Example of command
+  //Example of commands
 
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
 
   tom.move(Hex(2, -2, 0));
   tom.draw(layout, ctx);
+  var map = getFile("level1");
+  console.log("OKAY : "+map);
 
 
 
