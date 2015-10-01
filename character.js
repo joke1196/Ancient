@@ -49,5 +49,9 @@ function Character(name, hex, max_health, max_intel, img, width = CHAR_WIDTH, he
     }
 
   }
+
+  this.move = function(hex_position){
+    self.position = hex_position;
+  }
   return this;
 }

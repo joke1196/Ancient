@@ -41,6 +41,10 @@ function draw() {
   var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png");
   tom.draw(layout, ctx);
 
+  tom.move(Hex(2, -2, 0));
+  tom.draw(layout, ctx);
+
+
 
 }
 
