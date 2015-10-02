@@ -198,19 +198,15 @@ function polygon_corners(layout, h)
 function getHexMap(layout, mapArray)
 {
   var map = [];
-  // for (var q = 0; q < MAP_WIDTH; q++) {
-  //     var q_offset = Math.floor(q/2);
-  //     for (var s = -q_offset; s < MAP_HEIGHT  - q_offset; s++) {
-  //         map.push(Hex(q, -q-s,s));
-  //     }
-  // }
   if(mapArray == null){
     console.log("ERROR : could not load map array");
   }
-  for (var q = 0; q < 2; q++) {
+  for (var q = 0; q < MAP_HEIGHT; q++) {
       var q_offset = Math.floor(q/2);
-      for (var s = -q_offset; s < 4  - q_offset; s++) {
-        if(mapArray[q][s] == 1){
+      for (var s = -q_offset; s < MAP_WIDTH  - q_offset; s++) {
+        var axialCoord = qoffset_from_cube(q_offset, Hex(q, -q-s,s));
+        //Because of tile disposition, have to negate the row and stay in the array width
+        if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] === "1"){
           map.push({hex : Hex(q, -q-s,s), isWalkable : false});
         }else{
           map.push({hex : Hex(q, -q-s,s), isWalkable : true});
@@ -222,10 +218,7 @@ function getHexMap(layout, mapArray)
   for(var index in map){
      polygon.push({ poly : polygon_corners(layout, map[index].hex), isWalkable : map[index].isWalkable});
   }
-
   return polygon;
-
-
 }
 
 function drawHex(map, ctx)

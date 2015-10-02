@@ -2,12 +2,12 @@
 //GLOBALS
 var STAGE_HEIGHT = 800;
 var STAGE_WIDTH = STAGE_HEIGHT * 1.61803;
-var MAP_HEIGHT = 12;
-var MAP_WIDTH = 18;
+var MAP_HEIGHT = 18;
+var MAP_WIDTH = 12;
 var HEX_HEIGHT = 50;
 var HEX_WIDTH = 23;
 var MAP_X = 300;
-var MAP_Y = 700;
+var MAP_Y = 750;
 
 var canvas = null;
 var ctx = null;
@@ -35,11 +35,12 @@ function draw() {
   var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
   layout.origin;
  //Creating the map
-  // var map  = getHexMap(layout, []);
-  // drawHex(map, ctx);
+  var mapArray = getFile("level1"); //has to be done only once per level
+  var map = getHexMap(layout, mapArray);
+
   //Creating a Character
-  var tom = new Character("Tom", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3);
-  var john = new Character("John", Hex(5, -5, 0), 100, 100, "img/spriteSheet_test.png", 3);
+  var tom = new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 3);
+  var john = new Character("John", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 3);
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
   //Example of commands
@@ -47,10 +48,9 @@ function draw() {
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
 
-  tom.move(Hex(2, -2, 0));
+  tom.move(Hex(2, -2, 0), mapArray);
   tom.draw(layout, ctx);
-  var map = getFile("level1");
-  console.log("OKAY : "+map);
+  drawHex(map, ctx);
 
 
 

@@ -54,8 +54,8 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
     command.execute(command.value, command.target);
   }
 
-  this.move = function(hex_position){
-    self.position = hex_position;
+  this.move = function(hex_position, map){
+      self.position = hex_position;
   }
   return this;
 }
