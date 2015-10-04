@@ -3,9 +3,14 @@ function Grid(layout, level, mapArray){
   this.layout = layout;
   this.mapArray = mapArray;
   this.level = level;
-  this.hashMap = getHexMap(this.layout, this.mapArray);
-  this.polygons = hexToPoly(this.hashMap, this.layout);
+  this.hashMap = new Map();
+  this.polygons = [];
+  var self = this;
 
+ (function init(){ // Init is done only once when creating the object
+    self.hashMap = getHexMap(self.layout, self.mapArray);
+    self.polygons = hexToPoly(self.hashMap, self.layout);
+  })();
 
   this.draw = function(ctx){
     for(var index in this.polygons){
@@ -23,6 +28,11 @@ function Grid(layout, level, mapArray){
       ctx.fill();
     }
   }
+
+  this.getHashMap = function(){
+    return self.hashMap;
+  }
+
   return this;
 }
 
@@ -37,9 +47,9 @@ function getHexMap(layout, mapArray){
         var axialCoord = qoffset_from_cube(q_offset, Hex(q, -q-s,s));
         //Because of tile disposition, have to negate the row and stay in the array width
         if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] === 1){
-          hashMap.put(Hex(q, -q-s,s),{hex : Hex(q, -q-s,s), isWalkable : false});
+          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : false});
         }else{
-          hashMap.put(Hex(q, -q-s,s),{hex : Hex(q, -q-s,s), isWalkable : true});
+          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : true});
         }
       }
   }

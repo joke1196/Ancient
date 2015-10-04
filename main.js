@@ -44,15 +44,15 @@ function draw() {
  var grid = new Grid(layout, LEVEL1, mapArray);
 
   //Creating a Character
-  var tom = new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png");
-  var john = new Character("John", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png");
+  var tom = new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 2, grid);
+  var john = new Character("John", Hex(3, -3, 0), 100, 100, "img/spriteSheet_test.png", 3, grid);
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
   //Example of commands
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
-  tom.execute(new MoveCommand(Hex(2, -2, 0), tom));
-  
+  tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+
   tom.draw(layout, ctx);
   grid.draw(ctx);
 }

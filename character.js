@@ -5,7 +5,8 @@ var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
 var RANGE = 3;
 
-function Character(name, hex, max_health, max_intel, img, strength, width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE){
+function Character(name, hex, max_health, max_intel, img, strength, grid,
+  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE){
   this.name = name;
   this.max_health = max_health;
   this.max_intel = max_intel;
@@ -20,6 +21,7 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
   this.image.src = img;
   this.isAlive = true;
   this.actionsLeft = ACTIONS_PER_TURN;
+  this.grid = grid;
 
   var self = this; // added because of context problem
   this.setMaxHealth = function (new_max_health){
@@ -40,6 +42,12 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
 
   this.setIsAlive = function(new_state){
     self.isAlive = new_state;
+  }
+  this.getActionsLeft = function(){
+    return self.actionsLeft;
+  }
+  this.getGrid = function(){
+    return self.grid;
   }
 
   this.decActionsNum = function(){
@@ -65,7 +73,17 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
 // --------------- Command design pattern without undo --------------------------
 function attack(value, target) { target.setHealth(target.health - value); }
 function heal(value, target) { target.setHealth(target.health + value); }
-function move(value, target){ target.setPosition(value);} // TODO check if tile is walkable
+function move(value, target){
+  if(target.getActionsLeft() > 0){
+    var tile = target.getGrid().getHashMap().get(keyCreator(value));
+    if( tile != undefined && tile.isWalkable){
+      target.setPosition(value);
+    }else{
+      console.log("Cannot move to this tile");
+    }
+
+  }
+} // TODO check if tile is walkable
 
 var Command = function (execute, value, target) {
     this.execute = execute;
