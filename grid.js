@@ -1,6 +1,32 @@
-function getHexMap(layout, mapArray)
-{
-  var map = [];
+
+function Grid(layout, level, mapArray){
+  this.layout = layout;
+  this.mapArray = mapArray;
+  this.level = level;
+  this.hashMap = getHexMap(this.layout, this.mapArray);
+  this.polygons = hexToPoly(this.hashMap, this.layout);
+
+
+  this.draw = function(ctx){
+    for(var index in this.polygons){
+      ctx.beginPath();
+      for(var i = 0; i < 6; i++){
+        if(this.polygons[index].isWalkable){
+          ctx.fillStyle ="red";
+        }else{
+          ctx.fillStyle = "blue";
+        }
+        ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+    }
+  }
+  return this;
+}
+
+function getHexMap(layout, mapArray){
   var hashMap = new Map();
   if(mapArray == null){
     console.log("ERROR : could not load map array");
@@ -17,28 +43,13 @@ function getHexMap(layout, mapArray)
         }
       }
   }
+  return hashMap;
+}
 
+function hexToPoly(hashMap, layout){
   var polygon = [];
   for(var i = 0; i++ < hashMap.size; hashMap.next()){
     polygon.push({poly: polygon_corners(layout, hashMap.value().hex), isWalkable :  hashMap.value().isWalkable});
   }
   return polygon;
-}
-
-function drawHex(map, ctx)
-{
-  for(var index in map){
-    ctx.beginPath();
-    for(var i = 0; i < 6; i++){
-      if(map[index].isWalkable){
-        ctx.fillStyle ="red";
-      }else{
-        ctx.fillStyle = "blue";
-      }
-      ctx.lineTo(map[index].poly[i].x,map[index].poly[i].y);
-    }
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
-  }
 }

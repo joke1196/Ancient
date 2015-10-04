@@ -8,6 +8,11 @@ var HEX_HEIGHT = 50;
 var HEX_WIDTH = 23;
 var MAP_X = 300;
 var MAP_Y = 750;
+var LEVEL1 = "level1";
+var LEVEL2 = "level2";
+var LEVEL3 = "level3";
+var LEVEL4 = "level4";
+var LEVEL5 = "level5";
 
 var canvas = null;
 var ctx = null;
@@ -35,8 +40,8 @@ function draw() {
   var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
   layout.origin;
  //Creating the map
-  var mapArray = getFile("level1"); //has to be done only once per level
-  var map = getHexMap(layout, mapArray);
+ var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
+ var grid = new Grid(layout, LEVEL1, mapArray);
 
   //Creating a Character
   var tom = new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 3);
@@ -44,13 +49,12 @@ function draw() {
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
   //Example of commands
-
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
 
   tom.move(Hex(2, -2, 0), mapArray);
   tom.draw(layout, ctx);
-  drawHex(map, ctx);
+  grid.draw(ctx);
 
 
 

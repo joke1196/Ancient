@@ -11,10 +11,5 @@ function getFile(level) {
 function parserMap(txtData) {
   var jsonData = JSON.parse(txtData);
   console.log(jsonData);
-  // var mapArray = [];
-  // for (var index in jsonData.map) {
-  //   console.log(jsonData.map[index]);
-  //   mapArray.push(jsonData.map[index]);
-  // }
   return jsonData.map;
 }
