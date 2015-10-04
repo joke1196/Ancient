@@ -31,8 +31,11 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
   this.setHealth = function (new_health){
     self.health = new_health;
   }
-  this.setHealth = function (new_intel){
+  this.setIntel = function (new_intel){
     self.intel = new_intel;
+  }
+  this.setPosition = function(new_position){
+    self.position = new_position;
   }
 
   this.setIsAlive = function(new_state){
@@ -54,9 +57,6 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
     command.execute(command.value, command.target);
   }
 
-  this.move = function(hex_position, map){
-      self.position = hex_position;
-  }
   return this;
 }
 
@@ -65,12 +65,12 @@ function Character(name, hex, max_health, max_intel, img, strength, width = CHAR
 // --------------- Command design pattern without undo --------------------------
 function attack(value, target) { target.setHealth(target.health - value); }
 function heal(value, target) { target.setHealth(target.health + value); }
-function blind(value, target) { target.range = range - value; }
+function move(value, target){ target.setPosition(value);} // TODO check if tile is walkable
 
 var Command = function (execute, value, target) {
     this.execute = execute;
     this.value = value;
-    this.target = target
+    this.target = target;
 }
 var AttackCommand = function (value, target) {
     return new Command(attack, value, target);
@@ -79,7 +79,6 @@ var AttackCommand = function (value, target) {
 var HealCommand = function (value, target) {
     return new Command(heal, value, target);
 };
-
-var BlindCommand = function (value, target) {
-    return new Command(blind,  value, target);
-};
+var MoveCommand = function(value, target){
+  return new Command(move, value, target);
+}
