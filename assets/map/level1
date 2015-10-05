@@ -18,5 +18,8 @@
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0]
-  ]
+  ],
+  "numOfTextures" : 2,
+  "textures" : ["assets/textures/grass.png",
+   "assets/textures/stone.png"]
 }

@@ -5,11 +5,21 @@ function Grid(layout, level, mapArray){
   this.level = level;
   this.hashMap = new Map();
   this.polygons = [];
+  this.numOfTextures = this.mapArray.numOfTextures;
+  this.textures = [];
+
+
   var self = this;
 
  (function init(){ // Init is done only once when creating the object
-    self.hashMap = getHexMap(self.layout, self.mapArray);
+    self.hashMap = getHexMap(self.layout, self.mapArray.map);
     self.polygons = hexToPoly(self.hashMap, self.layout);
+    for(var i = 0; i < self.numOfTextures; i++){
+      var img = new Image();
+      img.src = self.mapArray.textures[i];
+      img.onload = self.setAssetReady(img);
+      self.textures.push(img);
+    }
   })();
 
   return this;
@@ -20,23 +30,40 @@ Grid.prototype.getHashMap = function(){
   return this.hashMap;
 }
 
+
 Grid.prototype.draw = function(ctx){
-  for(var index in this.polygons){
+  var self = this;
+  var img = new Image();
+  img.onload = function (){
+  for(var index in self.polygons){
+    ctx.save();
     ctx.beginPath();
+    var i = self.polygons[index].isWalkable;
     for(var i = 0; i < 6; i++){
-      if(this.polygons[index].isWalkable){
+      if(self.polygons[index].isWalkable){
         ctx.fillStyle ="red";
       }else{
         ctx.fillStyle = "blue";
       }
-      ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
+      ctx.lineTo(self.polygons[index].poly[i].x, self.polygons[index].poly[i].y);
     }
     ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
+    ctx.clip();
+    ctx.drawImage(this, 0, 0);
+    ctx.restore(); 
+    // ctx.stroke();
+    // ctx.fill();
   }
 }
+// Specify the src to load the image
+  img.src ="assets/map/textures/stone.png";
+}
 
+
+Grid.prototype.setAssetReady= function(obj)
+{
+  obj.ready = true;
+}
 
 //------------- GRID  init functions ------------------
 function getHexMap(layout, mapArray){
@@ -49,7 +76,7 @@ function getHexMap(layout, mapArray){
       for (var s = -q_offset; s < MAP_WIDTH  - q_offset; s++) {
         var axialCoord = qoffset_from_cube(q_offset, Hex(q, -q-s,s));
         //Because of tile disposition, have to negate the row and stay in the array width
-        if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] === 1){
+        if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] !== 0){
           hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : false});
         }else{
           hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : true});
