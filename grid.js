@@ -12,30 +12,33 @@ function Grid(layout, level, mapArray){
     self.polygons = hexToPoly(self.hashMap, self.layout);
   })();
 
-  this.draw = function(ctx){
-    for(var index in this.polygons){
-      ctx.beginPath();
-      for(var i = 0; i < 6; i++){
-        if(this.polygons[index].isWalkable){
-          ctx.fillStyle ="red";
-        }else{
-          ctx.fillStyle = "blue";
-        }
-        ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-    }
-  }
-
-  this.getHashMap = function(){
-    return self.hashMap;
-  }
-
   return this;
 }
 
+
+Grid.prototype.getHashMap = function(){
+  return this.hashMap;
+}
+
+Grid.prototype.draw = function(ctx){
+  for(var index in this.polygons){
+    ctx.beginPath();
+    for(var i = 0; i < 6; i++){
+      if(this.polygons[index].isWalkable){
+        ctx.fillStyle ="red";
+      }else{
+        ctx.fillStyle = "blue";
+      }
+      ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+  }
+}
+
+
+//------------- GRID  init functions ------------------
 function getHexMap(layout, mapArray){
   var hashMap = new Map();
   if(mapArray == null){

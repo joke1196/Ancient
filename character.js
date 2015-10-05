@@ -23,49 +23,50 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.actionsLeft = ACTIONS_PER_TURN;
   this.grid = grid;
 
-  var self = this; // added because of context problem
-  this.setMaxHealth = function (new_max_health){
-    self.max_health = new_max_health;
-  }
-  this.setMaxHealth = function (new_max_intel){
-    self.max_intel = new_max_intel;
-  }
-  this.setHealth = function (new_health){
-    self.health = new_health;
-  }
-  this.setIntel = function (new_intel){
-    self.intel = new_intel;
-  }
-  this.setPosition = function(new_position){
-    self.position = new_position;
-  }
-
-  this.setIsAlive = function(new_state){
-    self.isAlive = new_state;
-  }
-  this.getActionsLeft = function(){
-    return self.actionsLeft;
-  }
-  this.getGrid = function(){
-    return self.grid;
-  }
-
-  this.decActionsNum = function(){
-    self.actionsLeft = actionsLeft - 1;
-  }
-
-  this.draw = function(layout, ctx){
-    var pos = hex_to_pixel(layout, self.position);
-    self.image.onload = function (){
-      ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
-    }
-  }
-
-  this.execute = function(command){
-    command.execute(command.value, command.target);
-  }
-
   return this;
+}
+
+Character.prototype.setMaxHealth = function (new_max_health){
+  this.max_health = new_max_health;
+}
+Character.prototype.setMaxHealth = function (new_max_intel){
+  this.max_intel = new_max_intel;
+}
+Character.prototype.setHealth = function (new_health){
+  this.health = new_health;
+}
+Character.prototype.setIntel = function (new_intel){
+  this.intel = new_intel;
+}
+Character.prototype.setPosition = function(new_position){
+  this.position = new_position;
+}
+
+Character.prototype.setIsAlive = function(new_state){
+  this.isAlive = new_state;
+}
+Character.prototype.getActionsLeft = function(){
+  return this.actionsLeft;
+}
+Character.prototype.getGrid = function(){
+  return this.grid;
+}
+
+Character.prototype.decActionsNum = function(){
+  this.actionsLeft = actionsLeft - 1;
+}
+
+Character.prototype.draw = function(layout, ctx){
+  var pos = hex_to_pixel(layout, this.position);
+  //Added because of context problems in onload function
+  var self = this;
+  this.image.onload = function (){
+    ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
+  }
+}
+
+Character.prototype.execute = function(command){
+  command.execute(command.value, command.target);
 }
 
 
