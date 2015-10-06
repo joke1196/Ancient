@@ -14,12 +14,7 @@ function Grid(layout, level, mapArray){
  (function init(){ // Init is done only once when creating the object
     self.hashMap = getHexMap(self.layout, self.mapArray.map);
     self.polygons = hexToPoly(self.hashMap, self.layout);
-    for(var i = 0; i < self.numOfTextures; i++){
-      var img = new Image();
-      img.src = self.mapArray.textures[i];
-      img.onload = self.setAssetReady(img);
-      self.textures.push(img);
-    }
+
   })();
 
   return this;
