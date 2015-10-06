@@ -5,21 +5,15 @@ function Grid(layout, level, mapArray){
   this.level = level;
   this.hashMap = new Map();
   this.polygons = [];
-  this.numOfTextures = this.mapArray.numOfTextures;
-  this.textures = [];
-
-
+  this.textures = preloadTextures(this.mapArray.textures);
   var self = this;
 
  (function init(){ // Init is done only once when creating the object
     self.hashMap = getHexMap(self.layout, self.mapArray.map);
     self.polygons = hexToPoly(self.hashMap, self.layout);
-
   })();
-
   return this;
 }
-
 
 Grid.prototype.getHashMap = function(){
   return this.hashMap;
@@ -27,31 +21,17 @@ Grid.prototype.getHashMap = function(){
 
 
 Grid.prototype.draw = function(ctx){
-      var img = new Image();
-      var self = this;
-      img.addEventListener('load', function(e) {
-      ctx.fillStyle = ctx.createPattern(img, 'repeat');
-    for(var index in self.polygons){
+    for(var index in this.polygons){
       ctx.beginPath();
+      var value = this.polygons[index].value;
+      ctx.fillStyle = ctx.createPattern(this.textures[value], "no-repeat");
       for(var i = 0; i < 6; i++){
-        // if(this.polygons[index].isWalkable){
-        //   ctx.fillStyle ="red";
-        // }else{
-        //   ctx.fillStyle = "blue";
-        // }
-        ctx.lineTo(self.polygons[index].poly[i].x, self.polygons[index].poly[i].y);
+        ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
       }
-      //
       ctx.closePath();
-
-      // ctx.stroke();
+      ctx.stroke();
       ctx.fill();
-      // ctx.clip();
-
     }
-  });
-  img.src="t.png";
-
 }
 
 
@@ -67,9 +47,9 @@ function getHexMap(layout, mapArray){
         var axialCoord = qoffset_from_cube(q_offset, Hex(q, -q-s,s));
         //Because of tile disposition, have to negate the row and stay in the array width
         if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] !== 0){
-          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : false});
+          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : false, value : mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)]});
         }else{
-          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : true});
+          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : true, value : mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)]});
         }
       }
   }
@@ -79,7 +59,20 @@ function getHexMap(layout, mapArray){
 function hexToPoly(hashMap, layout){
   var polygon = [];
   for(var i = 0; i++ < hashMap.size; hashMap.next()){
-    polygon.push({poly: polygon_corners(layout, hashMap.value().hex), isWalkable :  hashMap.value().isWalkable});
+    polygon.push({poly: polygon_corners(layout, hashMap.value().hex), isWalkable :  hashMap.value().isWalkable, value : hashMap.value().value});
   }
   return polygon;
+}
+
+
+function preloadTextures(urlArray){
+    try {
+      var array = [];
+      for(var index in urlArray){
+        var _img = new Image();
+        _img.src = urlArray[index];
+        array.push(_img);
+      }
+      return array;
+    } catch (e) { console.log("Texture not preloaded "); }
 }
