@@ -42,19 +42,18 @@ function draw() {
  //Creating the map
  var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
  var grid = new Grid(layout, LEVEL1, mapArray);
-
+ grid.draw(ctx);
   //Creating a Character
-  var tom = new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 2, grid);
-  var john = new Character("John", Hex(3, -3, 0), 100, 100, "img/spriteSheet_test.png", 3, grid);
+  var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
+  var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
   //Example of commands
   tom.execute(new AttackCommand(tom.strength, john));
   tom.execute(new HealCommand(tom.intel, tom));
-  tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+  // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
 
   tom.draw(layout, ctx);
-  grid.draw(ctx);
 }
 
 window.onload = function() {

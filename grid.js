@@ -32,38 +32,33 @@ Grid.prototype.getHashMap = function(){
 
 
 Grid.prototype.draw = function(ctx){
-  var self = this;
-  var img = new Image();
-  img.onload = function (){
-  for(var index in self.polygons){
-    ctx.save();
-    ctx.beginPath();
-    var i = self.polygons[index].isWalkable;
-    for(var i = 0; i < 6; i++){
-      if(self.polygons[index].isWalkable){
-        ctx.fillStyle ="red";
-      }else{
-        ctx.fillStyle = "blue";
+      var img = new Image();
+      var self = this;
+      img.addEventListener('load', function(e) {
+      ctx.fillStyle = ctx.createPattern(img, 'repeat');
+    for(var index in self.polygons){
+      ctx.beginPath();
+      for(var i = 0; i < 6; i++){
+        // if(this.polygons[index].isWalkable){
+        //   ctx.fillStyle ="red";
+        // }else{
+        //   ctx.fillStyle = "blue";
+        // }
+        ctx.lineTo(self.polygons[index].poly[i].x, self.polygons[index].poly[i].y);
       }
-      ctx.lineTo(self.polygons[index].poly[i].x, self.polygons[index].poly[i].y);
+      //
+      ctx.closePath();
+
+      // ctx.stroke();
+      ctx.fill();
+      // ctx.clip();
+
     }
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(this, 0, 0);
-    ctx.restore(); 
-    // ctx.stroke();
-    // ctx.fill();
-  }
-}
-// Specify the src to load the image
-  img.src ="assets/map/textures/stone.png";
+  });
+  img.src="t.png";
+
 }
 
-
-Grid.prototype.setAssetReady= function(obj)
-{
-  obj.ready = true;
-}
 
 //------------- GRID  init functions ------------------
 function getHexMap(layout, mapArray){
