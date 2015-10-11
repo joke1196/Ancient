@@ -18,6 +18,7 @@ var canvas = null;
 var ctx = null;
 
 function gameLoop() {
+  var fsm = FSM.getInstance();
   draw();
 }
 
@@ -54,6 +55,7 @@ function draw() {
   // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
 
   tom.draw(layout, ctx);
+
 }
 
 window.onload = function() {
