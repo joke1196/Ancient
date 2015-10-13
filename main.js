@@ -18,7 +18,6 @@ var canvas = null;
 var ctx = null;
 
 function gameLoop() {
-  var fsm = FSM.getInstance();
   draw();
 }
 
@@ -43,7 +42,10 @@ function draw() {
  //Creating the map
  var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
  var grid = new Grid(layout, LEVEL1, mapArray);
- grid.draw(ctx);
+ var aM = new AssetManager();
+ aM.queueDownload(grid.textures);
+ aM.downloadAll(grid.draw(ctx));
+ // grid.draw(ctx);
   //Creating a Character
   var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
   var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);

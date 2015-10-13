@@ -22,15 +22,8 @@ Grid.prototype.getHashMap = function(){
 
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
-      ctx.beginPath();
       var value = this.polygons[index].value;
-      ctx.fillStyle = ctx.createPattern(this.textures[value], "no-repeat");
-      for(var i = 0; i < 6; i++){
-        ctx.lineTo(this.polygons[index].poly[i].x, this.polygons[index].poly[i].y);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
+      ctx.drawImage(this.textures[value], this.polygons[index].poly[0].x ,this.polygons[index].poly[0].y);
     }
 }
 
