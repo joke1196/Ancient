@@ -54,7 +54,6 @@ AssetManager.prototype.getImages = function(path){
       resolve(img);
     }, false);
     img.addEventListener("error", function() {
-      console.log(path);
       reject(img);
     }, false);
     img.src = path;
