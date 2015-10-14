@@ -18,14 +18,7 @@ var canvas = null;
 var ctx = null;
 
 function gameLoop() {
-  var fsm = StateMachine.create({
-   initial: 'first', final: 'fourth',
-   events: [
-     { name: 'hop',  from: 'first',  to: 'second' },
-     { name: 'skip', from: 'second', to: 'third'  },
-     { name: 'jump', from: 'third',  to: 'fourth' },
-   ]
- }); 
+
   draw();
 }
 
@@ -67,5 +60,35 @@ function draw() {
 
 window.onload = function() {
   createCanvas();
+  var fsm = StateMachine.create({
+   initial: 'menu',
+     events: [
+       { name: 'loading',  from: 'menu',  to: 'load' },
+       { name: 'play', from: 'load', to: 'play'  },
+       { name: 'quit', from: 'play',  to: 'menu' },
+     ],
+     callbacks: {
+
+   onenterload: function() {console.log("Entering load");},
+   onentermenu: function() {console.log("Entering menu"); },
+   onenterplay: function() { console.log("Entering game"); },
+
+   onleavemenu: function() {
+     console.log("Leaving menu");
+    //  return false; // tell StateMachine to defer next state until we call transition (in fadeOut callback above)
+   },
+   onleaveload: function(){
+     console.log("Leaving load");
+    //  return false;
+   },
+   onleaveplay: function() {
+     console.log("Leaving game");
+    //  return false; // tell StateMachine to defer next state until we call transition (in slideDown callback above)
+   }
+
+ }});
+   fsm.loading();
+   fsm.play();
+   fsm.quit();
   gameLoop();
 };
