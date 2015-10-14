@@ -18,7 +18,14 @@ var canvas = null;
 var ctx = null;
 
 function gameLoop() {
-  var fsm = FSM.getInstance();
+  var fsm = StateMachine.create({
+   initial: 'first', final: 'fourth',
+   events: [
+     { name: 'hop',  from: 'first',  to: 'second' },
+     { name: 'skip', from: 'second', to: 'third'  },
+     { name: 'jump', from: 'third',  to: 'fourth' },
+   ]
+ }); 
   draw();
 }
 
