@@ -17,6 +17,7 @@ AssetManager.prototype.downloadAll = function(downloadCallback) {
   }
   for (var index = 0; index < this.downloadQueue.length; index++) {
     var path = this.downloadQueue[index];
+    // DO NOT REMOVE YET
   //   var img = new Image();
   //   var that = this;
   //   img.addEventListener("load", function() {
