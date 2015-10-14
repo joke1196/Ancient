@@ -7,7 +7,7 @@ var MAP_WIDTH = 12;
 var HEX_HEIGHT = 50;
 var HEX_WIDTH = 23;
 var MAP_X = 300;
-var MAP_Y = 750;
+var MAP_Y = 650;
 var LEVEL1 = "level1";
 var LEVEL2 = "level2";
 var LEVEL3 = "level3";
@@ -43,7 +43,7 @@ function draw() {
  var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
  var grid = new Grid(layout, LEVEL1, mapArray);
  var aM = new AssetManager();
- aM.queueDownload(grid.textures);
+ aM.queueDownload(mapArray.textures);
  aM.downloadAll(grid.draw(ctx));
   //Creating a Character
   var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
