@@ -95,6 +95,7 @@ function draw() {
 
 window.onload = function() {
   createCanvas();
+  fsm.loading();
   gameLoop();
 };
 
