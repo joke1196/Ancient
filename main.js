@@ -16,10 +16,27 @@ var LEVEL5 = "level5";
 
 var canvas = null;
 var ctx = null;
+var lastUpdate = Date.now();
+
+//Creating a layout for the hex map
+var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
+layout.origin;
+
+//Creating the map
+var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
+var grid = new Grid(layout, LEVEL1, mapArray);
+
+//Creating a Character
+var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
+var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
 
 function gameLoop() {
-
+  var now = Date.now();
+  var td = (now - lastUpdate) / 1000;
+  update(td);
   draw();
+  mozRequestAnimationFrame(gameLoop);
+  lastUpdate = now;
 }
 
 function createCanvas() {
@@ -32,63 +49,59 @@ function createCanvas() {
   ctx = canvas.getContext("2d");
 }
 
+function update(td){
+  //Example of commands
+  tom.execute(new AttackCommand(tom.strength, john));
+  tom.execute(new HealCommand(tom.intel, tom));
+  // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+}
+
 function draw() {
   // Filling the screen with powder blue
   ctx.fillStyle = "#B4D8E7";
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
-  //Creating a layout for the hex map
-  var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
-  layout.origin;
- //Creating the map
- var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
- var grid = new Grid(layout, LEVEL1, mapArray);
- grid.draw(ctx);
-  //Creating a Character
-  var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
-  var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
+
+
+  grid.draw(ctx);
+
   tom.draw(layout, ctx);
   john.draw(layout, ctx);
-  //Example of commands
-  tom.execute(new AttackCommand(tom.strength, john));
-  tom.execute(new HealCommand(tom.intel, tom));
-  // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
-
   tom.draw(layout, ctx);
 
 }
 
 window.onload = function() {
   createCanvas();
-  var fsm = StateMachine.create({
-   initial: 'menu',
-     events: [
-       { name: 'loading',  from: 'menu',  to: 'load' },
-       { name: 'play', from: 'load', to: 'play'  },
-       { name: 'quit', from: 'play',  to: 'menu' },
-     ],
-     callbacks: {
-
-   onenterload: function() {console.log("Entering load");},
-   onentermenu: function() {console.log("Entering menu"); },
-   onenterplay: function() { console.log("Entering game"); },
-
-   onleavemenu: function() {
-     console.log("Leaving menu");
-    //  return false; // tell StateMachine to defer next state until we call transition (in fadeOut callback above)
-   },
-   onleaveload: function(){
-     console.log("Leaving load");
-    //  return false;
-   },
-   onleaveplay: function() {
-     console.log("Leaving game");
-    //  return false; // tell StateMachine to defer next state until we call transition (in slideDown callback above)
-   }
-
- }});
-   fsm.loading();
-   fsm.play();
-   fsm.quit();
+ //  var fsm = StateMachine.create({
+ //   initial: 'menu',
+ //     events: [
+ //       { name: 'loading',  from: 'menu',  to: 'load' },
+ //       { name: 'play', from: 'load', to: 'play'  },
+ //       { name: 'quit', from: 'play',  to: 'menu' },
+ //     ],
+ //     callbacks: {
+ //
+ //   onenterload: function() {console.log("Entering load");},
+ //   onentermenu: function() {console.log("Entering menu"); },
+ //   onenterplay: function() { console.log("Entering game"); },
+ //
+ //   onleavemenu: function() {
+ //     console.log("Leaving menu");
+ //    //  return false; // tell StateMachine to defer next state until we call transition (in fadeOut callback above)
+ //   },
+ //   onleaveload: function(){
+ //     console.log("Leaving load");
+ //    //  return false;
+ //   },
+ //   onleaveplay: function() {
+ //     console.log("Leaving game");
+ //    //  return false; // tell StateMachine to defer next state until we call transition (in slideDown callback above)
+ //   }
+ //
+ // }});
+ //   fsm.loading();
+ //   fsm.play();
+ //   fsm.quit();
   gameLoop();
 };
