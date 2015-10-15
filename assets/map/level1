@@ -19,6 +19,6 @@
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0]
   ],
-  "textures" : ["assets/map/textures/grass.png",
-   "assets/map/textures/stone.png"]
+  "textures" : ["img/Tile.png",
+   "img/Tile.png"]
 }
