@@ -58,11 +58,10 @@ Character.prototype.decActionsNum = function(){
 
 Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
-  //Added because of context problems in onload function
   var self = this;
-  this.image.onload = function (){
+  // this.image.onload = function (){
     ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
-  }
+  // }
 }
 
 Character.prototype.execute = function(command){

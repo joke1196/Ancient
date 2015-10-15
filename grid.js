@@ -1,6 +1,6 @@
 function Grid(layout, level, mapArray){
   this.layout = layout;
-  this.X_OFFSET = this.layout.size.x;
+  this.X_OFFSET = this.layout.size.x - 7;
   this.mapArray = mapArray;
   this.level = level;
   this.hashMap = new Map();
@@ -23,13 +23,13 @@ Grid.prototype.getHashMap = function(){
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
       var value = this.polygons[index].value;
-      ctx.drawImage(this.textures[value], this.polygons[index].poly[4].x - this.X_OFFSET + 6,this.polygons[index].poly[4].y, (this.textures[value].width * 1.5)+ 5, (this.textures[value].height*1.5)+2);
+      ctx.drawImage(this.textures[value], this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, (this.textures[value].width)*(0.575), ((this.textures[value].height)*(1/3)));
       ctx.beginPath();
       for(var i in this.polygons[index].poly){
         ctx.lineTo(this.polygons[index].poly[i].x ,this.polygons[index].poly[i].y);
       }
       ctx.closePath();
-      // ctx.stroke();
+      ctx.stroke();
     }
 }
 
