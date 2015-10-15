@@ -30,6 +30,11 @@ var grid = new Grid(layout, LEVEL1, mapArray);
 var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
 var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
 
+var ASSET_MANAGER = new AssetManager();
+//Should be in a loading state
+ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
+ASSET_MANAGER.downloadAll(); // CallBack should be a change state to the game state
+
 function gameLoop() {
   var now = Date.now();
   var td = (now - lastUpdate) / 1000;
