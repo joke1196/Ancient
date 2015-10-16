@@ -14,6 +14,7 @@ var LEVEL3 = "level3";
 var LEVEL4 = "level4";
 var LEVEL5 = "level5";
 
+
 var canvas = null;
 var ctx = null;
 var lastUpdate = Date.now();
@@ -32,22 +33,79 @@ var grid = new Grid(layout, LEVEL1, mapArray);
 var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
 var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
 
+var State = {
+   menu  : {
+     update : function(td){
+      console.log("Update in menu");
+      canvas.addEventListener("click", function() {
+        fsm.loading();
+        canvas.removeListener;
+      }, false);
+    },
+    draw : function(){
+      ctx.font="20px Georgia";
+      ctx.fillText("Menu",10,50);
+    }
+  },
+  play : {
+    update : function(td){
+      console.log("Update in play");
+      //Example of commands
+      tom.execute(new AttackCommand(tom.strength, john));
+      tom.execute(new HealCommand(tom.intel, tom));
+      // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+    },
+    draw : function(){
+      // Filling the screen with powder blue
+      ctx.fillStyle = "#B4D8E7";
+      ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+
+      grid.draw(ctx);
+
+      tom.draw(layout, ctx);
+      john.draw(layout, ctx);
+      tom.draw(layout, ctx);
+    }
+  },
+  load : {
+    update : function (td){
+      console.log("Update in load");
+      canvas.addEventListener("click", function() {
+        fsm.game();
+        canvas.removeListener;
+      }, false);
+    },
+    draw : function(){
+      ctx.font="20px Georgia";
+      ctx.fillText("Loading",10,50);
+    }
+  }
+}
+var state = new States(State.menu);
+
+
+
 //Creating a StateMachine
 var fsm = StateMachine.create({
  initial: 'menu',
    events: [
      { name: 'loading',  from: 'menu',  to: 'load' },
-     { name: 'play', from: 'load', to: 'play'  },
+     { name: 'game', from: 'load', to: 'play'  },
      { name: 'quit', from: 'play',  to: 'menu' },
    ],
    callbacks: {
 
  onenterload: function() {console.log("Entering load");
-      ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
-      ASSET_MANAGER.downloadAll(fsm.play());
+    state.setCurrentState(State.load);
+    ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
+    ASSET_MANAGER.downloadAll();
   },
- onentermenu: function() {console.log("Entering menu"); },
- onenterplay: function() { console.log("Entering game"); },
+ onentermenu: function() {console.log("Entering menu");
+  state.setCurrentState(State.menu);
+},
+ onenterplay: function() { console.log("Entering game");
+   state.setCurrentState(State.play);
+  },
 
  onleavemenu: function() {
    console.log("Leaving menu");
@@ -57,45 +115,30 @@ var fsm = StateMachine.create({
  },
  onleaveplay: function() {
    console.log("Leaving game");
+
+ },
+ ongame: function(){
+   console.log("Playing");
  }
 
 }});
 
 
 
+
+
 function gameLoop() {
   var now = Date.now();
   var td = (now - lastUpdate) / 1000;
-  update(td);
-  draw();
+  state.getCurrentState().update(td);
+  state.getCurrentState().draw();
   mozRequestAnimationFrame(gameLoop);
   lastUpdate = now;
 }
 
 
-function update(td){
-  //Example of commands
-  tom.execute(new AttackCommand(tom.strength, john));
-  tom.execute(new HealCommand(tom.intel, tom));
-  // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
-}
-
-function draw() {
-  // Filling the screen with powder blue
-  ctx.fillStyle = "#B4D8E7";
-  ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
-
-  grid.draw(ctx);
-
-  tom.draw(layout, ctx);
-  john.draw(layout, ctx);
-  tom.draw(layout, ctx);
-
-}
-
 window.onload = function() {
   createCanvas();
-  fsm.loading();
   gameLoop();
 };
 
