@@ -47,9 +47,12 @@ var State = {
   play : {
     update : function(td){
       console.log("Update in play");
+      
       //Example of commands
       tom.execute(new AttackCommand(tom.strength, john));
       tom.execute(new HealCommand(tom.intel, tom));
+      //Update the state of the character
+      tom.update();
       // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
     },
     draw : function(){
