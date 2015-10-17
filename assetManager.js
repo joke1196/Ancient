@@ -34,6 +34,8 @@ AssetManager.prototype.downloadAll = function(downloadCallback) {
   //   }, false);
   //   img.src = path;
   var self = this;
+
+  //Modification by FooBar
   this.getImages(path).then(function(response){
     console.log("Success!", response);
     self.successCount += 1;
@@ -67,4 +69,11 @@ AssetManager.prototype.getAsset = function(path) {
 
 AssetManager.prototype.isDone = function() {
     return (this.downloadQueue.length == this.successCount + this.errorCount);
+}
+//Modification by FooBar
+AssetManager.prototype.update = function(){
+  if(this.downloadQueue.length !== 0 ){
+    return   ((this.successCount + this.errorCount) * 100) / this.downloadQueue.length;
+  }
+  return 0;
 }

@@ -37,10 +37,7 @@ var State = {
    menu  : {
      update : function(td){
       console.log("Update in menu");
-      canvas.addEventListener("click", function() {
-        fsm.loading();
-        canvas.removeListener;
-      }, false);
+      canvas.addEventListener("click", myFunc, false);
     },
     draw : function(){
       ctx.font="20px Georgia";
@@ -70,10 +67,12 @@ var State = {
   load : {
     update : function (td){
       console.log("Update in load");
-      canvas.addEventListener("click", function() {
+      // Example of progress behavior
+      ctx.fillStyle = "red";
+      ctx.fillRect(0 ,0, ASSET_MANAGER.update() * STAGE_WIDTH / 100, 10 );
+      if(ASSET_MANAGER.update() === 100){
         fsm.game();
-        canvas.removeListener;
-      }, false);
+      }
     },
     draw : function(){
       ctx.font="20px Georgia";
@@ -96,9 +95,12 @@ var fsm = StateMachine.create({
    callbacks: {
 
  onenterload: function() {console.log("Entering load");
+    canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
     state.setCurrentState(State.load);
+    ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
     ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
     ASSET_MANAGER.downloadAll();
+
   },
  onentermenu: function() {console.log("Entering menu");
   state.setCurrentState(State.menu);
@@ -124,9 +126,6 @@ var fsm = StateMachine.create({
 }});
 
 
-
-
-
 function gameLoop() {
   var now = Date.now();
   var td = (now - lastUpdate) / 1000;
@@ -150,4 +149,8 @@ function createCanvas() {
   document.body.appendChild(canvas);
   // Our drawing handle
   ctx = canvas.getContext("2d");
+}
+
+function myFunc() { // TODO REMOVE or make it nice
+  fsm.loading();
 }
