@@ -32,112 +32,65 @@ var grid = new Grid(layout, LEVEL1, mapArray);
 //Creating a Character
 var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
 var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
-
-var State = {
-   menu  : {
-     update : function(td){
-      console.log("Update in menu");
-      canvas.addEventListener("click", myFunc, false);
-    },
-    draw : function(){
-      ctx.font="20px Georgia";
-      ctx.fillText("Menu",10,50);
-    }
-  },
-  play : {
-    update : function(td){
-      console.log("Update in play");
-      
-      //Example of commands
-      tom.execute(new AttackCommand(tom.strength, john));
-      tom.execute(new HealCommand(tom.intel, tom));
-      //Update the state of the character
-      tom.update();
-      // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
-    },
-    draw : function(){
-      // Filling the screen with powder blue
-      ctx.fillStyle = "#B4D8E7";
-      ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
-
-      grid.draw(ctx);
-
-      tom.draw(layout, ctx);
-      john.draw(layout, ctx);
-      tom.draw(layout, ctx);
-    }
-  },
-  load : {
-    update : function (td){
-      console.log("Update in load");
-      // Example of progress behavior
-      ctx.fillStyle = "red";
-      ctx.fillRect(0 ,0, ASSET_MANAGER.update() * STAGE_WIDTH / 100, 10 );
-      if(ASSET_MANAGER.update() === 100){
-        fsm.game();
-      }
-    },
-    draw : function(){
-      ctx.font="20px Georgia";
-      ctx.fillText("Loading",10,50);
-    }
-  }
-}
-var state = new States(State.menu);
-
+//Creating Scene
+var sceneManager = new SceneManager();
+sceneManager.showScene(new MenuScene());
 
 
 //Creating a StateMachine
-var fsm = StateMachine.create({
- initial: 'menu',
-   events: [
-     { name: 'loading',  from: 'menu',  to: 'load' },
-     { name: 'game', from: 'load', to: 'play'  },
-     { name: 'quit', from: 'play',  to: 'menu' },
-   ],
-   callbacks: {
-
- onenterload: function() {console.log("Entering load");
-    canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
-    state.setCurrentState(State.load);
-    ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-    ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
-    ASSET_MANAGER.downloadAll();
-
-  },
- onentermenu: function() {console.log("Entering menu");
-  state.setCurrentState(State.menu);
-},
- onenterplay: function() { console.log("Entering game");
-   state.setCurrentState(State.play);
-  },
-
- onleavemenu: function() {
-   console.log("Leaving menu");
- },
- onleaveload: function(){
-   console.log("Leaving load");
- },
- onleaveplay: function() {
-   console.log("Leaving game");
-
- },
- ongame: function(){
-   console.log("Playing");
- }
-
-}});
+// var fsm = StateMachine.create({
+//  initial: 'menu',
+//    events: [
+//      { name: 'loading',  from: 'menu',  to: 'load' },
+//      { name: 'game', from: 'load', to: 'play'  },
+//      { name: 'quit', from: 'play',  to: 'menu' },
+//    ],
+//    callbacks: {
+//
+//  onenterload: function() {console.log("Entering load");
+//     canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
+//     state.setCurrentState(State.load);
+//     ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+//     ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
+//     ASSET_MANAGER.downloadAll();
+//
+//   },
+//  onentermenu: function() {console.log("Entering menu");
+//   state.setCurrentState(State.menu);
+// },
+//  onenterplay: function() { console.log("Entering game");
+//    state.setCurrentState(State.play);
+//   },
+//
+//  onleavemenu: function() {
+//    console.log("Leaving menu");
+//  },
+//  onleaveload: function(){
+//    console.log("Leaving load");
+//  },
+//  onleaveplay: function() {
+//    console.log("Leaving game");
+//
+//  },
+//  ongame: function(){
+//    console.log("Playing");
+//  }
+//
+// }});
 
 
 function gameLoop() {
   var now = Date.now();
   var td = (now - lastUpdate) / 1000;
-  state.getCurrentState().update(td);
-  state.getCurrentState().draw();
+  if(sceneManager.getNextScene() !== undefined){
+    sceneManager.setCurrentSceneToNext();
+    sceneManager.setNextScene(undefined);
+  }
+  sceneManager.getCurrentScene().update(td);
+  sceneManager.getCurrentScene().draw();
   mozRequestAnimationFrame(gameLoop);
   lastUpdate = now;
 }
-
 
 window.onload = function() {
   createCanvas();
@@ -155,5 +108,6 @@ function createCanvas() {
 }
 
 function myFunc() { // TODO REMOVE or make it nice
-  fsm.loading();
+  // fsm.loading();
+  sceneManager.showScene(new LoadScene);
 }
