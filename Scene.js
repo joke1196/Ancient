@@ -58,14 +58,14 @@ LoadScene.prototype.update = function(td){
   console.log("Update in load");
   // Example of progress behavior
 
-  if(ASSET_MANAGER.update() === 100){
+  if(AssetManager.getInstance().update() === 100){
     // fsm.game();
     sceneManager.showScene(new PlayScene());
   }
 }
 LoadScene.prototype.draw = function(td){
   ctx.fillStyle = "red";
-  ctx.fillRect(0 ,0, ASSET_MANAGER.update() * STAGE_WIDTH / 100, 10 );
+  ctx.fillRect(0 ,0, AssetManager.getInstance().update() * STAGE_WIDTH / 100, 10 );
   ctx.font="20px Georgia";
   ctx.fillText("Loading",10,50);
 }
@@ -73,8 +73,8 @@ LoadScene.prototype.onSceneChange = function(){
   canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
-  ASSET_MANAGER.downloadAll();
+  AssetManager.getInstance().queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
+  AssetManager.getInstance().downloadAll();
 }
 function PlayScene(){
   return this;

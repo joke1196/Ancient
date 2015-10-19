@@ -1,12 +1,21 @@
 //---------- CODE BY Seth Ladd ------------------------
 //---------- http://www.html5rocks.com/en/tutorials/games/assetmanager/
 
-function AssetManager() {
-    this.successCount = 0;
-    this.errorCount = 0;
-    this.cache = {};
-    this.downloadQueue = [];
+var AssetManager =  new function AssetManager() {
+  var instance = this;
+  this.successCount = 0;
+  this.errorCount = 0;
+  this.cache = {};
+  this.downloadQueue = [];
+
+  //Static method
+  AssetManager.getInstance = function(){
+    return instance;
+  }
+  return AssetManager;
 }
+
+
 AssetManager.prototype.queueDownload = function(paths) {
     this.downloadQueue = paths;
 }

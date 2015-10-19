@@ -23,8 +23,6 @@ var lastUpdate = Date.now();
 var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
 layout.origin;
 
-var ASSET_MANAGER = new AssetManager();
-
 //Creating the map
 var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
 var grid = new Grid(layout, LEVEL1, mapArray);
