@@ -31,7 +31,7 @@ var grid = new Grid(layout, LEVEL1, mapArray);
 var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
 var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
 //Creating Scene
-var sceneManager = new SceneManager();
+var sceneManager = SceneManager.getInstance();
 sceneManager.showScene(new MenuScene());
 
 

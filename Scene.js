@@ -1,7 +1,11 @@
-function SceneManager(){
+var SceneManager = new function SceneManager(){
+  var instance = this;
   this.currentScene = undefined;
   this.nextScene = undefined;
-  return this;
+  SceneManager.getInstance = function(){
+    return instance;
+  }
+  return SceneManager;
 }
 
 SceneManager.prototype.showScene = function(scene){
