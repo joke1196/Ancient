@@ -77,7 +77,7 @@ LoadScene.prototype.onSceneChange = function(){
   canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  AssetManager.getInstance().queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png"]);
+  AssetManager.getInstance().queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
   AssetManager.getInstance().downloadAll();
 }
 function PlayScene(){
@@ -92,11 +92,17 @@ PlayScene.prototype.update = function(td){
   console.log("Update in play");
 
    //Example of commands
-   tom.execute(new AttackCommand(tom.strength, john));
-   tom.execute(new HealCommand(tom.intel, tom));
-   //Update the state of the character
-   tom.update();
-   // tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+  //  allies[0].execute(new AttackCommand(allies[0].strength, allies[1]));
+  //  allies[0].execute(new HealCommand(allies[0].intel, allies[0]));
+  //  //Update the state of the character
+  //  tom.update();
+  //  tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
+  //  for(var ally in allies){
+  //    allies[ally].update();
+  //  }
+  //  for(var enemy in enemies){
+  //    enemies[enemy].update();
+  //  }
 }
 
 PlayScene.prototype.draw = function(){
@@ -105,11 +111,15 @@ PlayScene.prototype.draw = function(){
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   grid.draw(ctx);
-
-  tom.draw(layout, ctx);
-  john.draw(layout, ctx);
-  tom.draw(layout, ctx);
+  for(var ally in allies){
+    allies[ally].draw(layout, ctx);
+  }
+  for(var enemy in enemies){
+    enemies[enemy].draw(layout, ctx);
+  }
 }
 PlayScene.prototype.onSceneChange = function(){
  grid = new Grid(layout, LEVEL1, mapArray);
+ allies.push(new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid));
+ allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
 }

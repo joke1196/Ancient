@@ -27,9 +27,10 @@ layout.origin;
 var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
 var grid = undefined;
 
-//Creating a Character
-var tom = new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid);
-var john = new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid);
+//Creating arrays for enemies and allies
+var allies = [];
+var enemies = [];
+
 //Creating Scene
 var sceneManager = SceneManager.getInstance();
 sceneManager.showScene(new MenuScene());
