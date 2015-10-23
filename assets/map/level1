@@ -1,4 +1,6 @@
-{ "map" : [
+{ "width": 12,
+  "height" : 18,
+  "map" : [
     [0,1,0,1,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -19,5 +21,6 @@
     [0,0,1,0,0,0,0,0,0,0,0,0],
     [0,0,0,1,2,2,1,0,0,0,0,0]
   ],
-  "textures" : "assets/map/textures/Ash_planet/Ash_planet_bitmap.png"
+  "textures" : "assets/map/textures/Ash_planet/Ash_planet_bitmap.png",
+  "unwalkableTiles" : [1, 2]
 }

@@ -6,16 +6,19 @@ function Grid(layout, level, mapArray){
   this.layout = layout;
   this.X_OFFSET = this.layout.size.x - 7;
   this.mapArray = mapArray;
+  this.MAP_HEIGHT = this.mapArray.height;
+  this.MAP_WIDTH = this.mapArray.width;
   this.level = level;
   this.hashMap = new Map();
   this.polygons = [];
   this.textures = new Image();
   this.textures.src = this.mapArray.textures;
+  this.unwalkableTiles = this.mapArray.unwalkableTiles;
   var self = this;
 
  (function init(){ // Init is done only once when creating the object
-    self.hashMap = getHexMap(self.layout, self.mapArray.map);
-    self.polygons = hexToPoly(self.hashMap, self.layout);
+    self.hashMap = self.getHexMap();
+    self.polygons = self.hexToPoly();
   })();
   return this;
 }
@@ -40,30 +43,29 @@ Grid.prototype.draw = function(ctx){
 
 
 //------------- GRID  init functions ------------------
-function getHexMap(layout, mapArray){
+Grid.prototype.getHexMap = function(){
   var hashMap = new Map();
-  if(mapArray == null){
+  if(this.mapArray == null){
     console.log("ERROR : could not load map array");
   }
-  for (var q = 0; q < MAP_HEIGHT; q++) {
+  for (var q = 0; q < this.MAP_HEIGHT; q++) {
       var q_offset = Math.floor(q/2);
-      for (var s = -q_offset; s < MAP_WIDTH  - q_offset; s++) {
+      for (var s = -q_offset; s < this.MAP_WIDTH  - q_offset; s++) {
         var axialCoord = qoffset_from_cube(q_offset, Hex(q, -q-s,s));
         //Because of tile disposition, have to negate the row and stay in the array width
-        if(mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)] !== 0){
-          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : false, value : mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)]});
-        }else{
-          hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : true, value : mapArray[axialCoord.col][mod(-axialCoord.row, MAP_WIDTH)]});
-        }
+        //If the tile is not walkable
+        var unwalkable = this.unwalkableTiles.indexOf(this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]) > -1;
+        hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]});//TODO Test
+
       }
   }
   return hashMap;
 }
 
-function hexToPoly(hashMap, layout){
+Grid.prototype.hexToPoly = function(){
   var polygon = [];
-  for(var i = 0; i++ < hashMap.size; hashMap.next()){
-    polygon.push({poly: polygon_corners(layout, hashMap.value().hex), isWalkable :  hashMap.value().isWalkable, value : hashMap.value().value});
+  for(var i = 0; i++ < this.hashMap.size; this.hashMap.next()){
+    polygon.push({poly: polygon_corners(this.layout, this.hashMap.value().hex), isWalkable :  this.hashMap.value().isWalkable, value : this.hashMap.value().value});
   }
   return polygon;
 }
