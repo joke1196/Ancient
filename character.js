@@ -26,7 +26,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.actionsLeft = ACTIONS_PER_TURN;
   this.tmp_actionsLeft = 0;
   this.grid = grid;
-
+  
   return this;
 }
 

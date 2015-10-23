@@ -64,6 +64,7 @@ LoadScene.prototype.update = function(td){
 
   if(AssetManager.getInstance().update() === 100){
     // fsm.game();
+    mapArray = AssetManager.getInstance().getFileDestination();
     sceneManager.showScene(new PlayScene());
   }
 }
@@ -74,12 +75,13 @@ LoadScene.prototype.draw = function(td){
   ctx.fillText("Loading",10,50);
 }
 LoadScene.prototype.onSceneChange = function(){
+  var assetManager = AssetManager.getInstance();
   canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  AssetManager.getInstance().queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
-  AssetManager.getInstance().queueFile(levelManager.getCurrentLevel().getName());
-  AssetManager.getInstance().downloadAll();
+  assetManager.queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
+  assetManager.queueFile(levelManager.getCurrentLevel().getName(), mapArray);
+  assetManager.downloadAll();
 }
 function PlayScene(){
   return this;
