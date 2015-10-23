@@ -28,7 +28,7 @@ Grid.prototype.getHashMap = function(){
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
       var value = this.polygons[index].value;
-      ctx.drawImage(this.textures, value * TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT, this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, TILE_WIDTH*(0.58), (TILE_HEIGHT*(0.31)));
+      ctx.drawImage(this.textures, value * TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT, this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, TILE_WIDTH*(0.58), (TILE_HEIGHT*(1/3.0)));
       ctx.beginPath();
       for(var i in this.polygons[index].poly){
         ctx.lineTo(this.polygons[index].poly[i].x ,this.polygons[index].poly[i].y);
