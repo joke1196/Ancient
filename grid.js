@@ -4,11 +4,7 @@ var TILE_HEIGHT = 150;
 
 function Grid(layout, level, mapArray){
   this.layout = layout;
-<<<<<<< HEAD
   this.X_OFFSET = this.layout.size.x - 7;
-=======
-  this.X_OFFSET = this.layout.size.x -7;
->>>>>>> develop
   this.mapArray = mapArray;
   this.level = level;
   this.hashMap = new Map();
