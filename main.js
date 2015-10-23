@@ -23,17 +23,24 @@ var lastUpdate = Date.now();
 var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
 layout.origin;
 
+
+
+//Creating Scene
+var sceneManager = SceneManager.getInstance();
+sceneManager.showScene(new MenuScene());
+var levelManager = LevelManager.getInstance();
+levelManager.showLevel(new LevelGrass());
+
 //Creating the map
-var mapArray = getFile(LEVEL1); // TODO Should be handled by the Asset manager
+var mapArray = {};
 var grid = undefined;
 
 //Creating arrays for enemies and allies
 var allies = [];
 var enemies = [];
+var isVictorious = false;
 
-//Creating Scene
-var sceneManager = SceneManager.getInstance();
-sceneManager.showScene(new MenuScene());
+var myTest = 0;
 
 
 //Creating a StateMachine
@@ -108,5 +115,5 @@ function createCanvas() {
 
 function myFunc() { // TODO REMOVE or make it nice
   // fsm.loading();
-  sceneManager.showScene(new LoadScene);
+  sceneManager.showScene(new LoadScene());
 }

@@ -78,6 +78,7 @@ LoadScene.prototype.onSceneChange = function(){
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   AssetManager.getInstance().queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
+  AssetManager.getInstance().queueFile(levelManager.getCurrentLevel().getName());
   AssetManager.getInstance().downloadAll();
 }
 function PlayScene(){
@@ -91,6 +92,9 @@ PlayScene.prototype = Object.create(Scene.prototype);
 PlayScene.prototype.update = function(td){
   console.log("Update in play");
 
+  if(myTest++ === 200){
+    isVictorious = true;
+  }
    //Example of commands
   //  allies[0].execute(new AttackCommand(allies[0].strength, allies[1]));
   //  allies[0].execute(new HealCommand(allies[0].intel, allies[0]));
@@ -103,6 +107,12 @@ PlayScene.prototype.update = function(td){
   //  for(var enemy in enemies){
   //    enemies[enemy].update();
   //  }
+
+  if(isVictorious){
+    isVictorious = false;
+    levelManager.showLevel(new LevelAsh());
+    sceneManager.showScene(new LoadScene());
+  }
 }
 
 PlayScene.prototype.draw = function(){

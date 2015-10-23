@@ -7,6 +7,8 @@ var AssetManager =  new function AssetManager() {
   this.errorCount = 0;
   this.cache = {};
   this.downloadQueue = [];
+  this.fileQueue = undefined;
+  this.queueLength  = 0;
 
   //Static method
   AssetManager.getInstance = function(){
@@ -19,13 +21,24 @@ var AssetManager =  new function AssetManager() {
 AssetManager.prototype.queueDownload = function(paths) {
     this.downloadQueue = paths;
 }
+AssetManager.prototype.queueFile = function(level) {
+    this.fileQueue = "assets/map/" + level;
+}
 
 AssetManager.prototype.downloadAll = function(downloadCallback) {
-  if (this.downloadQueue.length === 0) {
+  this.successCount = 0;
+  this.errorCount = 0;
+  this.queueLength = this.downloadQueue.length + 1; // Added one for the file TODO MAKE A PROMISE POOL FOR FILE
+  if (this.queueLength === 0) {
       downloadCallback();
   }
-  for (var index = 0; index < this.downloadQueue.length; index++) {
-    var path = this.downloadQueue[index];
+  var self = this;
+  Promise.all(this.getImagesPromisePool())
+    .then(this.getFilePromise())
+    .then(downloadCallback);
+
+//Modification by FooBar
+
     // DO NOT REMOVE YET
   //   var img = new Image();
   //   var that = this;
@@ -42,32 +55,68 @@ AssetManager.prototype.downloadAll = function(downloadCallback) {
   //     }
   //   }, false);
   //   img.src = path;
-  var self = this;
+  // this.getFilePromise(levelManager.getCurrentLevel().getName()).then(function(response){
+  //   mapArray = JSON.parse(response);
+  //   // console.log("Success!", response);
+  //   // self.successCount += 1;
+  // }, function(error){
+  //   // console.log("Error", error);
+  //   // self.errorCount += 1;
+  // }).then(this.getImagesPromise(path).then(function(response){
+  //   console.log("Success!", response);
+  //   self.successCount += 1;
+  //
+  //   }, function(error){
+  //     console.log("Error", error);
+  //     self.errorCount += 1;
+  //   });
+  // });
 
-  //Modification by FooBar
-  this.getImages(path).then(function(response){
-    console.log("Success!", response);
-    self.successCount += 1;
-
-  }, function(error){
-    console.log("Error", error);
-    self.errorCount += 1;
-  });
-  }
 }
 
-AssetManager.prototype.getImages = function(path){
+AssetManager.prototype.getImagesPromisePool = function(){
+  var self = this;
+  var promisePool = [];
+  for (var index = 0; index < this.downloadQueue.length; index++) {
+    var path = this.downloadQueue[index];
+    promisePool.push(new Promise(function(resolve, reject){
+      var img = new Image();
+      img.addEventListener("load", function() {
+        self.cache[path] = img;
+        console.log("Success!", img);
+        self.successCount += 1;
+        resolve(img);
+      }, false);
+      img.addEventListener("error", function() {
+        console.log("Error", error);
+        self.errorCount += 1;
+        reject(img);
+      }, false);
+      img.src = path;
+    }));
+  }
+  return promisePool;
+}
+AssetManager.prototype.getFilePromise = function(level){
+  var client = new XMLHttpRequest();
   var self = this;
   return new Promise(function(resolve, reject){
-    var img = new Image();
-    img.addEventListener("load", function() {
-      self.cache[path] = img;
-      resolve(img);
-    }, false);
-    img.addEventListener("error", function() {
-      reject(img);
-    }, false);
-    img.src = path;
+    client.open('GET', self.fileQueue);
+    client.onreadystatechange = function() {
+      if(client.readyState === 4){ // done
+        if(client.status === 200){
+          console.log("Success!");
+          self.successCount += 1;
+          mapArray = JSON.parse(client.responseText);
+          resolve(client.responseText);
+        }else{
+          console.log("Error", error);
+          self.errorCount += 1;
+          reject(client.responseText);
+        }
+      }
+    };
+    client.send();
   });
 }
 
@@ -81,7 +130,7 @@ AssetManager.prototype.isDone = function() {
 //Modification by FooBar
 AssetManager.prototype.update = function(){
   if(this.downloadQueue.length !== 0 ){
-    return   ((this.successCount + this.errorCount) * 100) / this.downloadQueue.length;
+    return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + 1) ;
   }
   return 0;
 }
