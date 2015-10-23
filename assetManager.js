@@ -9,6 +9,7 @@ var AssetManager =  new function AssetManager() {
   this.downloadQueue = [];
   this.fileQueue = undefined;
   this.queueLength  = 0;
+  this.fileDestination = undefined;
 
   //Static method
   AssetManager.getInstance = function(){
@@ -25,7 +26,7 @@ AssetManager.prototype.queueFile = function(level) {
     this.fileQueue = "assets/map/" + level;
 }
 
-AssetManager.prototype.downloadAll = function(downloadCallback) {
+AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination) {
   this.successCount = 0;
   this.errorCount = 0;
   this.queueLength = this.downloadQueue.length + 1; // Added one for the file TODO MAKE A PROMISE POOL FOR FILE
@@ -34,7 +35,7 @@ AssetManager.prototype.downloadAll = function(downloadCallback) {
   }
   var self = this;
   Promise.all(this.getImagesPromisePool())
-    .then(this.getFilePromise())
+    .then(this.getFilePromise(fileDestination))
     .then(downloadCallback);
 
 //Modification by FooBar
@@ -97,7 +98,7 @@ AssetManager.prototype.getImagesPromisePool = function(){
   }
   return promisePool;
 }
-AssetManager.prototype.getFilePromise = function(level){
+AssetManager.prototype.getFilePromise = function(){
   var client = new XMLHttpRequest();
   var self = this;
   return new Promise(function(resolve, reject){
@@ -107,7 +108,7 @@ AssetManager.prototype.getFilePromise = function(level){
         if(client.status === 200){
           console.log("Success!");
           self.successCount += 1;
-          mapArray = JSON.parse(client.responseText);
+          self.fileDestination = JSON.parse(client.responseText);
           resolve(client.responseText);
         }else{
           console.log("Error", error);
@@ -133,4 +134,7 @@ AssetManager.prototype.update = function(){
     return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + 1) ;
   }
   return 0;
+}
+AssetManager.prototype.getFileDestination = function(){
+  return this.fileDestination;
 }
