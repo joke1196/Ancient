@@ -12,15 +12,19 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.max_intel = max_intel;
   this.health = max_health;
   this.intel = 0;
+  this.tmp_health = max_health;
+  this.tmp_intel = 0;
   this.strength = strength;
   this.range = range;
   this.position = hex;
+  this.tmp_position = hex;
   this.width = width;
   this.height = height;
   this.image = new Image();
   this.image.src = img;
   this.isAlive = true;
   this.actionsLeft = ACTIONS_PER_TURN;
+  this.tmp_actionsLeft = 0;
   this.grid = grid;
 
   return this;
@@ -33,13 +37,13 @@ Character.prototype.setMaxHealth = function (new_max_intel){
   this.max_intel = new_max_intel;
 }
 Character.prototype.setHealth = function (new_health){
-  this.health = new_health;
+  this.tmp_health = new_health;
 }
 Character.prototype.setIntel = function (new_intel){
-  this.intel = new_intel;
+  this.tmp_intel = new_intel;
 }
 Character.prototype.setPosition = function(new_position){
-  this.position = new_position;
+  this.tmp_position = new_position;
 }
 
 Character.prototype.setIsAlive = function(new_state){
@@ -53,20 +57,25 @@ Character.prototype.getGrid = function(){
 }
 
 Character.prototype.decActionsNum = function(){
-  this.actionsLeft = actionsLeft - 1;
+  this.tmp_actionsLeft = this.actionsLeft - 1;
 }
 
 Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
-  //Added because of context problems in onload function
   var self = this;
-  this.image.onload = function (){
-    ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
-  }
+  ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
 }
 
 Character.prototype.execute = function(command){
   command.execute(command.value, command.target);
+  this.decActionsNum();
+}
+
+Character.prototype.update = function(){
+  this.health = this.tmp_health;
+  this.actionsLeft = this.tmp_actionsLeft;
+  this.intel = this.tmp_intel;
+  this.position = this.tmp_position;
 }
 
 

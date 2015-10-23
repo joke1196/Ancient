@@ -1,12 +1,21 @@
 //---------- CODE BY Seth Ladd ------------------------
 //---------- http://www.html5rocks.com/en/tutorials/games/assetmanager/
 
-function AssetManager() {
-    this.successCount = 0;
-    this.errorCount = 0;
-    this.cache = {};
-    this.downloadQueue = [];
+var AssetManager =  new function AssetManager() {
+  var instance = this;
+  this.successCount = 0;
+  this.errorCount = 0;
+  this.cache = {};
+  this.downloadQueue = [];
+
+  //Static method
+  AssetManager.getInstance = function(){
+    return instance;
+  }
+  return AssetManager;
 }
+
+
 AssetManager.prototype.queueDownload = function(paths) {
     this.downloadQueue = paths;
 }
@@ -34,6 +43,8 @@ AssetManager.prototype.downloadAll = function(downloadCallback) {
   //   }, false);
   //   img.src = path;
   var self = this;
+
+  //Modification by FooBar
   this.getImages(path).then(function(response){
     console.log("Success!", response);
     self.successCount += 1;
@@ -66,4 +77,11 @@ AssetManager.prototype.getAsset = function(path) {
 
 AssetManager.prototype.isDone = function() {
     return (this.downloadQueue.length == this.successCount + this.errorCount);
+}
+//Modification by FooBar
+AssetManager.prototype.update = function(){
+  if(this.downloadQueue.length !== 0 ){
+    return   ((this.successCount + this.errorCount) * 100) / this.downloadQueue.length;
+  }
+  return 0;
 }
