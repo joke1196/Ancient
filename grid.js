@@ -1,3 +1,7 @@
+//Globals
+var TILE_WIDTH = 150;
+var TILE_HEIGHT = 150;
+
 function Grid(layout, level, mapArray){
   this.layout = layout;
   this.X_OFFSET = this.layout.size.x -7;
@@ -5,7 +9,8 @@ function Grid(layout, level, mapArray){
   this.level = level;
   this.hashMap = new Map();
   this.polygons = [];
-  this.textures = preloadTextures(this.mapArray.textures);
+  this.textures = new Image();
+  this.textures.src = this.mapArray.textures;
   var self = this;
 
  (function init(){ // Init is done only once when creating the object
@@ -23,7 +28,7 @@ Grid.prototype.getHashMap = function(){
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
       var value = this.polygons[index].value;
-      ctx.drawImage(this.textures[value], this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, (this.textures[value].width)*(0.58), ((this.textures[value].height)*(0.31)));
+      ctx.drawImage(this.textures, value * TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT, this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, TILE_WIDTH*(0.58), (TILE_HEIGHT*(0.31)));
       ctx.beginPath();
       for(var i in this.polygons[index].poly){
         ctx.lineTo(this.polygons[index].poly[i].x ,this.polygons[index].poly[i].y);
@@ -64,14 +69,14 @@ function hexToPoly(hashMap, layout){
 }
 
 
-function preloadTextures(urlArray){
-    try {
-      var array = [];
-      for(var index in urlArray){
-        var _img = new Image();
-        _img.src = urlArray[index];
-        array.push(_img);
-      }
-      return array;
-    } catch (e) { console.log("Texture not preloaded "); }
-}
+// function preloadTextures(urlArray){
+//     try {
+//       var array = [];
+//       for(var index in urlArray){
+//         var _img = new Image();
+//         _img.src = urlArray[index];
+//         array.push(_img);
+//       }
+//       return array;
+//     } catch (e) { console.log("Texture not preloaded "); }
+// }
