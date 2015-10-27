@@ -83,7 +83,14 @@ LoadScene.prototype.onSceneChange = function(){
   assetManager.queueFile(levelManager.getCurrentLevel().getName(), mapArray);
   assetManager.downloadAll();
 }
+
+var gameStates = {
+  PLAYERSTURN: 0,
+  COMPUTERSTURN: 1
+}
+
 function PlayScene(){
+  this.state = gameStates.PLAYERSTURN;
   return this;
 }
 
@@ -97,6 +104,21 @@ PlayScene.prototype.update = function(td){
   if(myTest++ === 200){
     isVictorious = true;
   }
+
+  if(this.state === gameStates.PLAYERSTURN){
+    console.log("Player's turn");
+
+    if(totalAP <= 0){
+      //computersTurn
+      console.log("To computersTurn");
+      this.state = gameStates.COMPUTERSTURN;
+    }
+  }else{
+    //If computers turn is finished
+    console.log("Computer's turn");
+    console.log("To Players turn");
+    this.state = gameStates.PLAYERSTURN;
+  }
    //Example of commands
   //  allies[0].execute(new AttackCommand(allies[0].strength, allies[1]));
   //  allies[0].execute(new HealCommand(allies[0].intel, allies[0]));
@@ -109,6 +131,11 @@ PlayScene.prototype.update = function(td){
   //  for(var enemy in enemies){
   //    enemies[enemy].update();
   //  }
+  totalAP = 0;
+  for(var index in allies){
+    allies[index].update();
+    totalAP += allies[index].getActionsLeft();
+  }
 
   if(isVictorious){
     isVictorious = false;
@@ -131,7 +158,11 @@ PlayScene.prototype.draw = function(){
   }
 }
 PlayScene.prototype.onSceneChange = function(){
- grid = new Grid(layout, LEVEL1, mapArray);
+ grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  allies.push(new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid));
- allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
+ // allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
+ totalAP = 0;
+ for(var index in allies){
+   totalAP += allies[index].getActionsLeft();
+ }
 }

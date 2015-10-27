@@ -39,47 +39,40 @@ var grid = undefined;
 var allies = [];
 var enemies = [];
 var isVictorious = false;
-
+var totalAP = 0;
 var myTest = 0;
 
 
 //Creating a StateMachine
 // var fsm = StateMachine.create({
-//  initial: 'menu',
+//  initial: 'startTurn',
 //    events: [
-//      { name: 'loading',  from: 'menu',  to: 'load' },
-//      { name: 'game', from: 'load', to: 'play'  },
-//      { name: 'quit', from: 'play',  to: 'menu' },
+//      { name: 'toPlayers',  from: 'startTurn',  to: 'playersTurn' },
+//      { name: 'switchSide', from: 'playersTurn', to: 'computersTurn'  },
+//      { name: 'endTurn', from: 'computersTurn',  to: 'startTurn' },
+//      { name: 'endTurn', from: 'playersTurn', to: 'startTurn'}
 //    ],
 //    callbacks: {
 //
-//  onenterload: function() {console.log("Entering load");
-//     canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
-//     state.setCurrentState(State.load);
-//     ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-//     ASSET_MANAGER.queueDownload(["img/spriteSheet_test.png", "img/Tile.png"]);
-//     ASSET_MANAGER.downloadAll();
+//  onenterstartTurn: function() {console.log("Entering start");
+//
 //
 //   },
-//  onentermenu: function() {console.log("Entering menu");
-//   state.setCurrentState(State.menu);
-// },
-//  onenterplay: function() { console.log("Entering game");
-//    state.setCurrentState(State.play);
+//  onenterplayersTurn: function() {console.log("Entering playerturn");
+//  // Reset action points to max
+//   },
+//  onentercomputersTurn: function() { console.log("Entering comp");
 //   },
 //
-//  onleavemenu: function() {
+//  onleavestartTurn: function() {
 //    console.log("Leaving menu");
 //  },
-//  onleaveload: function(){
+//  onleaveplayersTurn: function(){
 //    console.log("Leaving load");
 //  },
-//  onleaveplay: function() {
+//  onleavecomputersTurn: function() {
 //    console.log("Leaving game");
 //
-//  },
-//  ongame: function(){
-//    console.log("Playing");
 //  }
 //
 // }});

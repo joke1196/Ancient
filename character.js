@@ -24,9 +24,9 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.image.src = img;
   this.isAlive = true;
   this.actionsLeft = ACTIONS_PER_TURN;
-  this.tmp_actionsLeft = 0;
+  this.tmp_actionsLeft = this.actionsLeft;
   this.grid = grid;
-  
+
   return this;
 }
 
@@ -67,8 +67,13 @@ Character.prototype.draw = function(layout, ctx){
 }
 
 Character.prototype.execute = function(command){
-  command.execute(command.value, command.target);
-  this.decActionsNum();
+  if(this.actionsLeft >= 0){
+    command.execute(command.value, command.target);
+    this.decActionsNum();
+  }
+  else{
+    console.log("Not enough actions left");
+  }
 }
 
 Character.prototype.update = function(){
@@ -76,6 +81,9 @@ Character.prototype.update = function(){
   this.actionsLeft = this.tmp_actionsLeft;
   this.intel = this.tmp_intel;
   this.position = this.tmp_position;
+  if(this.health <= 0 ){
+    this.isAlive = false;
+  }
 }
 
 
