@@ -160,7 +160,7 @@ PlayScene.prototype.draw = function(){
 PlayScene.prototype.onSceneChange = function(){
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  allies.push(new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid));
- // allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
+ allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
  totalAP = 0;
  for(var index in allies){
    totalAP += allies[index].getActionsLeft();
