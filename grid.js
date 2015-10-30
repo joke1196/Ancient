@@ -55,7 +55,7 @@ Grid.prototype.getHexMap = function(){
         //Because of tile disposition, have to negate the row and stay in the array width
         //If the tile is not walkable
         var unwalkable = this.unwalkableTiles.indexOf(this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]) > -1;
-        hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]});//TODO Test
+        hashMap.put( keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : !unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)], isFree: true});//TODO Test
 
       }
   }

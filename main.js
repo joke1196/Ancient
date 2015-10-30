@@ -38,6 +38,7 @@ var grid = undefined;
 //Creating arrays for enemies and allies
 var allies = [];
 var enemies = [];
+var environment = [];
 var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;

@@ -27,44 +27,55 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.tmp_actionsLeft = this.actionsLeft;
   this.grid = grid;
 
+  var self = this;
+  (function init(){ // Init is done only once when creating the object setting the tile to occupied
+   self.getGrid().getHashMap().get(keyCreator(self.getPosition())).isFree = false;
+  })();
+
   return this;
 }
 
 Character.prototype.setMaxHealth = function (new_max_health){
   this.max_health = new_max_health;
-}
+};
 Character.prototype.setMaxHealth = function (new_max_intel){
   this.max_intel = new_max_intel;
-}
+};
 Character.prototype.setHealth = function (new_health){
   this.tmp_health = new_health;
-}
+};
 Character.prototype.setIntel = function (new_intel){
   this.tmp_intel = new_intel;
-}
+};
 Character.prototype.setPosition = function(new_position){
   this.tmp_position = new_position;
-}
+};
 
 Character.prototype.setIsAlive = function(new_state){
   this.isAlive = new_state;
-}
+};
 Character.prototype.getActionsLeft = function(){
   return this.actionsLeft;
-}
+};
 Character.prototype.getGrid = function(){
   return this.grid;
-}
+};
+Character.prototype.getPosition = function(){
+  return this.position;
+};
+Character.prototype.getY = function(){
+  return hex_to_pixel(layout, this.position).y;
+};
 
 Character.prototype.decActionsNum = function(){
   this.tmp_actionsLeft = this.actionsLeft - 1;
-}
+};
 
 Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
   var self = this;
   ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
-}
+};
 
 Character.prototype.execute = function(command){
   if(this.actionsLeft >= 0){
@@ -74,7 +85,7 @@ Character.prototype.execute = function(command){
   else{
     console.log("Not enough actions left");
   }
-}
+};
 
 Character.prototype.update = function(){
   this.health = this.tmp_health;
@@ -84,7 +95,7 @@ Character.prototype.update = function(){
   if(this.health <= 0 ){
     this.isAlive = false;
   }
-}
+};
 
 
 
@@ -94,7 +105,9 @@ function heal(value, target) { target.setHealth(target.health + value); }
 function move(value, target){
   if(target.getActionsLeft() > 0){
     var tile = target.getGrid().getHashMap().get(keyCreator(value));
-    if( tile != undefined && tile.isWalkable){
+    if( tile != undefined && tile.isWalkable && tile.isFree){
+      target.getGrid().getHashMap().get(keyCreator(target.getPosition())).isFree = true;
+      target.getGrid().getHashMap().get(keyCreator(value)).isFree = false;
       target.setPosition(value);
     }else{
       console.log("Cannot move to this tile");
@@ -107,7 +120,7 @@ var Command = function (execute, value, target) {
     this.execute = execute;
     this.value = value;
     this.target = target;
-}
+};
 var AttackCommand = function (value, target) {
     return new Command(attack, value, target);
 };
@@ -117,4 +130,4 @@ var HealCommand = function (value, target) {
 };
 var MoveCommand = function(value, target){
   return new Command(move, value, target);
-}
+};

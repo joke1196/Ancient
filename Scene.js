@@ -4,26 +4,26 @@ var SceneManager = new function SceneManager(){
   this.nextScene = undefined;
   SceneManager.getInstance = function(){
     return instance;
-  }
+  };
   return SceneManager;
-}
+}();
 
 SceneManager.prototype.showScene = function(scene){
   this.currentScene = scene;
   scene.onSceneChange();
-}
+};
 SceneManager.prototype.getCurrentScene = function(){
   return this.currentScene;
-}
+};
 SceneManager.prototype.getNextScene = function(){
   return this.nextScene;
-}
+};
 SceneManager.prototype.setNextScene = function(scene){
   this.nextScene = scene;
-}
+};
 SceneManager.prototype.setCurrentSceneToNext = function(){
   this.currentScene = this.nextScene;
-}
+};
 
 
 
@@ -31,9 +31,9 @@ function Scene(){
   return this;
 }
 
-Scene.prototype.update = function(td){}
-Scene.prototype.draw = function(){}
-Scene.prototype.onSceneChange = function(){}
+Scene.prototype.update = function(td){};
+Scene.prototype.draw = function(){};
+Scene.prototype.onSceneChange = function(){};
 
 function MenuScene(){
   return this;
@@ -43,12 +43,12 @@ MenuScene.prototype = Object.create(Scene.prototype);
 MenuScene.prototype.update = function(td){
   console.log("Update in menu");
   canvas.addEventListener("click", myFunc, false);
-}
+};
 MenuScene.prototype.draw = function(td){
   ctx.font="20px Georgia";
   ctx.fillText("Menu",10,50);
-}
-MenuScene.prototype.onSceneChange = function(){}
+};
+MenuScene.prototype.onSceneChange = function(){};
 
 function LoadScene(){
   return this;
@@ -67,13 +67,13 @@ LoadScene.prototype.update = function(td){
     mapArray = AssetManager.getInstance().getFileDestination();
     sceneManager.showScene(new PlayScene());
   }
-}
+};
 LoadScene.prototype.draw = function(td){
   ctx.fillStyle = "red";
   ctx.fillRect(0 ,0, AssetManager.getInstance().update() * STAGE_WIDTH / 100, 10 );
   ctx.font="20px Georgia";
   ctx.fillText("Loading",10,50);
-}
+};
 LoadScene.prototype.onSceneChange = function(){
   var assetManager = AssetManager.getInstance();
   canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
@@ -82,15 +82,16 @@ LoadScene.prototype.onSceneChange = function(){
   assetManager.queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
   assetManager.queueFile(levelManager.getCurrentLevel().getName(), mapArray);
   assetManager.downloadAll();
-}
+};
 
 var gameStates = {
   PLAYERSTURN: 0,
   COMPUTERSTURN: 1
-}
+};
 
 function PlayScene(){
   this.state = gameStates.PLAYERSTURN;
+  this.drawElements= [];
   return this;
 }
 
@@ -124,13 +125,6 @@ PlayScene.prototype.update = function(td){
   //  allies[0].execute(new HealCommand(allies[0].intel, allies[0]));
   //  //Update the state of the character
   //  tom.update();
-  //  tom.execute(new MoveCommand(Hex(0, -1, 1), tom));
-  //  for(var ally in allies){
-  //    allies[ally].update();
-  //  }
-  //  for(var enemy in enemies){
-  //    enemies[enemy].update();
-  //  }
   totalAP = 0;
   for(var index in allies){
     allies[index].update();
@@ -142,7 +136,7 @@ PlayScene.prototype.update = function(td){
     levelManager.showLevel(new LevelAsh());
     sceneManager.showScene(new LoadScene());
   }
-}
+};
 
 PlayScene.prototype.draw = function(){
   // Filling the screen with powder blue
@@ -150,19 +144,34 @@ PlayScene.prototype.draw = function(){
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   grid.draw(ctx);
-  for(var ally in allies){
-    allies[ally].draw(layout, ctx);
+
+  this.drawElements = this.drawElements.sort(function(a, b){
+    return a.getY() - b.getY();
+  });
+
+
+
+  for(var index in this.drawElements){
+    this.drawElements[index].draw(layout, ctx);
   }
-  for(var enemy in enemies){
-    enemies[enemy].draw(layout, ctx);
-  }
-}
+
+};
 PlayScene.prototype.onSceneChange = function(){
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
- allies.push(new Character("Tom", Hex(3, -2, -1), 100, 100, "img/spriteSheet_test.png", 2, grid));
- allies.push(new Character("John", Hex(2, -1, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
+ allies = [];
+ this.drawElements = [];
+ allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 2, grid));
+ allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
  totalAP = 0;
  for(var index in allies){
    totalAP += allies[index].getActionsLeft();
  }
-}
+ this.drawElements.push(allies);
+ this.drawElements.push(enemies);
+ this.drawElements.push(environment);
+ this.drawElements = [].concat.apply([], this.drawElements);
+ this.drawElements = this.drawElements.sort(function(a, b){
+   return a.getY() - b.getY();
+ });
+
+};
