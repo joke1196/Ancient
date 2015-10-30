@@ -33,7 +33,7 @@ levelManager.showLevel(new LevelGrass());
 
 //Creating the map
 var mapArray = {};
-var grid = undefined;
+var grid;
 
 //Creating arrays for enemies and allies
 var allies = [];

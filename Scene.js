@@ -1,3 +1,8 @@
+var messageType = {
+  INFO : "green",
+  WARN : "red"
+}
+
 var SceneManager = new function SceneManager(){
   var instance = this;
   this.currentScene = undefined;
@@ -91,6 +96,7 @@ var gameStates = {
 
 function PlayScene(){
   this.state = gameStates.PLAYERSTURN;
+  this.topMessage = new TopMessage(messageType.INFO, "It works", 100, ctx);
   return this;
 }
 
@@ -104,7 +110,6 @@ PlayScene.prototype.update = function(td){
   if(myTest++ === 200){
     isVictorious = true;
   }
-
   if(this.state === gameStates.PLAYERSTURN){
     console.log("Player's turn");
 
@@ -148,7 +153,6 @@ PlayScene.prototype.draw = function(){
   // Filling the screen with powder blue
   ctx.fillStyle = "#B4D8E7";
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
-
   grid.draw(ctx);
   for(var ally in allies){
     allies[ally].draw(layout, ctx);
@@ -156,6 +160,7 @@ PlayScene.prototype.draw = function(){
   for(var enemy in enemies){
     enemies[enemy].draw(layout, ctx);
   }
+  this.topMessage.draw();
 }
 PlayScene.prototype.onSceneChange = function(){
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
