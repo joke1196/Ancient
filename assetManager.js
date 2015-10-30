@@ -16,15 +16,15 @@ var AssetManager =  new function AssetManager() {
     return instance;
   }
   return AssetManager;
-}
+}();
 
 
 AssetManager.prototype.queueDownload = function(paths) {
     this.downloadQueue = paths;
-}
+};
 AssetManager.prototype.queueFile = function(level) {
     this.fileQueue = "assets/map/" + level;
-}
+};
 
 AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination) {
   this.successCount = 0;
@@ -37,43 +37,7 @@ AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination)
   Promise.all(this.getImagesPromisePool())
     .then(this.getFilePromise(fileDestination))
     .then(downloadCallback);
-
-//Modification by FooBar
-
-    // DO NOT REMOVE YET
-  //   var img = new Image();
-  //   var that = this;
-  //   img.addEventListener("load", function() {
-  //     that.successCount += 1;
-  //     if (that.isDone()) {
-  //         downloadCallback();
-  //     }
-  //   }, false);
-  //   img.addEventListener("error", function() {
-  //     that.errorCount += 1;
-  //     if (that.isDone()) {
-  //         downloadCallback();
-  //     }
-  //   }, false);
-  //   img.src = path;
-  // this.getFilePromise(levelManager.getCurrentLevel().getName()).then(function(response){
-  //   mapArray = JSON.parse(response);
-  //   // console.log("Success!", response);
-  //   // self.successCount += 1;
-  // }, function(error){
-  //   // console.log("Error", error);
-  //   // self.errorCount += 1;
-  // }).then(this.getImagesPromise(path).then(function(response){
-  //   console.log("Success!", response);
-  //   self.successCount += 1;
-  //
-  //   }, function(error){
-  //     console.log("Error", error);
-  //     self.errorCount += 1;
-  //   });
-  // });
-
-}
+};
 
 AssetManager.prototype.getImagesPromisePool = function(){
   var self = this;
@@ -97,7 +61,7 @@ AssetManager.prototype.getImagesPromisePool = function(){
     }));
   }
   return promisePool;
-}
+};
 AssetManager.prototype.getFilePromise = function(){
   var client = new XMLHttpRequest();
   var self = this;
@@ -119,22 +83,22 @@ AssetManager.prototype.getFilePromise = function(){
     };
     client.send();
   });
-}
+};
 
 AssetManager.prototype.getAsset = function(path) {
     return this.cache[path];
-}
+};
 
 AssetManager.prototype.isDone = function() {
     return (this.downloadQueue.length == this.successCount + this.errorCount);
-}
+};
 //Modification by FooBar
 AssetManager.prototype.update = function(){
   if(this.downloadQueue.length !== 0 ){
     return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + 1) ;
   }
   return 0;
-}
+};
 AssetManager.prototype.getFileDestination = function(){
   return this.fileDestination;
-}
+};

@@ -25,7 +25,7 @@ function Grid(layout, level, mapArray){
 
 Grid.prototype.getHashMap = function(){
   return this.hashMap;
-}
+};
 
 
 Grid.prototype.draw = function(ctx){
@@ -39,7 +39,7 @@ Grid.prototype.draw = function(ctx){
       ctx.closePath();
       ctx.stroke();
     }
-}
+};
 
 
 //------------- GRID  init functions ------------------
@@ -60,7 +60,7 @@ Grid.prototype.getHexMap = function(){
       }
   }
   return hashMap;
-}
+};
 
 Grid.prototype.hexToPoly = function(){
   var polygon = [];
@@ -68,17 +68,4 @@ Grid.prototype.hexToPoly = function(){
     polygon.push({poly: polygon_corners(this.layout, this.hashMap.value().hex), isWalkable :  this.hashMap.value().isWalkable, value : this.hashMap.value().value});
   }
   return polygon;
-}
-
-
-// function preloadTextures(urlArray){
-//     try {
-//       var array = [];
-//       for(var index in urlArray){
-//         var _img = new Image();
-//         _img.src = urlArray[index];
-//         array.push(_img);
-//       }
-//       return array;
-//     } catch (e) { console.log("Texture not preloaded "); }
-// }
+};
