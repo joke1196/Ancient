@@ -31,7 +31,13 @@ function Scene(){
   return this;
 }
 
-Scene.prototype.update = function(td){};
+Scene.prototype.update = function(td){ //TODO create a proper preloading scene
+  console.log(AssetManager.getInstance().update());
+  if(AssetManager.getInstance().update() >= 100){
+    SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
+    SceneManager.getInstance().showScene(new MenuScene);
+  }
+};
 Scene.prototype.draw = function(){};
 Scene.prototype.onSceneChange = function(){};
 
@@ -48,7 +54,9 @@ MenuScene.prototype.draw = function(td){
   ctx.font="20px Georgia";
   ctx.fillText("Menu",10,50);
 };
-MenuScene.prototype.onSceneChange = function(){};
+MenuScene.prototype.onSceneChange = function(){
+  soundManager.play("lune.mp3");
+};
 
 function LoadScene(){
   return this;
@@ -157,6 +165,7 @@ PlayScene.prototype.draw = function(){
 
 };
 PlayScene.prototype.onSceneChange = function(){
+  SoundManager.getInstance().stop("lune.mp3");
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  allies = [];
  this.drawElements = [];

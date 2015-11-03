@@ -23,11 +23,16 @@ var lastUpdate = Date.now();
 var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
 layout.origin;
 
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var soundManager = SoundManager.getInstance();
+soundManager.setContext(audioCtx);
+
 
 
 //Creating Scene
 var sceneManager = SceneManager.getInstance();
-sceneManager.showScene(new MenuScene());
+sceneManager.showScene(new Scene());
+// sceneManager.showScene(new MenuScene());
 var levelManager = LevelManager.getInstance();
 levelManager.showLevel(new LevelGrass());
 
@@ -43,41 +48,9 @@ var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;
 
-
-//Creating a StateMachine
-// var fsm = StateMachine.create({
-//  initial: 'startTurn',
-//    events: [
-//      { name: 'toPlayers',  from: 'startTurn',  to: 'playersTurn' },
-//      { name: 'switchSide', from: 'playersTurn', to: 'computersTurn'  },
-//      { name: 'endTurn', from: 'computersTurn',  to: 'startTurn' },
-//      { name: 'endTurn', from: 'playersTurn', to: 'startTurn'}
-//    ],
-//    callbacks: {
-//
-//  onenterstartTurn: function() {console.log("Entering start");
-//
-//
-//   },
-//  onenterplayersTurn: function() {console.log("Entering playerturn");
-//  // Reset action points to max
-//   },
-//  onentercomputersTurn: function() { console.log("Entering comp");
-//   },
-//
-//  onleavestartTurn: function() {
-//    console.log("Leaving menu");
-//  },
-//  onleaveplayersTurn: function(){
-//    console.log("Leaving load");
-//  },
-//  onleavecomputersTurn: function() {
-//    console.log("Leaving game");
-//
-//  }
-//
-// }});
-
+var test = AssetManager.getInstance();
+test.queueSoundFiles(["assets/sounds/lune.mp3"], audioCtx);
+test.downloadAll();
 
 function gameLoop() {
   var now = Date.now();
@@ -108,6 +81,5 @@ function createCanvas() {
 }
 
 function myFunc() { // TODO REMOVE or make it nice
-  // fsm.loading();
   sceneManager.showScene(new LoadScene());
 }
