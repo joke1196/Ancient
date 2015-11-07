@@ -76,6 +76,7 @@ AssetManager.prototype.getFilePromise = function(){
   var client = new XMLHttpRequest();
   var self = this;
   return new Promise(function(resolve, reject){
+    console.log(self.fileQueue[0]);
     if(self.fileQueue.length > 0){
       client.open('GET', self.fileQueue[0]);
       client.onreadystatechange = function() {

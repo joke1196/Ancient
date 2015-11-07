@@ -28,13 +28,12 @@ var soundManager = SoundManager.getInstance();
 soundManager.setContext(audioCtx);
 
 
-
+var levelManager = LevelManager.getInstance();
+levelManager.showLevel(new LevelMenu());
 //Creating Scene
 var sceneManager = SceneManager.getInstance();
-sceneManager.showScene(new Scene());
-// sceneManager.showScene(new MenuScene());
-var levelManager = LevelManager.getInstance();
-levelManager.showLevel(new LevelGrass());
+sceneManager.showScene(new PreloaderScene());
+
 
 //Creating the map
 var mapArray = {};
@@ -48,9 +47,7 @@ var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;
 
-var test = AssetManager.getInstance(); //TODO remove 
-test.queueSoundFiles(["assets/sounds/lune.mp3"], audioCtx);
-test.downloadAll();
+
 
 function gameLoop() {
   var now = Date.now();
@@ -71,7 +68,7 @@ window.onload = function() {
 };
 
 function createCanvas() {
-  // Create and put a canvas HTML element isnide the document body.
+  // Create and put a canvas HTML element inside the document body.
   canvas = document.createElement("canvas");
   canvas.width = STAGE_WIDTH;
   canvas.height = STAGE_HEIGHT;
@@ -81,5 +78,6 @@ function createCanvas() {
 }
 
 function myFunc() { // TODO REMOVE or make it nice
+  LevelManager.getInstance().showLevel(new LevelGrass());
   sceneManager.showScene(new LoadScene());
 }

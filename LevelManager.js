@@ -81,3 +81,26 @@ LevelGrass.prototype.getSprites = function(){ // TODO Complete
 LevelGrass.prototype.getEnvironement = function(){
   return this.environement;
 };
+
+function LevelMenu(){
+  this.name = "levelMenu";
+  return this;
+}
+LevelMenu.prototype = Object.create(Level.prototype);
+
+LevelMenu.prototype.init = function(){};
+LevelMenu.prototype.getEnemies = function(){
+  // return this.enemies;
+};
+LevelMenu.prototype.getSounds = function(){ // TODO Complete
+  var sounds = ["assets/sounds/lune.mp3"];
+  return sounds;
+};
+
+LevelMenu.prototype.getSprites = function(){ // TODO Complete
+  var sprites = ["assets/menuBgTest.png", "assets/logo.png"];
+  return sprites;
+};
+LevelMenu.prototype.getEnvironement = function(){
+  // return this.environement;
+};

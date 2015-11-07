@@ -31,17 +31,32 @@ function Scene(){
   return this;
 }
 
-Scene.prototype.update = function(td){ //TODO create a proper preloading scene
-  console.log(AssetManager.getInstance().update());
-  if(AssetManager.getInstance().update() >= 100){
-    SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
-    SceneManager.getInstance().showScene(new MenuScene);
-  }
-};
+Scene.prototype.update = function(td){};
 Scene.prototype.draw = function(){};
 Scene.prototype.onSceneChange = function(){};
 
+
+function PreloaderScene(){
+  return this;
+}
+
+PreloaderScene.prototype = Object.create(Scene.prototype);
+PreloaderScene.prototype.update = function(td){
+  if(AssetManager.getInstance().update() >= 100){
+    SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
+    SceneManager.getInstance().showScene(new MenuScene());
+  }
+};
+PreloaderScene.prototype.draw = function(){};
+PreloaderScene.prototype.onSceneChange = function(){
+  var assets = AssetManager.getInstance();
+  assets.queueSoundFiles(LevelManager.getInstance().getCurrentLevel().getSounds(), audioCtx);
+  assets.queueDownload(LevelManager.getInstance().getCurrentLevel().getSprites());
+  assets.downloadAll();
+};
+
 function MenuScene(){
+  this.background = new Image();
   return this;
 }
 MenuScene.prototype = Object.create(Scene.prototype);
@@ -51,8 +66,8 @@ MenuScene.prototype.update = function(td){
   canvas.addEventListener("click", myFunc, false);
 };
 MenuScene.prototype.draw = function(td){
-  ctx.font="20px Georgia";
-  ctx.fillText("Menu",10,50);
+  ctx.font="60px Georgia";
+  ctx.fillText("Click to begin!",300,300);
 };
 MenuScene.prototype.onSceneChange = function(){
   soundManager.play("lune.mp3");
@@ -71,7 +86,6 @@ LoadScene.prototype.update = function(td){
   // Example of progress behavior
 
   if(AssetManager.getInstance().update() === 100){
-    // fsm.game();
     mapArray = AssetManager.getInstance().getFileDestination();
     sceneManager.showScene(new PlayScene());
   }
