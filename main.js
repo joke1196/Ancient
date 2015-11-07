@@ -48,7 +48,7 @@ var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;
 
-var test = AssetManager.getInstance();
+var test = AssetManager.getInstance(); //TODO remove 
 test.queueSoundFiles(["assets/sounds/lune.mp3"], audioCtx);
 test.downloadAll();
 

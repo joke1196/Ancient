@@ -87,7 +87,7 @@ LoadScene.prototype.onSceneChange = function(){
   canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  assetManager.queueDownload(["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"]);
+  assetManager.queueDownload(levelManager.getCurrentLevel().getSprites());
   assetManager.queueFile(levelManager.getCurrentLevel().getName(), mapArray);
   assetManager.downloadAll();
 };
