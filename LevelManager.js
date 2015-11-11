@@ -65,12 +65,15 @@ LevelAsh.prototype.getSprites = function(){ // TODO Complete
 
 function LevelGrass(){
   this.name = "levelGrass";
+  this.allies = [];
+  this.enemies = [];
   return this;
 }
 LevelGrass.prototype = Object.create(Level.prototype);
 
 LevelGrass.prototype.init = function(){};
 LevelGrass.prototype.getEnemies = function(){
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
   return this.enemies;
 };
 
@@ -101,6 +104,8 @@ LevelMenu.prototype.getSprites = function(){ // TODO Complete
   var sprites = ["assets/menuBgTest.png", "assets/logo.png"];
   return sprites;
 };
+
+
 LevelMenu.prototype.getEnvironement = function(){
   // return this.environement;
 };

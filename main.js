@@ -39,10 +39,7 @@ sceneManager.showScene(new PreloaderScene());
 var mapArray = {};
 var grid = undefined;
 
-//Creating arrays for enemies and allies
-var allies = [];
-var enemies = [];
-var environment = [];
+//Setting globals // TODO move to Scene
 var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;

@@ -4,9 +4,10 @@ var CHAR_HEIGHT = 140;
 var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
 var RANGE = 3;
+var FIRERANGE = 1;
 
 function Character(name, hex, max_health, max_intel, img, strength, grid,
-  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE){
+  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
   this.name = name;
   this.max_health = max_health;
   this.max_intel = max_intel;
@@ -16,6 +17,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.tmp_intel = 0;
   this.strength = strength;
   this.range = range;
+  this.fireRange = fireRange;
   this.position = hex;
   this.tmp_position = hex;
   this.width = width;
@@ -29,7 +31,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
 
   var self = this;
   (function init(){ // Init is done only once when creating the object setting the tile to occupied
-   self.getGrid().getHashMap().get(keyCreator(self.getPosition())).isFree = false;
+   self.grid.getHashMap().get(keyCreator(self.position)).isFree = false;
   })();
 
   return this;
@@ -96,3 +98,46 @@ Character.prototype.update = function(){
     this.isAlive = false;
   }
 };
+
+function Enemy(name, hex, max_health, max_intel, img, strength, grid,
+  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){
+  this.base = Character;
+  this.base(name, hex, max_health, max_intel, img, strength, grid,
+    width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE);
+  return this;
+}
+
+Enemy.prototype = Object.create(Character.prototype);
+Enemy.prototype.constructor = Character;
+Enemy.prototype.parent = Character.prototype;
+
+Enemy.prototype.update = function(){
+  /*
+If enemy is in firing range
+*/
+
+/*
+  if enemy is the weakest
+    Attack
+else
+  move to closest(A*)  enemy get closest enemy (Radius)
+   */
+
+};
+
+Enemy.prototype.getClosestCharacter = function(){
+  var characters = SceneManager.getInstance().getCurrentScene().allies;
+  if(characters){
+    //Sorting the array to find the closest character from the enemy (this)
+    characters.sort(function(a ,b){
+      return hex_distance(a.getPosition(), this.getPosition());
+    });
+    return characters[0];
+  }else{
+    console.error("Error: Allies array is empty!");
+  }
+};
+
+Enemy.prototype.getInFiringRange = function(){
+
+}
