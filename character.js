@@ -80,7 +80,7 @@ Character.prototype.draw = function(layout, ctx){
 Character.prototype.execute = function(command){
   if(this.actionsLeft >= 0){
     command.execute(command.value, command.target);
-    this.decActionsNum();
+
   }
   else{
     console.log("Not enough actions left");
@@ -95,39 +95,4 @@ Character.prototype.update = function(){
   if(this.health <= 0 ){
     this.isAlive = false;
   }
-};
-
-
-
-// --------------- Command design pattern without undo --------------------------
-function attack(value, target) { target.setHealth(target.health - value); }
-function heal(value, target) { target.setHealth(target.health + value); }
-function move(value, target){
-  if(target.getActionsLeft() > 0){
-    var tile = target.getGrid().getHashMap().get(keyCreator(value));
-    if( tile != undefined && tile.isWalkable && tile.isFree){
-      target.getGrid().getHashMap().get(keyCreator(target.getPosition())).isFree = true;
-      target.getGrid().getHashMap().get(keyCreator(value)).isFree = false;
-      target.setPosition(value);
-    }else{
-      console.log("Cannot move to this tile");
-    }
-
-  }
-} // TODO check if tile is walkable
-
-var Command = function (execute, value, target) {
-    this.execute = execute;
-    this.value = value;
-    this.target = target;
-};
-var AttackCommand = function (value, target) {
-    return new Command(attack, value, target);
-};
-
-var HealCommand = function (value, target) {
-    return new Command(heal, value, target);
-};
-var MoveCommand = function(value, target){
-  return new Command(move, value, target);
 };
