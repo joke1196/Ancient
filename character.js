@@ -112,6 +112,8 @@ Enemy.prototype.constructor = Character;
 Enemy.prototype.parent = Character.prototype;
 
 Enemy.prototype.update = function(){
+  this.getClosestCharacter();
+
   /*
 If enemy is in firing range
 */
@@ -126,12 +128,18 @@ else
 };
 
 Enemy.prototype.getClosestCharacter = function(){
-  var characters = SceneManager.getInstance().getCurrentScene().allies;
+  var characters = SceneManager.getInstance().getCurrentScene().getAllies();
+  var self = this;
   if(characters){
     //Sorting the array to find the closest character from the enemy (this)
     characters.sort(function(a ,b){
-      return hex_distance(a.getPosition(), this.getPosition());
+      console.log("This", self);
+      var distSelf = self.getPosition();
+      var distA = hex_distance(a.getPosition(), distSelf);
+      var distB = hex_distance(b.getPosition(), distSelf);
+      return distA - distB;
     });
+    console.log(characters[0]);
     return characters[0];
   }else{
     console.error("Error: Allies array is empty!");
