@@ -46,6 +46,7 @@ PreloaderScene.prototype.update = function(td){
     SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
     SceneManager.getInstance().showScene(new MenuScene());
   }
+
 };
 PreloaderScene.prototype.draw = function(){};
 PreloaderScene.prototype.onSceneChange = function(){

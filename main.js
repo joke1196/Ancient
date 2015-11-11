@@ -58,7 +58,7 @@ function gameLoop() {
   }
   sceneManager.getCurrentScene().update(td);
   sceneManager.getCurrentScene().draw();
-  mozRequestAnimationFrame(gameLoop);
+  window.requestAnimationFrame(gameLoop);
   lastUpdate = now;
 }
 
