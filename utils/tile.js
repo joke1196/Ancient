@@ -194,3 +194,15 @@ function polygon_corners(layout, h)
 }
 
 //--------------------END CODE FROM REDBLOGAMES---------------------
+function getHexInRadius(radius, center){
+  var results = [];
+  for(var dx = - radius; dx <= radius; dx++){
+    var dy = max(-radius, -dx-radius);
+    var top = min(radius, -dx+radius);
+    for(dy; dy <= top; dy++){
+        var dz = -dx-dy;
+        results.push(hex_add(center, Hex(dx,dy,dz)));
+    }
+  }
+  return results;
+}

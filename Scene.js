@@ -136,9 +136,18 @@ PlayScene.prototype.update = function(td){
 
   if(this.state === gameStates.PLAYERSTURN){
     console.log("Player's turn");
-
+    this.allies[0].execute(new MoveCommand(Hex(1, -1, 0), this.allies[0], this.allies[0]));
+    this.allies[0].update();
+    this.allies[0].execute(new MoveCommand(Hex(2, -2, 0), this.allies[0], this.allies[0]));
+    this.allies[0].update();
+    this.allies[1].execute(new MoveCommand(Hex(0, 0, 0), this.allies[1], this.allies[1]));
+    this.allies[1].update();
+    this.allies[1].execute(new MoveCommand(Hex(5, -5, 0), this.allies[1], this.allies[1]));
+    this.allies[1].update();
+    console.log("totalAP: ", totalAP);
     if(totalAP <= 0){
       //computersTurn
+      this.enemies[0].update();
       console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
     }
@@ -149,8 +158,9 @@ PlayScene.prototype.update = function(td){
     this.state = gameStates.PLAYERSTURN;
   }
    //Example of commands
-  //  allies[0].execute(new AttackCommand(allies[0].strength, allies[1]));
-  //  allies[0].execute(new HealCommand(allies[0].intel, allies[0]));
+  //  this.allies[0].execute(new AttackCommand(this.allies[0].strength, this.allies[1]));
+
+  //  this.allies[0].execute(new HealCommand(this.allies[0].intel, this.allies[0]));
   //  //Update the state of the character
   //  tom.update();
   totalAP = 0;
@@ -205,4 +215,8 @@ PlayScene.prototype.onSceneChange = function(){
    return a.getY() - b.getY();
  });
 
+};
+
+PlayScene.prototype.getAllies = function(){
+  return this.allies;
 };

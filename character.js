@@ -65,6 +65,9 @@ Character.prototype.getGrid = function(){
 Character.prototype.getPosition = function(){
   return this.position;
 };
+Character.prototype.getHealth = function(){
+  return this.health;
+};
 Character.prototype.getY = function(){
   return hex_to_pixel(layout, this.position).y;
 };
@@ -81,8 +84,7 @@ Character.prototype.draw = function(layout, ctx){
 
 Character.prototype.execute = function(command){
   if(this.actionsLeft >= 0){
-    command.execute(command.value, command.target);
-
+    command.execute(command.value, command.target, command.self);
   }
   else{
     console.log("Not enough actions left");
@@ -111,20 +113,47 @@ Enemy.prototype = Object.create(Character.prototype);
 Enemy.prototype.constructor = Character;
 Enemy.prototype.parent = Character.prototype;
 
-Enemy.prototype.update = function(){
+Enemy.prototype.update = function(td){
   this.getClosestCharacter();
+  var nextTarget;
+  var inRange = this.getInFiringRange();
+  if(inRange.length > 0){
+    if(inRange.length >= 1){
+      //Attack the character in range with the less health
+      this.execute(new AttackCommand(this.strength,  minInArray(inRange, Character.prototype.getHealth), this));
+    }
+  }else{
+
+  }
+
 
   /*
-If enemy is in firing range
-*/
 
-/*
-  if enemy is the weakest
-    Attack
 else
   move to closest(A*)  enemy get closest enemy (Radius)
    */
 
+};
+
+Enemy.prototype.draw = function(layout, ctx){
+  this.parent.draw.call(this, layout,ctx);
+  // var radius = this.getInFiringRange();
+  // var polygons = [];
+  //
+  // for(var index in radius){
+  //    polygons.push(polygon_corners(layout, radius[index]));
+  // }
+  // ctx.fillStyle = "red";
+  // console.log("Poly", polygons);
+  // for(var poly in polygons){
+  // ctx.beginPath();
+  //   for(var i in polygons[poly]){
+  //     ctx.lineTo(polygons[poly][i].x ,polygons[poly][i].y);
+  //   }
+  // ctx.closePath();
+  // ctx.stroke();
+  // ctx.fill();
+  // }
 };
 
 Enemy.prototype.getClosestCharacter = function(){
@@ -132,8 +161,7 @@ Enemy.prototype.getClosestCharacter = function(){
   var self = this;
   if(characters){
     //Sorting the array to find the closest character from the enemy (this)
-    characters.sort(function(a ,b){
-      console.log("This", self);
+    characters.sort(function(a ,b){ // TODO use find min in array
       var distSelf = self.getPosition();
       var distA = hex_distance(a.getPosition(), distSelf);
       var distB = hex_distance(b.getPosition(), distSelf);
@@ -148,4 +176,14 @@ Enemy.prototype.getClosestCharacter = function(){
 
 Enemy.prototype.getInFiringRange = function(){
 
-}
+  var range = getHexInRadius(this.fireRange, this.position);
+  var charInRange = [];
+  var char ;
+  for(var hex in range){
+    char = this.grid.getHashMap().get(keyCreator(range[hex])).occupiedBy;
+    if(char){
+      charInRange.push(char);
+    }
+  }
+  return charInRange;
+};
