@@ -5,6 +5,7 @@ var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
 var RANGE = 3;
 var FIRERANGE = 1;
+var TIMEOFFSET = 20;
 
 function Character(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
@@ -28,6 +29,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.actionsLeft = ACTIONS_PER_TURN;
   this.tmp_actionsLeft = this.actionsLeft;
   this.grid = grid;
+  this.td = 0;
 
   var self = this;
   (function init(){ // Init is done only once when creating the object setting the tile to occupied
@@ -99,6 +101,7 @@ Character.prototype.update = function(){
   if(this.health <= 0 ){
     this.isAlive = false;
   }
+  this.td++;
 };
 
 function Enemy(name, hex, max_health, max_intel, img, strength, grid,
@@ -106,7 +109,6 @@ function Enemy(name, hex, max_health, max_intel, img, strength, grid,
   this.base = Character;
   this.base(name, hex, max_health, max_intel, img, strength, grid,
     width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE);
-    this.lastUpdate = 0;
   return this;
 }
 
@@ -114,29 +116,27 @@ Enemy.prototype = Object.create(Character.prototype);
 Enemy.prototype.constructor = Character;
 Enemy.prototype.parent = Character.prototype;
 
-Enemy.prototype.play = function(td){
-  if(this.actionsLeft > 0){
-    var inAttackDist = this.getInFireRange();
-    if(inAttackDist.length > 0){
-      if(inAttackDist.length >= 1){
-        //Attack the character in range with the less health
-        this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+Enemy.prototype.play = function(){
+  if(this.td >= TIMEOFFSET){
+    this.td = 0;
+    if(this.actionsLeft > 0){
+      var inAttackDist = this.getInFireRange();
+      console.log(inAttackDist.length);
+      if(inAttackDist.length > 0){
+        if(inAttackDist.length >= 1){
+          //Attack the character in range with the less health
+          this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+        }
+      }else {
+        //Find the closest character and move in its direction
+        var char = this.getClosestCharacter();
+        var inRange = this.getInRange(this.range);
+        var tile = this.getClosestTileToChar(inRange, char);
+        this.execute(new MoveCommand(tile.hex, this, this));
       }
-    }else {
-      //Find the closest character and move in its direction
-      var char = this.getClosestCharacter();
-      var inRange = this.getInRange(this.range);
-      var tile = this.getClosestTileToChar(inRange, char);
-      this.execute(new MoveCommand(tile.hex, this, this));
     }
+
   }
-
-
-  /*
-
-else
-  move to closest(A*)  enemy get closest enemy (Radius)
-   */
 
 };
 
@@ -160,6 +160,7 @@ Enemy.prototype.draw = function(layout, ctx){
   // ctx.fill();
   // }
 };
+
 
 Enemy.prototype.getClosestCharacter = function(){
   var characters = SceneManager.getInstance().getCurrentScene().getAllies();
@@ -216,7 +217,6 @@ Enemy.prototype.getClosestTileToChar = function(tileInRange, char){
   var closestTile;
   for(var index in tileInRange){
     var tile = tileInRange[index];
-    console.log("Tile", tile.hex);
     var dist = hex_distance(tile.hex, char.position);
     if(dist < closestDist){
       closestDist = dist;
