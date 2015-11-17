@@ -106,6 +106,7 @@ function Enemy(name, hex, max_health, max_intel, img, strength, grid,
   this.base = Character;
   this.base(name, hex, max_health, max_intel, img, strength, grid,
     width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE);
+    this.lastUpdate = 0;
   return this;
 }
 
@@ -113,17 +114,21 @@ Enemy.prototype = Object.create(Character.prototype);
 Enemy.prototype.constructor = Character;
 Enemy.prototype.parent = Character.prototype;
 
-Enemy.prototype.update = function(td){
-  this.getClosestCharacter();
-  var nextTarget;
-  var inRange = this.getInFiringRange();
-  if(inRange.length > 0){
-    if(inRange.length >= 1){
-      //Attack the character in range with the less health
-      this.execute(new AttackCommand(this.strength,  minInArray(inRange, Character.prototype.getHealth), this));
+Enemy.prototype.play = function(td){
+  if(this.actionsLeft > 0){
+    var inAttackDist = this.getInFireRange();
+    if(inAttackDist.length > 0){
+      if(inAttackDist.length >= 1){
+        //Attack the character in range with the less health
+        this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+      }
+    }else {
+      //Find the closest character and move in its direction
+      var char = this.getClosestCharacter();
+      var inRange = this.getInRange(this.range);
+      var tile = this.getClosestTileToChar(inRange, char);
+      this.execute(new MoveCommand(tile.hex, this, this));
     }
-  }else{
-
   }
 
 
@@ -174,7 +179,7 @@ Enemy.prototype.getClosestCharacter = function(){
   }
 };
 
-Enemy.prototype.getInFiringRange = function(){
+Enemy.prototype.getInFireRange = function(){
 
   var range = getHexInRadius(this.fireRange, this.position);
   var charInRange = [];
@@ -186,4 +191,37 @@ Enemy.prototype.getInFiringRange = function(){
     }
   }
   return charInRange;
+};
+
+Enemy.prototype.getInRange = function(){
+  var range = getHexInRadius(this.range, this.position);
+  var hexInRange = [];
+  for(var hex in range){
+    var tile = this.grid.getHashMap().get(keyCreator(range[hex]));
+    if(tile !== undefined && tile.isWalkable && tile.occupiedBy === null){
+      hexInRange.push(tile);
+    }
+  }
+  return hexInRange;
+};
+
+/**
+ * Return the accessible tile which is closest to the character char
+ * @param  {Array of Hex} tileInRange array containing the tile in range and walkable
+ * @param  {Character} char        the character to which we want to move to
+ * @return {Hex}             the tile where the AI will move
+ */
+Enemy.prototype.getClosestTileToChar = function(tileInRange, char){
+  var closestDist = Number.MAX_SAFE_INTEGER;
+  var closestTile;
+  for(var index in tileInRange){
+    var tile = tileInRange[index];
+    console.log("Tile", tile.hex);
+    var dist = hex_distance(tile.hex, char.position);
+    if(dist < closestDist){
+      closestDist = dist;
+      closestTile = tile;
+    }
+  }
+  return closestTile;
 };

@@ -8,7 +8,7 @@ function move(value, target, self){
     var tile = target.getGrid().getHashMap().get(keyCreator(value)); //TODO test clean
     console.log("Tile:", tile);
     console.log("Occup: ", tile.occupiedBy);
-    if( tile != undefined && tile.isWalkable && tile.occupiedBy == null){
+    if( tile !== undefined && tile.isWalkable && tile.occupiedBy == null){
       targetMap.get(keyCreator(target.getPosition())).occupiedBy = null;
       targetMap.get(keyCreator(value)).occupiedBy = target;
       target.setPosition(value);

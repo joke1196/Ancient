@@ -73,7 +73,7 @@ LevelGrass.prototype = Object.create(Level.prototype);
 
 LevelGrass.prototype.init = function(){};
 LevelGrass.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
+  this.enemies.push(new Enemy("Bill", Hex(12, -12, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
   return this.enemies;
 };
 

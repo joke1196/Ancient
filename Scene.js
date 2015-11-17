@@ -147,6 +147,7 @@ PlayScene.prototype.update = function(td){
     console.log("totalAP: ", totalAP);
     if(totalAP <= 0){
       //computersTurn
+      this.enemies[0].play(td);
       this.enemies[0].update();
       console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
