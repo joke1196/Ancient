@@ -200,6 +200,17 @@ PlayScene.prototype.draw = function(){
   for(var index in this.drawElements){
     this.drawElements[index].draw(layout, ctx);
   }
+  if(selectedChar != undefined){
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
+    ctx.fillStyle = "white";
+    ctx.font="20px Georgia";
+
+    ctx.fillText("Name: " + selectedChar.getName(),10, 760);
+    ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
+    ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
+    ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
+  }
 
 };
 PlayScene.prototype.onSceneChange = function(){
@@ -222,6 +233,8 @@ PlayScene.prototype.onSceneChange = function(){
  this.drawElements = this.drawElements.sort(function(a, b){
    return a.getY() - b.getY();
  });
+
+ selectedChar = this.allies[0];
 
 
 };

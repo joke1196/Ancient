@@ -58,6 +58,13 @@ Character.prototype.setPosition = function(new_position){
 Character.prototype.setIsAlive = function(new_state){
   this.isAlive = new_state;
 };
+
+Character.prototype.getName = function(){
+  return this.name;
+};
+Character.prototype.getIntel = function(){
+  return this.intel;
+};
 Character.prototype.getActionsLeft = function(){
   return this.actionsLeft;
 };
