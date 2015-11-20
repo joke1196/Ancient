@@ -96,7 +96,7 @@ LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
 LevelMenu.prototype.getSounds = function(){ // TODO Complete
-  var sounds = ["assets/sounds/lune.mp3"];
+  var sounds = ["assets/sounds/Ancient_Theme_V1_1.m4a", "assets/sounds/Ancient_Battle_Loop.m4a"];
   return sounds;
 };
 

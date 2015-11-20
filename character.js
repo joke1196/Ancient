@@ -3,7 +3,7 @@ var CHAR_WIDTH = 90;
 var CHAR_HEIGHT = 140;
 var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
-var RANGE = 3;
+var RANGE = 2;
 var FIRERANGE = 1;
 var TIMEOFFSET = 20;
 

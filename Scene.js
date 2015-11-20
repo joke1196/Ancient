@@ -42,13 +42,18 @@ function PreloaderScene(){
 
 PreloaderScene.prototype = Object.create(Scene.prototype);
 PreloaderScene.prototype.update = function(td){
+  console.log(AssetManager.getInstance().update());
   if(AssetManager.getInstance().update() >= 100){
     SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
     SceneManager.getInstance().showScene(new MenuScene());
   }
 
 };
-PreloaderScene.prototype.draw = function(){};
+PreloaderScene.prototype.draw = function(){
+  ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.font="60px Georgia";
+  ctx.fillText("Preloading",300,300);
+};
 PreloaderScene.prototype.onSceneChange = function(){
   var assets = AssetManager.getInstance();
   assets.queueSoundFiles(LevelManager.getInstance().getCurrentLevel().getSounds(), audioCtx);
@@ -67,11 +72,12 @@ MenuScene.prototype.update = function(td){
   canvas.addEventListener("click", myFunc, false);
 };
 MenuScene.prototype.draw = function(td){
+  ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.font="60px Georgia";
   ctx.fillText("Click to begin!",300,300);
 };
 MenuScene.prototype.onSceneChange = function(){
-  soundManager.play("lune.mp3");
+  soundManager.play("Ancient_Theme_V1_1.m4a");
 };
 
 function LoadScene(){
@@ -197,7 +203,8 @@ PlayScene.prototype.draw = function(){
 
 };
 PlayScene.prototype.onSceneChange = function(){
- SoundManager.getInstance().stop("lune.mp3");
+ SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
+ SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  this.allies = [];
  this.drawElements = [];
@@ -215,6 +222,7 @@ PlayScene.prototype.onSceneChange = function(){
  this.drawElements = this.drawElements.sort(function(a, b){
    return a.getY() - b.getY();
  });
+
 
 };
 

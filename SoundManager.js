@@ -26,16 +26,18 @@ SoundManager.prototype.setSoundMap = function(bufferMap){
 SoundManager.prototype.getSoundMap = function(){
   return this.bufferMap;
 };
-
-SoundManager.prototype.play = function(fileName){
-
+SoundManager.prototype.play = function(fileName,volume = 1.0, loop = false){
   var source = this.context.createBufferSource();
+  var gainNode = this.context.createGain();
   source.buffer = this.bufferMap.get(fileName);
-  console.log("The source : ", source);
-  source.connect(this.context.destination);
+  source.connect(gainNode);
+  gainNode.connect(this.context.destination);
+  source.loop = loop;
   source.start(0);
+  gainNode.gain.value = volume;
   this.sourceMap.put(fileName, source);
 };
+
 SoundManager.prototype.stop = function(fileName){
   this.sourceMap.get(fileName).stop();
 };

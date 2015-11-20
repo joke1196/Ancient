@@ -8,11 +8,6 @@ var HEX_HEIGHT = 50;
 var HEX_WIDTH = 25;
 var MAP_X = 300;
 var MAP_Y = 750;
-var LEVEL1 = "level1";
-var LEVEL2 = "level2";
-var LEVEL3 = "level3";
-var LEVEL4 = "level4";
-var LEVEL5 = "level5";
 
 
 var canvas = null;

@@ -28,7 +28,6 @@ AssetManager.prototype.queueDownload = function(paths) {
 AssetManager.prototype.queueSoundFiles = function(paths, context){
   this.soundQueue = paths;
   this.audioCtx = context;
-  console.log(this.soundQueue);
 };
 AssetManager.prototype.queueFile = function(level) {
     this.fileQueue[0] = "assets/map/" + level; //TODO passing level as arrays
@@ -40,12 +39,17 @@ AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination)
   this.queueLength = this.downloadQueue.length + this.fileQueue.length + this.soundQueue.length; // Added one for the file TODO MAKE A PROMISE POOL FOR FILE
   if (this.queueLength === 0) {
       downloadCallback();
+  }else {
+    var self = this;
+    var promises = Array.concat(this.getImagesPromisePool(), this.getSoundsPromisePool(), this.getFilePromise(fileDestination));
+    console.log("Promises",promises);
+    Promise.all(promises).then(function(){
+      this.downloadQueue = [];
+      this.fileQueue = [];
+      this.soundQueue = [];
+      downloadCallback();
+    });
   }
-  var self = this;
-  Promise.all(this.getImagesPromisePool())
-    .then(this.getSoundsPromisePool())
-    .then(this.getFilePromise(fileDestination))
-    .then(downloadCallback);
 };
 
 AssetManager.prototype.getImagesPromisePool = function(){
@@ -75,57 +79,61 @@ AssetManager.prototype.getImagesPromisePool = function(){
 AssetManager.prototype.getFilePromise = function(){
   var client = new XMLHttpRequest();
   var self = this;
-  return new Promise(function(resolve, reject){
-    console.log(self.fileQueue[0]);
-    if(self.fileQueue.length > 0){
-      client.open('GET', self.fileQueue[0]);
-      client.onreadystatechange = function() {
-        if(client.readyState === 4){ // done
-          if(client.status === 200){
-            console.log("Success!");
-            self.successCount += 1;
-            self.fileDestination = JSON.parse(client.responseText);
-            resolve(client.responseText);
-          }else{
-            console.log("Error", error);
-            self.errorCount += 1;
-            reject(client.responseText);
+  var promisePool = [];
+  for(var index in this.fileQueue){
+    promisePool.push(new Promise(function(resolve, reject){
+      console.log(self.fileQueue[index]);
+      if(self.fileQueue.length > 0){
+        client.open('GET', self.fileQueue[index]);
+        client.onreadystatechange = function() {
+          if(client.readyState === 4){ // done
+            if(client.status === 200){
+              console.log("Success!");
+              self.successCount += 1;
+              self.fileDestination = JSON.parse(client.responseText);
+              resolve(client.responseText);
+            }else{
+              console.log("Error", error);
+              self.errorCount += 1;
+              reject(client.responseText);
+            }
           }
-        }
-      };
+        };
 
-      client.send();
-    }
-    resolve();
-  });
+        client.send();
+      }
+      resolve();
+    }));
+  }
+  return promisePool;
 };
 
 AssetManager.prototype.getSoundsPromisePool = function(){
   var self = this;
   var promisePool = [];
   this.soundMap = new Map();
-  var request = new XMLHttpRequest();
   for(var index in this.soundQueue){
+    var request = new XMLHttpRequest();
     promisePool.push(new Promise(function(resolve, reject){
       request.open("GET", self.soundQueue[index], true);
+      console.log("Queue", self.soundQueue[index]);
+      var name = self.soundQueue[index].replace("assets/sounds/", "");
       request.responseType = "arraybuffer";
       request.onload = function() {
       // Asynchronously decode the audio file data in request.response
         self.audioCtx.decodeAudioData(
-          request.response,
+          this.response,
           function(buffer) {
             if (!buffer) {
               console.log('error decoding file data: ' + url);
+              self.errorCount += 1;
               reject(buffer);
             }
 
-            // self.soundQueue[0] = buffer;
-            var name = self.soundQueue[index].replace("assets/sounds/", "");
-            console.log("My Buffer :", buffer);
             self.soundMap.put(name, buffer);
             console.log("in promise", self.soundMap);
-            resolve(buffer);
             self.successCount += 1;
+            resolve(buffer);
           },
           function(error) {
             console.error('decodeAudioData error', error);
@@ -135,11 +143,13 @@ AssetManager.prototype.getSoundsPromisePool = function(){
           );
         };
         request.send();
+        request.onerror = function() {
+          console.error('SoundManager: XHR error');
+          self.errorCount += 1;
+        };
       }));
   }
-  request.onerror = function() {
-    alert('SoundManager: XHR error');
-  };
+
   return promisePool;
 };
 
