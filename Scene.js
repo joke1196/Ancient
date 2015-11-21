@@ -1,3 +1,12 @@
+//GLOBALS
+var ACTION_BTN_POSX = 850;
+var ACTION_BTN_POSY = 740;
+var BTN_WIDTH = 180;
+var BTN_HEIGHT = 50;
+var BTN_MARGIN = 10;
+var RIGHT_BTN_POSX = ACTION_BTN_POSX + BTN_WIDTH + BTN_MARGIN;
+var ACTION_MOVE = 0;
+var ACTION_FIRE = 1;
 var SceneManager = new function SceneManager(){
   var instance = this;
   this.currentScene = undefined;
@@ -134,7 +143,7 @@ function PlayScene(){
 PlayScene.prototype = Object.create(Scene.prototype);
 
 PlayScene.prototype.update = function(td){
-  console.log("Update in play");
+  // console.log("Update in play");
 
 
   if(myTest++ === 200){
@@ -142,7 +151,7 @@ PlayScene.prototype.update = function(td){
   }
 
   if(this.state === gameStates.PLAYERSTURN){
-    console.log("Player's turn");
+    // console.log("Player's turn");
     this.allies[0].execute(new MoveCommand(Hex(1, -1, 0), this.allies[0], this.allies[0]));
     this.allies[0].update();
     this.allies[0].execute(new MoveCommand(Hex(2, -2, 0), this.allies[0], this.allies[0]));
@@ -151,18 +160,18 @@ PlayScene.prototype.update = function(td){
     this.allies[1].update();
     this.allies[1].execute(new MoveCommand(Hex(5, -5, 0), this.allies[1], this.allies[1]));
     this.allies[1].update();
-    console.log("totalAP: ", totalAP);
+    // console.log("totalAP: ", totalAP);
     if(totalAP <= 0){
       //computersTurn
       this.enemies[0].play(td);
       this.enemies[0].update();
-      console.log("To computersTurn");
+      // console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
     }
   }else{
     //If computers turn is finished
-    console.log("Computer's turn");
-    console.log("To Players turn");
+    // console.log("Computer's turn");
+    // console.log("To Players turn");
     this.state = gameStates.PLAYERSTURN;
   }
    //Example of commands
@@ -213,9 +222,9 @@ PlayScene.prototype.draw = function(){
     ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
     if(selectedChar.getType() === "Character"){
       ctx.fillStyle = "orange";
-      ctx.fillRect(850, 740, 180, 50);
+      ctx.fillRect(ACTION_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
       ctx.fillStyle = "orange";
-      ctx.fillRect(1040, 740, 180, 50);
+      ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
       ctx.fillStyle = "black";
       ctx.font="25px Georgia";
       ctx.fillText("MOVE",900, 775);
@@ -260,13 +269,43 @@ PlayScene.prototype.clickFunction = function(evt){
   evt.preventDefault();
   var mouse = { x: evt.pageX, y: evt.pageY};
   var tmpSelectedChar = this.getCharFromClick(mouse);
-  if(!tmpSelectedChar){
+
+  if(selectedChar && !tmpSelectedChar){
     //check if clicked on move or fire
-    selectedChar = null;
+    var tmpAction = actionSelected(mouse);
+    //Clicking on a tile after the action was selected
+    if(action !== null && tmpAction === null){
+      switch (action) {
+        case ACTION_MOVE:
+          var tile = getTileMove(mouse);
+          selectedChar.execute(new MoveCommand(tile.hex, selectedChar, selectedChar));
+          break;
+        case ACTION_FIRE:
+          // var target = getCharAttack();
+          // selectedChar.execute(new AttackCommand(tile.hex, target, selectedChar));
+          break;
+        default:
+          action = null;
+      }
+    }else if(action === null && tmpAction !== null){
+      //Clicking on an action after selecting a character
+      action = tmpAction;
+      switch (action) {
+        case ACTION_MOVE:
+          console.log("MOVE SELECTED");
+          showDistance(selectedChar, selectedChar.range, MOVE_OVERLAY);
+          break;
+        case ACTION_FIRE:
+          console.log("Fire SELECTED");
+          showDistance(selectedChar, selectedChar.fireRange, FIRE_OVERLAY);
+          break;
+        default:
+      }
+    }
+
   }else{
     selectedChar = tmpSelectedChar;
   }
-  console.log("selectedChar", selectedChar);
 };
 
 /**
@@ -285,3 +324,27 @@ PlayScene.prototype.getCharFromClick = function(mouse){
   }
   return null;
 };
+/**
+ * When a character is selected check on which action the player clicked
+ * @param  {Object} mouse mouse coordinates
+ * @return {int}       return null in order to deselect the player or an int representing the action
+ */
+function actionSelected(mouse){
+  if(mouse.x >= ACTION_BTN_POSX && mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
+    console.log("Action selected move");
+    return ACTION_MOVE;
+  }else if(mouse.x >= RIGHT_BTN_POSX && mouse.x <=RIGHT_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
+    return ACTION_FIRE;
+  }else{
+    return null;
+  }
+}
+
+
+function showDistance(entity, range, type){
+  var tiles = getHexInRadius(range, entity.position);
+  for(var index in tiles){
+    entity.getGrid().getHashMap().get(keyCreator(tiles[index])).isSelected = type;
+  }
+  entity.getGrid().updateMap();
+}

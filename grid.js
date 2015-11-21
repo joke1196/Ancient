@@ -1,6 +1,9 @@
 //Globals
 var TILE_WIDTH = 150;
 var TILE_HEIGHT = 150;
+var DEFAULT = 0;
+var MOVE_OVERLAY = 1;
+var FIRE_OVERLAY = 2;
 
 function Grid(layout, level, mapArray){
   this.layout = layout;
@@ -31,7 +34,8 @@ Grid.prototype.getHashMap = function(){
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
       var value = this.polygons[index].value;
-      ctx.drawImage(this.textures, value * TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT, this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, TILE_WIDTH*(0.58), (TILE_HEIGHT*(1/3.0)));
+      var overlay = this.polygons[index].isSelected;
+      ctx.drawImage(this.textures, value * TILE_WIDTH, overlay * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, this.polygons[index].poly[4].x - this.X_OFFSET,this.polygons[index].poly[4].y, TILE_WIDTH*(0.58), (TILE_HEIGHT*(1/3.0)));
       ctx.beginPath();
       for(var i in this.polygons[index].poly){
         ctx.lineTo(this.polygons[index].poly[i].x ,this.polygons[index].poly[i].y);
@@ -55,7 +59,7 @@ Grid.prototype.getHexMap = function(){
         //Because of tile disposition, have to negate the row and stay in the array width
         //If the tile is not walkable
         var unwalkable = this.unwalkableTiles.indexOf(this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]) > -1;
-        hashMap.put(keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : !unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)], occupiedBy: null});//TODO Clean
+        hashMap.put(keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : !unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)], occupiedBy: null, isSelected: DEFAULT});//TODO Clean
 
       }
   }
@@ -65,7 +69,11 @@ Grid.prototype.getHexMap = function(){
 Grid.prototype.hexToPoly = function(){
   var polygon = [];
   for(var i = 0; i++ < this.hashMap.size; this.hashMap.next()){
-    polygon.push({poly: polygon_corners(this.layout, this.hashMap.value().hex), isWalkable :  this.hashMap.value().isWalkable, value : this.hashMap.value().value});
+    polygon.push({poly: polygon_corners(this.layout, this.hashMap.value().hex), isWalkable :  this.hashMap.value().isWalkable, value : this.hashMap.value().value, isSelected : this.hashMap.value().isSelected});
   }
   return polygon;
+};
+
+Grid.prototype.updateMap = function(){
+  this.polygons = this.hexToPoly();
 };

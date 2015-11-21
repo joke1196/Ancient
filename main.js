@@ -39,6 +39,7 @@ var isVictorious = false;
 var totalAP = 0;
 var myTest = 0;
 var selectedChar;
+var action = null;
 
 
 
