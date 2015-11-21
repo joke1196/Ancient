@@ -83,6 +83,9 @@ Character.prototype.getY = function(){
 Character.prototype.getXY = function(){
   return hex_to_pixel(layout, this.position);
 };
+Character.prototype.getType = function(){
+  return "Character";
+};
 
 Character.prototype.decActionsNum = function(){
   this.tmp_actionsLeft = this.actionsLeft - 1;
@@ -171,7 +174,9 @@ Enemy.prototype.draw = function(layout, ctx){
   // }
 };
 
-
+Enemy.prototype.getType = function(){
+  return "Enemy";
+};
 Enemy.prototype.getClosestCharacter = function(){
   var characters = SceneManager.getInstance().getCurrentScene().getAllies();
   var self = this;

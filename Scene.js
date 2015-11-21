@@ -211,14 +211,16 @@ PlayScene.prototype.draw = function(){
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
     ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
     ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
-    ctx.fillStyle = "orange";
-    ctx.fillRect(850, 740, 180, 50);
-    ctx.fillStyle = "orange";
-    ctx.fillRect(1040, 740, 180, 50);
-    ctx.fillStyle = "black";
-    ctx.font="25px Georgia";
-    ctx.fillText("MOVE",900, 775);
-    ctx.fillText("FIRE",1090, 775);
+    if(selectedChar.getType() === "Character"){
+      ctx.fillStyle = "orange";
+      ctx.fillRect(850, 740, 180, 50);
+      ctx.fillStyle = "orange";
+      ctx.fillRect(1040, 740, 180, 50);
+      ctx.fillStyle = "black";
+      ctx.font="25px Georgia";
+      ctx.fillText("MOVE",900, 775);
+      ctx.fillText("FIRE",1090, 775);
+    }
   }
 
 };
