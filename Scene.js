@@ -136,6 +136,7 @@ PlayScene.prototype = Object.create(Scene.prototype);
 PlayScene.prototype.update = function(td){
   console.log("Update in play");
 
+
   if(myTest++ === 200){
     isVictorious = true;
   }
@@ -192,7 +193,7 @@ PlayScene.prototype.draw = function(){
   grid.draw(ctx);
 
   this.drawElements = this.drawElements.sort(function(a, b){
-    return a.getY() - b.getY();
+    return a.getXY().y - b.getXY().y;
   });
 
 
@@ -210,10 +211,19 @@ PlayScene.prototype.draw = function(){
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
     ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
     ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
+    ctx.fillStyle = "orange";
+    ctx.fillRect(850, 740, 180, 50);
+    ctx.fillStyle = "orange";
+    ctx.fillRect(1040, 740, 180, 50);
+    ctx.fillStyle = "black";
+    ctx.font="25px Georgia";
+    ctx.fillText("MOVE",900, 775);
+    ctx.fillText("FIRE",1090, 775);
   }
 
 };
 PlayScene.prototype.onSceneChange = function(){
+ var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
@@ -231,14 +241,45 @@ PlayScene.prototype.onSceneChange = function(){
  this.drawElements.push(this.environment);
  this.drawElements = [].concat.apply([], this.drawElements);
  this.drawElements = this.drawElements.sort(function(a, b){
-   return a.getY() - b.getY();
+   return a.getXY().y - b.getXY().y;
  });
 
- selectedChar = this.allies[0];
-
+ canvas.addEventListener("mousedown", function(evt){
+   self.clickFunction(evt);
+ }, false);
 
 };
 
 PlayScene.prototype.getAllies = function(){
   return this.allies;
+};
+
+PlayScene.prototype.clickFunction = function(evt){
+  evt.preventDefault();
+  var mouse = { x: evt.pageX, y: evt.pageY};
+  var tmpSelectedChar = this.getCharFromClick(mouse);
+  if(!tmpSelectedChar){
+    //check if clicked on move or fire
+    selectedChar = null;
+  }else{
+    selectedChar = tmpSelectedChar;
+  }
+  console.log("selectedChar", selectedChar);
+};
+
+/**
+ * Return the character clicked by the mouse
+ * @param  {Oject} mouse mouse coordinates
+ * @return {Character}      the character clicked
+ */
+PlayScene.prototype.getCharFromClick = function(mouse){
+  for(var index in this.drawElements){
+    var allyXY = this.drawElements[index].getXY();
+    var imgX =  allyXY.x - Math.floor(this.drawElements[index].width / 2);
+    var imgY = allyXY.y - this.drawElements[index].height;
+    if(mouse.x >= imgX && mouse.x <= imgX + this.drawElements[index].width && mouse.y >= imgY  && mouse.y <= allyXY.y){
+        return this.drawElements[index];
+      }
+  }
+  return null;
 };

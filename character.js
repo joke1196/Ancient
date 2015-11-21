@@ -33,7 +33,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
 
   var self = this;
   (function init(){ // Init is done only once when creating the object setting the tile to occupied
-   self.grid.getHashMap().get(keyCreator(self.position)).isFree = false;
+   self.grid.getHashMap().get(keyCreator(self.position)).occupiedBy = self;
   })();
 
   return this;
@@ -79,6 +79,9 @@ Character.prototype.getHealth = function(){
 };
 Character.prototype.getY = function(){
   return hex_to_pixel(layout, this.position).y;
+};
+Character.prototype.getXY = function(){
+  return hex_to_pixel(layout, this.position);
 };
 
 Character.prototype.decActionsNum = function(){
