@@ -152,14 +152,6 @@ PlayScene.prototype.update = function(td){
 
   if(this.state === gameStates.PLAYERSTURN){
     // console.log("Player's turn");
-    this.allies[0].execute(new MoveCommand(Hex(1, -1, 0), this.allies[0], this.allies[0]));
-    this.allies[0].update();
-    this.allies[0].execute(new MoveCommand(Hex(2, -2, 0), this.allies[0], this.allies[0]));
-    this.allies[0].update();
-    this.allies[1].execute(new MoveCommand(Hex(0, 0, 0), this.allies[1], this.allies[1]));
-    this.allies[1].update();
-    this.allies[1].execute(new MoveCommand(Hex(5, -5, 0), this.allies[1], this.allies[1]));
-    this.allies[1].update();
     // console.log("totalAP: ", totalAP);
     if(totalAP <= 0){
       //computersTurn
@@ -277,8 +269,8 @@ PlayScene.prototype.clickFunction = function(evt){
     if(action !== null && tmpAction === null){
       switch (action) {
         case ACTION_MOVE:
-          var tile = getTileMove(mouse);
-          selectedChar.execute(new MoveCommand(tile.hex, selectedChar, selectedChar));
+          var hex = getTileMove(grid, mouse);
+          selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
           break;
         case ACTION_FIRE:
           // var target = getCharAttack();
@@ -287,16 +279,16 @@ PlayScene.prototype.clickFunction = function(evt){
         default:
           action = null;
       }
-    }else if(action === null && tmpAction !== null){
+      resetOverlay(selectedChar.getGrid().getHashMap());
+      selectedChar.getGrid().updateMap();
+    }else if(tmpAction !== null){
       //Clicking on an action after selecting a character
       action = tmpAction;
       switch (action) {
         case ACTION_MOVE:
-          console.log("MOVE SELECTED");
           showDistance(selectedChar, selectedChar.range, MOVE_OVERLAY);
           break;
         case ACTION_FIRE:
-          console.log("Fire SELECTED");
           showDistance(selectedChar, selectedChar.fireRange, FIRE_OVERLAY);
           break;
         default:
@@ -331,7 +323,6 @@ PlayScene.prototype.getCharFromClick = function(mouse){
  */
 function actionSelected(mouse){
   if(mouse.x >= ACTION_BTN_POSX && mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
-    console.log("Action selected move");
     return ACTION_MOVE;
   }else if(mouse.x >= RIGHT_BTN_POSX && mouse.x <=RIGHT_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
     return ACTION_FIRE;
@@ -340,11 +331,46 @@ function actionSelected(mouse){
   }
 }
 
-
+/**
+ * Add an overlay on the tiles that are in the range for the action
+ * @param  {Character} entity The character performing the action
+ * @param  {int} range  the range for the action
+ * @param  {int} type   type of the action
+ */
 function showDistance(entity, range, type){
+  var hashMap = entity.getGrid().getHashMap();
+  resetOverlay(hashMap);
   var tiles = getHexInRadius(range, entity.position);
   for(var index in tiles){
-    entity.getGrid().getHashMap().get(keyCreator(tiles[index])).isSelected = type;
+    var tile = hashMap.get(keyCreator(tiles[index]));
+    if(tile !== undefined && tile.isWalkable){
+      if(type === FIRE_OVERLAY){
+        tile.isSelected = type;
+      }else{
+        if(tile.occupiedBy === null){
+          tile.isSelected = type;
+        }
+      }
+    }
   }
   entity.getGrid().updateMap();
+}
+/**
+ * Returns the coordinates tile clicked by the user
+ * @param  {Grid} grid  the grid containing all the tiles
+ * @param  {Object} mouse the coordinates of the click
+ * @return {Hex}       The coordinates of the tile clicked
+ */
+function getTileMove(grid, mouse){
+  var hex = pixel_to_hex(layout, mouse);
+  var tile = grid.getHashMap().get(keyCreator(hex));
+  console.log("Tile", tile);
+  console.log(hex);
+  return hex;
+}
+
+function resetOverlay(hashMap){
+  for(var i = 0; i++ < hashMap.size; hashMap.next()){
+    hashMap.value().isSelected = DEFAULT;
+  }
 }

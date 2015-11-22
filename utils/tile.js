@@ -168,9 +168,9 @@ function pixel_to_hex(layout, p)
     var size = layout.size;
     var origin = layout.origin;
     var pt = Point((p.x - origin.x) / size.x, (p.y - origin.y) / size.y);
-    var q = M.b0 * pt.x + M.b1 * pt.y;
-    var r = M.b2 * pt.x + M.b3 * pt.y;
-    return Hex(q, r, -q - r);
+    var q = Math.round(M.b0 * pt.x + M.b1 * pt.y);
+    var r = Math.round(M.b2 * pt.x + M.b3 * pt.y);
+    return Hex(q, r, -q - r); // Modified by David Kunzmann
 }
 
 function hex_corner_offset(layout, corner)
