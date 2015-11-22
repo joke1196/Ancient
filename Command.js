@@ -4,9 +4,7 @@ function heal(value, target, self) { target.setHealth(target.health + value); se
 function move(value, target, self){
   if(target.getActionsLeft() > 0){
     var targetMap = target.getGrid().getHashMap();
-    var tile = targetMap.get(keyCreator(value)); //TODO test clean
-    console.log("Value", value);
-    console.log(tile);
+    var tile = targetMap.get(keyCreator(value)); //TODO clean
     if( tile !== undefined && tile.isWalkable && tile.occupiedBy === null){
       targetMap.get(keyCreator(target.getPosition())).occupiedBy = null;
       targetMap.get(keyCreator(value)).occupiedBy = target;

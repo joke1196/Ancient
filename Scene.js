@@ -156,7 +156,6 @@ PlayScene.prototype.update = function(td){
     if(totalAP <= 0){
       //computersTurn
       this.enemies[0].play(td);
-      this.enemies[0].update();
       // console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
     }
@@ -176,6 +175,9 @@ PlayScene.prototype.update = function(td){
   for(var index in this.allies){
     this.allies[index].update();
     totalAP += this.allies[index].getActionsLeft();
+  }
+  for(var enemy in this.enemies){
+    this.enemies[enemy].update();
   }
 
   // if(isVictorious){
@@ -266,19 +268,10 @@ PlayScene.prototype.clickFunction = function(evt){
     //check if clicked on move or fire
     var tmpAction = actionSelected(mouse);
     //Clicking on a tile after the action was selected
-    if(action !== null && tmpAction === null){
-      switch (action) {
-        case ACTION_MOVE:
-          var hex = getTileMove(grid, mouse);
-          selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
-          break;
-        case ACTION_FIRE:
-          // var target = getCharAttack();
-          // selectedChar.execute(new AttackCommand(tile.hex, target, selectedChar));
-          break;
-        default:
-          action = null;
-      }
+    if(action === ACTION_MOVE && tmpAction === null){
+      var hex = getTileMove(grid, mouse);
+      selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
+      action = null;
       resetOverlay(selectedChar.getGrid().getHashMap());
       selectedChar.getGrid().updateMap();
     }else if(tmpAction !== null){
@@ -292,6 +285,28 @@ PlayScene.prototype.clickFunction = function(evt){
           showDistance(selectedChar, selectedChar.fireRange, FIRE_OVERLAY);
           break;
         default:
+      }
+    }
+
+  }else if(selectedChar !== null && tmpSelectedChar !== null && action === ACTION_FIRE){
+    var target = this.getCharFromClick(mouse);
+    var validTarget = false;
+    if(target.getType() === "Enemy"){
+      var hexes = getHexInRadius(selectedChar.fireRange, selectedChar.position);
+      var tiles = getTilesFromHex(grid, hexes);
+      console.log("Tiles", tiles);
+      for(var index in tiles){
+        if(tiles[index].occupiedBy === target){
+          validTarget = true;
+          console.log("Valid Target");
+        }
+      }
+      if(validTarget){
+        selectedChar.execute(new AttackCommand(selectedChar.strength, target, selectedChar));
+        action = null;
+        tmpSelectedChar = null;
+        resetOverlay(selectedChar.getGrid().getHashMap());
+        selectedChar.getGrid().updateMap();
       }
     }
 
@@ -369,8 +384,20 @@ function getTileMove(grid, mouse){
   return hex;
 }
 
+
 function resetOverlay(hashMap){
   for(var i = 0; i++ < hashMap.size; hashMap.next()){
     hashMap.value().isSelected = DEFAULT;
   }
+}
+
+function getTilesFromHex(grid, hexes){
+  var tiles = [];
+  for(var index in hexes){
+    var tile = grid.getHashMap().get(keyCreator(hexes[index]));
+    if(tile !== undefined){
+      tiles.push(tile);
+    }
+  }
+  return tiles;
 }
