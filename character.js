@@ -5,7 +5,7 @@ var NUM_POS_SPRITE = 5;
 var ACTIONS_PER_TURN = 2;
 var RANGE = 2;
 var FIRERANGE = 1;
-var TIMEOFFSET = 20;
+var TIMEOFFSET = 100;
 
 function Character(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
@@ -54,7 +54,9 @@ Character.prototype.setIntel = function (new_intel){
 Character.prototype.setPosition = function(new_position){
   this.tmp_position = new_position;
 };
-
+Character.prototype.setActionsLeft = function(new_actionsLeft){
+  this.tmp_actionsLeft = new_actionsLeft;
+};
 Character.prototype.setIsAlive = function(new_state){
   this.isAlive = new_state;
 };
@@ -134,7 +136,7 @@ Enemy.prototype.play = function(){
     this.td = 0;
     if(this.actionsLeft > 0){
       var inAttackDist = this.getInFireRange();
-      console.log(inAttackDist.length);
+      console.log("Range:",inAttackDist.length);
       if(inAttackDist.length > 0){
         if(inAttackDist.length >= 1){
           //Attack the character in range with the less health
@@ -202,7 +204,7 @@ Enemy.prototype.getInFireRange = function(){
   var char ;
   for(var hex in range){
     char = this.grid.getHashMap().get(keyCreator(range[hex])).occupiedBy;
-    if(char){
+    if(char && char !== this){
       charInRange.push(char);
     }
   }

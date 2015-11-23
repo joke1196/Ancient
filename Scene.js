@@ -151,19 +151,27 @@ PlayScene.prototype.update = function(td){
   }
 
   if(this.state === gameStates.PLAYERSTURN){
-    // console.log("Player's turn");
-    // console.log("totalAP: ", totalAP);
+
     if(totalAP <= 0){
       //computersTurn
-      this.enemies[0].play(td);
       // console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
     }
   }else{
+    this.enemies[0].play(td);
     //If computers turn is finished
     // console.log("Computer's turn");
-    // console.log("To Players turn");
+
+  }
+  if(compTotalAP === 0 && totalAP === 0){
+    for(var ally in this.allies){
+      this.allies[ally].setActionsLeft(ACTIONS_PER_TURN);
+    }
+    for(var enemy in this.enemies){
+      this.enemies[enemy].setActionsLeft(ACTIONS_PER_TURN);
+    }
     this.state = gameStates.PLAYERSTURN;
+
   }
    //Example of commands
   //  this.allies[0].execute(new AttackCommand(this.allies[0].strength, this.allies[1]));
@@ -172,12 +180,14 @@ PlayScene.prototype.update = function(td){
   //  //Update the state of the character
   //  tom.update();
   totalAP = 0;
+  compTotalAP = 0 ;
   for(var index in this.allies){
     this.allies[index].update();
     totalAP += this.allies[index].getActionsLeft();
   }
   for(var enemy in this.enemies){
     this.enemies[enemy].update();
+    compTotalAP += this.enemies[enemy].getActionsLeft();
   }
 
   // if(isVictorious){
@@ -199,6 +209,11 @@ PlayScene.prototype.draw = function(){
     return a.getXY().y - b.getXY().y;
   });
 
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, BTN_WIDTH * 1.5, BTN_HEIGHT);
+  ctx.fillStyle = "orange";
+  ctx.font= "25px Georgia";
+  ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", 10,30 );
 
 
   for(var index in this.drawElements){
@@ -240,6 +255,9 @@ PlayScene.prototype.onSceneChange = function(){
  totalAP = 0;
  for(var index in this.allies){
    totalAP += this.allies[index].getActionsLeft();
+ }
+ for(var enemy in this.enemies){
+   compTotalAP += this.enemies[enemy].getActionsLeft();
  }
  this.drawElements.push(this.allies);
  this.drawElements.push(this.enemies);
