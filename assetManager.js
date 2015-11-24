@@ -66,7 +66,7 @@ AssetManager.prototype.getImagesPromisePool = function(){
         resolve(img);
       }, false);
       img.addEventListener("error", function() {
-        console.log("Error", error);
+        console.log("Error", img);
         self.errorCount += 1;
         reject(img);
       }, false);

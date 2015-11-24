@@ -1,11 +1,37 @@
 //GLOBALS
 var CHAR_WIDTH = 90;
 var CHAR_HEIGHT = 140;
-var NUM_POS_SPRITE = 5;
+var ENV_WIDTH = 400;
+var ENV_HEIGHT = 500;
+var NUM_POS_SPRITE = 5; //TODO Remove
 var ACTIONS_PER_TURN = 2;
 var RANGE = 2;
 var FIRERANGE = 1;
 var TIMEOFFSET = 100;
+
+function Environment(position, sprite, grid, width = ENV_WIDTH, height = ENV_HEIGHT){
+  this.position = position;
+  this.image = new Image();
+  this.image.src = sprite;
+  this.height = height;
+  this.width = width;
+  this.grid = grid;
+  var self = this;
+  (function init(){ // Init is done only once when creating the object setting the tile to occupied
+   self.grid.getHashMap().get(keyCreator(self.position)).occupiedBy = self;
+  })();
+}
+Environment.prototype.draw = function(layout, ctx){
+  var pos = hex_to_pixel(layout, this.position);
+  var self = this;
+  ctx.drawImage(self.image, 0, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
+};
+Environment.prototype.getXY = function(){
+  return hex_to_pixel(layout, this.position);
+};
+Environment.prototype.getType = function(){
+  return "Environment";
+};
 
 function Character(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
@@ -119,6 +145,7 @@ Character.prototype.update = function(){
   this.td++;
 };
 
+
 function Enemy(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){
   this.base = Character;
@@ -134,6 +161,7 @@ Enemy.prototype.parent = Character.prototype;
 Enemy.prototype.play = function(){
   if(this.td >= TIMEOFFSET){
     this.td = 0;
+    console.log("OKays");
     if(this.actionsLeft > 0){
       var inAttackDist = this.getInFireRange();
       console.log("Range:",inAttackDist.length);
@@ -204,7 +232,7 @@ Enemy.prototype.getInFireRange = function(){
   var char ;
   for(var hex in range){
     char = this.grid.getHashMap().get(keyCreator(range[hex])).occupiedBy;
-    if(char && char !== this){
+    if(char && char.getType === "Character"){
       charInRange.push(char);
     }
   }
@@ -222,6 +250,7 @@ Enemy.prototype.getInRange = function(){
   }
   return hexInRange;
 };
+
 
 /**
  * Return the accessible tile which is closest to the character char

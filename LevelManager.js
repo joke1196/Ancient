@@ -19,8 +19,8 @@ LevelManager.prototype.getCurrentLevel = function(){
 LevelManager.prototype.getNextLevel = function(){
   return this.nextLevel;
 };
-LevelManager.prototype.setNextLevel = function(scene){
-  this.nextLevel = scene;
+LevelManager.prototype.setNextLevel = function(level){
+  this.nextLevel = level;
 };
 LevelManager.prototype.setCurrentLevelToNext = function(){
   this.currentLevel = this.nextLevel;
@@ -29,7 +29,7 @@ LevelManager.prototype.setCurrentLevelToNext = function(){
 function Level(){
   this.name = "";
   this.enemies = [];
-  this.environement = [];
+  this.environment = [];
   return this;
 }
 
@@ -41,8 +41,13 @@ Level.prototype.getName = function(){
   return this.name;
 };
 
+LevelAsh.prototype = Object.create(Level.prototype);
+LevelAsh.prototype.constructor = Level;
+LevelAsh.prototype.parent = Level.prototype;
 
 function LevelAsh(){
+  this.base = Level;
+  this.base();
   this.name = "levelAsh";
   return this;
 }
@@ -53,9 +58,9 @@ LevelAsh.prototype.getEnemies = function(){
 
   return this.enemies;
 };
-LevelAsh.prototype.getEnvironement = function(){
+LevelAsh.prototype.getEnvironment = function(){
 
-  return this.environement;
+  return this.environment;
 };
 
 LevelAsh.prototype.getSprites = function(){ // TODO Complete
@@ -63,26 +68,35 @@ LevelAsh.prototype.getSprites = function(){ // TODO Complete
   return sprites;
 };
 
+LevelGrass.prototype = Object.create(Level.prototype);
+LevelGrass.prototype.constructor = Level;
+LevelGrass.prototype.parent = Level.prototype;
+
 function LevelGrass(){
+  this.base = Level;
+  this.base();
   this.name = "levelGrass";
-  this.allies = [];
-  this.enemies = [];
   return this;
 }
 LevelGrass.prototype = Object.create(Level.prototype);
 
-LevelGrass.prototype.init = function(){};
+LevelGrass.prototype.init = function(){
+  LevelManager.getInstance().setNextLevel(new LevelAsh());
+};
 LevelGrass.prototype.getEnemies = function(){
   this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
+  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
   return this.enemies;
 };
 
 LevelGrass.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "img/spriteSheet_test.png"];
+  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "img/spriteSheet_test.png", "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
-LevelGrass.prototype.getEnvironement = function(){
-  return this.environement;
+LevelGrass.prototype.getEnvironment = function(){
+  this.environment.push(new Environment(Hex(8, -10, 2), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(7, -10, 3), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  return this.environment;
 };
 
 function LevelMenu(){

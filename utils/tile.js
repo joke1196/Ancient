@@ -206,3 +206,7 @@ function getHexInRadius(radius, center){
   }
   return results;
 }
+
+function hexCompare(hex1, hex2){
+  return (hex1.q === hex2.q && hex1.r === hex2.r && hex1.s === hex2.s);
+}

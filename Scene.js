@@ -158,7 +158,13 @@ PlayScene.prototype.update = function(td){
       this.state = gameStates.COMPUTERSTURN;
     }
   }else{
-    this.enemies[0].play(td);
+    console.log("CompsTurns");
+    var selectedEnemy = this.enemies[selectedEnemyID];
+    if(selectedEnemy.getActionsLeft() > 0){
+      selectedEnemy.play(td);
+    }else{
+      selectedEnemyID++;
+    }
     //If computers turn is finished
     // console.log("Computer's turn");
 
@@ -170,6 +176,7 @@ PlayScene.prototype.update = function(td){
     for(var enemy in this.enemies){
       this.enemies[enemy].setActionsLeft(ACTIONS_PER_TURN);
     }
+    selectedEnemyID = 0;
     this.state = gameStates.PLAYERSTURN;
 
   }
@@ -193,7 +200,7 @@ PlayScene.prototype.update = function(td){
   // if(isVictorious){
   if(false){ // TODO REMOVE
     isVictorious = false;
-    levelManager.showLevel(new LevelAsh());
+    levelManager.setCurrentLevelToNext();
     sceneManager.showScene(new LoadScene());
   }
 };
@@ -206,7 +213,7 @@ PlayScene.prototype.draw = function(){
   grid.draw(ctx);
 
   this.drawElements = this.drawElements.sort(function(a, b){
-    return a.getXY().y - b.getXY().y;
+    return (a.getXY().y + a.height) - (b.getXY().y + b.height);
   });
 
   ctx.fillStyle = "black";
@@ -219,7 +226,7 @@ PlayScene.prototype.draw = function(){
   for(var index in this.drawElements){
     this.drawElements[index].draw(layout, ctx);
   }
-  if(selectedChar != undefined){
+  if(selectedChar !== undefined){
     ctx.fillStyle = "black";
     ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
     ctx.fillStyle = "white";
@@ -252,6 +259,7 @@ PlayScene.prototype.onSceneChange = function(){
  this.allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 2, grid));
  this.allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
  this.enemies = levelManager.getCurrentLevel().getEnemies();
+ this.environment = levelManager.getCurrentLevel().getEnvironment();
  totalAP = 0;
  for(var index in this.allies){
    totalAP += this.allies[index].getActionsLeft();
@@ -288,10 +296,13 @@ PlayScene.prototype.clickFunction = function(evt){
     //Clicking on a tile after the action was selected
     if(action === ACTION_MOVE && tmpAction === null){
       var hex = getTileMove(grid, mouse);
-      selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
-      action = null;
-      resetOverlay(selectedChar.getGrid().getHashMap());
-      selectedChar.getGrid().updateMap();
+      console.log(hex);
+      if(hex !== null){
+        selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
+        action = null;
+        resetOverlay(selectedChar.getGrid().getHashMap());
+        selectedChar.getGrid().updateMap();
+      }
     }else if(tmpAction !== null){
       //Clicking on an action after selecting a character
       action = tmpAction;
@@ -339,12 +350,16 @@ PlayScene.prototype.clickFunction = function(evt){
  * @return {Character}      the character clicked
  */
 PlayScene.prototype.getCharFromClick = function(mouse){
+  var element;
   for(var index in this.drawElements){
     var allyXY = this.drawElements[index].getXY();
     var imgX =  allyXY.x - Math.floor(this.drawElements[index].width / 2);
     var imgY = allyXY.y - this.drawElements[index].height;
     if(mouse.x >= imgX && mouse.x <= imgX + this.drawElements[index].width && mouse.y >= imgY  && mouse.y <= allyXY.y){
-        return this.drawElements[index];
+        element = this.drawElements[index];
+        if(element.getType() !== "Environment"){
+          return element;
+        }
       }
   }
   return null;
@@ -394,12 +409,22 @@ function showDistance(entity, range, type){
  * @param  {Object} mouse the coordinates of the click
  * @return {Hex}       The coordinates of the tile clicked
  */
-function getTileMove(grid, mouse){
+function getTileMove(grid, mouse, tileInRange){
   var hex = pixel_to_hex(layout, mouse);
-  var tile = grid.getHashMap().get(keyCreator(hex));
-  console.log("Tile", tile);
-  console.log(hex);
-  return hex;
+  var hexes = getHexInRadius(selectedChar.range, selectedChar.position);
+  for(var index in hexes){
+    console.log("hex", hex);
+  console.log("Hexes",   hexes[index]);
+    if(hexCompare(hexes[index], hex)){
+      console.log("OKEASy");
+      var tile = grid.getHashMap().get(keyCreator(hex));
+      console.log("tiles", tile);
+      if(tile !== undefined){
+        return hex;
+      }
+    }
+  }
+  return null;
 }
 
 
