@@ -231,10 +231,14 @@ Enemy.prototype.getInFireRange = function(){
   var charInRange = [];
   var char ;
   for(var hex in range){
-    char = this.grid.getHashMap().get(keyCreator(range[hex])).occupiedBy;
-    if(char && char.getType === "Character"){
-      charInRange.push(char);
+    var tile = this.grid.getHashMap().get(keyCreator(range[hex]));
+    if(tile !== undefined){
+      char = tile.occupiedBy;
+      if(char !== null && char.getType === "Character"){
+        charInRange.push(char);
+      }
     }
+
   }
   return charInRange;
 };
