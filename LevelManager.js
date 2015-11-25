@@ -11,7 +11,7 @@ var LevelManager =  new function LevelManager() {
 
 LevelManager.prototype.showLevel = function(level){
   this.currentLevel = level;
-  level.init();
+  this.currentLevel.init();
 };
 LevelManager.prototype.getCurrentLevel = function(){
   return this.currentLevel;
@@ -24,6 +24,7 @@ LevelManager.prototype.setNextLevel = function(level){
 };
 LevelManager.prototype.setCurrentLevelToNext = function(){
   this.currentLevel = this.nextLevel;
+  this.currentLevel.init();
 };
 
 function Level(){
@@ -41,6 +42,7 @@ Level.prototype.getName = function(){
   return this.name;
 };
 
+
 LevelAsh.prototype = Object.create(Level.prototype);
 LevelAsh.prototype.constructor = Level;
 LevelAsh.prototype.parent = Level.prototype;
@@ -55,7 +57,6 @@ LevelAsh.prototype = Object.create(Level.prototype);
 
 LevelAsh.prototype.init = function(){};
 LevelAsh.prototype.getEnemies = function(){
-
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
@@ -67,6 +68,15 @@ LevelAsh.prototype.getSprites = function(){ // TODO Complete
   var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"];
   return sprites;
 };
+LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
+  var dialog = ["assets/dialog/levelAsh"];
+  return dialog;
+};
+LevelAsh.prototype.getMap = function(){ // TODO Complete
+  var map = ["assets/map/levelAsh"];
+  return map;
+};
+
 
 LevelGrass.prototype = Object.create(Level.prototype);
 LevelGrass.prototype.constructor = Level;
@@ -98,6 +108,14 @@ LevelGrass.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(7, -10, 3), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
   return this.environment;
 };
+LevelGrass.prototype.getDialogsPath = function(){ // TODO Complete
+  var dialog = ["assets/dialog/levelGrass"];
+  return dialog;
+};
+LevelGrass.prototype.getMap = function(){ // TODO Complete
+  var map = ["assets/map/levelGrass"];
+  return map;
+};
 
 function LevelMenu(){
   this.name = "levelMenu";
@@ -105,7 +123,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){};
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass())};
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
@@ -115,11 +133,18 @@ LevelMenu.prototype.getSounds = function(){ // TODO Complete
 };
 
 LevelMenu.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/menuBgTest.png", "assets/logo.png"];
+  var sprites = ["assets/logo.png"];
   return sprites;
 };
 
 
 LevelMenu.prototype.getEnvironement = function(){
   // return this.environement;
+};
+LevelMenu.prototype.getDialogsPath = function(){ // TODO Complete
+  var dialog = ["assets/dialog/intro"];
+  return dialog;
+};
+LevelMenu.prototype.getMap = function(){ // TODO Complete
+  return "";
 };

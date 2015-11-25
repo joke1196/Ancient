@@ -18,8 +18,11 @@ var SceneManager = new function SceneManager(){
 }();
 
 SceneManager.prototype.showScene = function(scene){
+  if(this.currentScene !== undefined){
+    this.currentScene.onExitScene();
+  }
   this.currentScene = scene;
-  scene.onSceneChange();
+  scene.onEnterScene();
 };
 SceneManager.prototype.getCurrentScene = function(){
   return this.currentScene;
@@ -42,7 +45,7 @@ function Scene(){
 
 Scene.prototype.update = function(td){};
 Scene.prototype.draw = function(){};
-Scene.prototype.onSceneChange = function(){};
+Scene.prototype.onEnterScene = function(){};
 
 
 function PreloaderScene(){
@@ -56,19 +59,20 @@ PreloaderScene.prototype.update = function(td){
     SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
     SceneManager.getInstance().showScene(new MenuScene());
   }
-
 };
 PreloaderScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.font="60px Georgia";
   ctx.fillText("Preloading",300,300);
 };
-PreloaderScene.prototype.onSceneChange = function(){
+PreloaderScene.prototype.onEnterScene = function(){
   var assets = AssetManager.getInstance();
   assets.queueSoundFiles(LevelManager.getInstance().getCurrentLevel().getSounds(), audioCtx);
   assets.queueDownload(LevelManager.getInstance().getCurrentLevel().getSprites());
+  assets.queueDialog(LevelManager.getInstance().getCurrentLevel().getDialogsPath());
   assets.downloadAll();
 };
+PreloaderScene.prototype.onExitScene = function(){};
 
 function MenuScene(){
   this.background = new Image();
@@ -77,16 +81,18 @@ function MenuScene(){
 MenuScene.prototype = Object.create(Scene.prototype);
 
 MenuScene.prototype.update = function(td){
-  console.log("Update in menu");
-  canvas.addEventListener("click", myFunc, false);
 };
 MenuScene.prototype.draw = function(td){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.font="60px Georgia";
   ctx.fillText("Click to begin!",300,300);
 };
-MenuScene.prototype.onSceneChange = function(){
+MenuScene.prototype.onEnterScene = function(){
+  canvas.addEventListener("click", myFunc, false);
   soundManager.play("Ancient_Theme_V1_1.m4a");
+};
+MenuScene.prototype.onExitScene = function(){
+  canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
 };
 
 function LoadScene(){
@@ -102,7 +108,7 @@ LoadScene.prototype.update = function(td){
   // Example of progress behavior
 
   if(AssetManager.getInstance().update() === 100){
-    mapArray = AssetManager.getInstance().getFileDestination();
+    mapArray = AssetManager.getInstance().getMapArray();
     sceneManager.showScene(new PlayScene());
   }
 };
@@ -112,15 +118,19 @@ LoadScene.prototype.draw = function(td){
   ctx.font="20px Georgia";
   ctx.fillText("Loading",10,50);
 };
-LoadScene.prototype.onSceneChange = function(){
+LoadScene.prototype.onEnterScene = function(){
   var assetManager = AssetManager.getInstance();
-  canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
+
   // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   assetManager.queueDownload(levelManager.getCurrentLevel().getSprites());
-  assetManager.queueFile(levelManager.getCurrentLevel().getName(), mapArray);
+  var mapPath = levelManager.getCurrentLevel().getMap();
+  var dialogPath = levelManager.getCurrentLevel().getDialogsPath();
+  assetManager.queueMap(mapPath);
+  assetManager.queueDialog(dialogPath);
   assetManager.downloadAll();
 };
+LoadScene.prototype.onExitScene = function(){};
 
 var gameStates = {
   PLAYERSTURN: 0,
@@ -130,6 +140,7 @@ var gameStates = {
 function PlayScene(){
   this.state = gameStates.PLAYERSTURN;
   this.drawElements= [];
+  this.eventClick;
 
   //Creating arrays for enemies and allies
   this.allies = [];
@@ -226,7 +237,7 @@ PlayScene.prototype.draw = function(){
   for(var index in this.drawElements){
     this.drawElements[index].draw(layout, ctx);
   }
-  if(selectedChar !== undefined){
+  if(selectedChar !== undefined && selectedChar !== null){
     ctx.fillStyle = "black";
     ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
     ctx.fillStyle = "white";
@@ -249,7 +260,7 @@ PlayScene.prototype.draw = function(){
   }
 
 };
-PlayScene.prototype.onSceneChange = function(){
+PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
@@ -274,11 +285,14 @@ PlayScene.prototype.onSceneChange = function(){
  this.drawElements = this.drawElements.sort(function(a, b){
    return a.getXY().y - b.getXY().y;
  });
-
- canvas.addEventListener("mousedown", function(evt){
+ this.eventClick = function (evt){
    self.clickFunction(evt);
- }, false);
+ };
+ canvas.addEventListener("mousedown",this.eventClick, false);
 
+};
+PlayScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
 };
 
 PlayScene.prototype.getAllies = function(){
@@ -364,83 +378,71 @@ PlayScene.prototype.getCharFromClick = function(mouse){
   }
   return null;
 };
-/**
- * When a character is selected check on which action the player clicked
- * @param  {Object} mouse mouse coordinates
- * @return {int}       return null in order to deselect the player or an int representing the action
- */
-function actionSelected(mouse){
-  if(mouse.x >= ACTION_BTN_POSX && mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
-    return ACTION_MOVE;
-  }else if(mouse.x >= RIGHT_BTN_POSX && mouse.x <=RIGHT_BTN_POSX + BTN_WIDTH && mouse.y >= ACTION_BTN_POSY && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT){
-    return ACTION_FIRE;
-  }else{
-    return null;
-  }
+
+function DialogScene(){
+  this.dialogs = AssetManager.getInstance().getDialogs().dialogs;
+  console.log("Dialogs", this.dialogs);
+  this.dialogIndex = 0;
+  this.currentDialog = this.dialogs[0];
+  this.eventClick;
+  return this;
 }
 
-/**
- * Add an overlay on the tiles that are in the range for the action
- * @param  {Character} entity The character performing the action
- * @param  {int} range  the range for the action
- * @param  {int} type   type of the action
- */
-function showDistance(entity, range, type){
-  var hashMap = entity.getGrid().getHashMap();
-  resetOverlay(hashMap);
-  var tiles = getHexInRadius(range, entity.position);
-  for(var index in tiles){
-    var tile = hashMap.get(keyCreator(tiles[index]));
-    if(tile !== undefined && tile.isWalkable){
-      if(type === FIRE_OVERLAY){
-        tile.isSelected = type;
-      }else{
-        if(tile.occupiedBy === null){
-          tile.isSelected = type;
-        }
-      }
+DialogScene.prototype = Object.create(Scene.prototype);
+
+DialogScene.prototype.draw = function(){
+  var self = this;
+  ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  CT.drawText({
+    text:self.currentDialog,
+    x: 20,
+    y: 30,
+    boxWidth:STAGE_WIDTH - 20
+  });
+  ctx.fillStyle = "white";
+  ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.font="25px Georgia";
+  ctx.fillText("NEXT",1090, 775);
+};
+
+DialogScene.prototype.onEnterScene = function(){
+  var self = this;
+  CT.config({
+    canvas: canvas,
+    context: ctx,
+    fontFamily: "Georgia",
+    fontSize: "25px",
+    fontWeight: "normal",
+    fontColor: "white",
+    lineHeight: "24"
+  });
+  this.eventClick = function(evt){
+    self.dialogNext(evt);
+  };
+  canvas.addEventListener("mousedown", this.eventClick , false);
+
+};
+DialogScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
+};
+
+DialogScene.prototype.dialogNext = function(evt){
+  console.log("This", this);
+  evt.preventDefault();
+  var mouse = { x: evt.pageX, y: evt.pageY};
+  if(mouse.x <= RIGHT_BTN_POSX + BTN_WIDTH && mouse.x >= RIGHT_BTN_POSX && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT && mouse.y >= ACTION_BTN_POSY){
+    this.dialogIndex++;
+    console.log("Dialogs", this.dialogs);
+    if(this.dialogIndex < this.dialogs.length){
+      console.log("IN", this.dialogs);
+      this.currentDialog = this.dialogs[this.dialogIndex];
+    }else{
+      console.log("Change Scene");
+      LevelManager.getInstance().setCurrentLevelToNext();
+      sceneManager.showScene(new LoadScene());
     }
   }
-  entity.getGrid().updateMap();
-}
-/**
- * Returns the coordinates tile clicked by the user
- * @param  {Grid} grid  the grid containing all the tiles
- * @param  {Object} mouse the coordinates of the click
- * @return {Hex}       The coordinates of the tile clicked
- */
-function getTileMove(grid, mouse, tileInRange){
-  var hex = pixel_to_hex(layout, mouse);
-  var hexes = getHexInRadius(selectedChar.range, selectedChar.position);
-  for(var index in hexes){
-    console.log("hex", hex);
-  console.log("Hexes",   hexes[index]);
-    if(hexCompare(hexes[index], hex)){
-      console.log("OKEASy");
-      var tile = grid.getHashMap().get(keyCreator(hex));
-      console.log("tiles", tile);
-      if(tile !== undefined){
-        return hex;
-      }
-    }
-  }
-  return null;
-}
-
-
-function resetOverlay(hashMap){
-  for(var i = 0; i++ < hashMap.size; hashMap.next()){
-    hashMap.value().isSelected = DEFAULT;
-  }
-}
-
-function getTilesFromHex(grid, hexes){
-  var tiles = [];
-  for(var index in hexes){
-    var tile = grid.getHashMap().get(keyCreator(hexes[index]));
-    if(tile !== undefined){
-      tiles.push(tile);
-    }
-  }
-  return tiles;
-}
+};

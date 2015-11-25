@@ -7,10 +7,13 @@ var AssetManager =  new function AssetManager() {
   this.errorCount = 0;
   this.cache = {};
   this.downloadQueue = [];
-  this.fileQueue = [];
+  this.mapQueue = [];
+  this.dialogQueue = [];
   this.soundQueue = [];
   this.queueLength  = 0;
-  this.fileDestination = undefined;
+  this.fileDestination = [];
+  this.mapArray;
+  this.dialogs= [];
   this.soundMap = new Map();
   this.audioCtx = undefined;
 
@@ -29,19 +32,23 @@ AssetManager.prototype.queueSoundFiles = function(paths, context){
   this.soundQueue = paths;
   this.audioCtx = context;
 };
-AssetManager.prototype.queueFile = function(level) {
-    this.fileQueue[0] = "assets/map/" + level; //TODO passing level as arrays
+AssetManager.prototype.queueMap = function(path) {
+    this.mapQueue = path;
+};
+AssetManager.prototype.queueDialog = function(path) {
+    this.dialogQueue = path;
 };
 
 AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination) {
   this.successCount = 0;
   this.errorCount = 0;
-  this.queueLength = this.downloadQueue.length + this.fileQueue.length + this.soundQueue.length; // Added one for the file TODO MAKE A PROMISE POOL FOR FILE
+  this.dialogs = [];
+  this.queueLength = this.downloadQueue.length + this.mapQueue.length + this.soundQueue.length;
   if (this.queueLength === 0) {
       downloadCallback();
   }else {
     var self = this;
-    var promises = Array.concat(this.getImagesPromisePool(), this.getSoundsPromisePool(), this.getFilePromise(fileDestination));
+    var promises = Array.concat(this.getImagesPromisePool(), this.getSoundsPromisePool(), this.getMapPromise(fileDestination), this.getDialogPromise());
     console.log("Promises",promises);
     Promise.all(promises).then(function(){
       this.downloadQueue = [];
@@ -76,24 +83,25 @@ AssetManager.prototype.getImagesPromisePool = function(){
   return promisePool;
 };
 
-AssetManager.prototype.getFilePromise = function(){
-  var client = new XMLHttpRequest();
+AssetManager.prototype.getMapPromise = function(){
   var self = this;
-  var promisePool = [];
-  for(var index in this.fileQueue){
-    promisePool.push(new Promise(function(resolve, reject){
-      console.log(self.fileQueue[index]);
-      if(self.fileQueue.length > 0){
-        client.open('GET', self.fileQueue[index]);
+  var client = new XMLHttpRequest();
+  var path = this.mapQueue[0];
+  return new Promise(function(resolve, reject){
+      console.log("The QUeue", path);
+      if(self.mapQueue.length > 0){
+        client.open('GET', path,true);
         client.onreadystatechange = function() {
+          console.log("The QUeue IN", path);
           if(client.readyState === 4){ // done
             if(client.status === 200){
               console.log("Success!");
               self.successCount += 1;
-              self.fileDestination = JSON.parse(client.responseText);
+              var response = JSON.parse(client.responseText);
+              self.mapArray = response;
               resolve(client.responseText);
             }else{
-              console.log("Error", error);
+              console.log("Error", client.responseText);
               self.errorCount += 1;
               reject(client.responseText);
             }
@@ -103,9 +111,37 @@ AssetManager.prototype.getFilePromise = function(){
         client.send();
       }
       resolve();
-    }));
-  }
-  return promisePool;
+    });
+};
+AssetManager.prototype.getDialogPromise = function(){
+  var self = this;
+  var client = new XMLHttpRequest();
+  var path = this.dialogQueue[0];
+  return new Promise(function(resolve, reject){
+      console.log("The QUeue", path);
+      if(self.dialogQueue.length > 0){
+        client.open('GET', path,true);
+        client.onreadystatechange = function() {
+          console.log("The QUeue IN", path);
+          if(client.readyState === 4){ // done
+            if(client.status === 200){
+              console.log("Success!");
+              self.successCount += 1;
+              var response = JSON.parse(client.responseText);
+              self.dialogs = response;
+              resolve(client.responseText);
+            }else{
+              console.log("Error", client.responseText);
+              self.errorCount += 1;
+              reject(client.responseText);
+            }
+          }
+        };
+
+        client.send();
+      }
+      resolve();
+    });
 };
 
 AssetManager.prototype.getSoundsPromisePool = function(){
@@ -166,11 +202,16 @@ AssetManager.prototype.isDone = function() {
 };
 //Modification by FooBar
 AssetManager.prototype.update = function(){
-  if(this.downloadQueue.length !== 0 || this.fileQueue !== 0 || this.soundQueue !== 0 ){
-    return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + this.soundQueue.length + this.fileQueue.length) ;
+  if(this.downloadQueue.length !== 0 || this.mapQueue !== 0 || this.soundQueue !== 0 || this.dialogQueue !== 0){
+    return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + this.soundQueue.length + this.mapQueue.length + this.dialogQueue.length) ;
   }
   return 0;
 };
-AssetManager.prototype.getFileDestination = function(){
-  return this.fileDestination;
+
+AssetManager.prototype.getMapArray = function(){
+  console.log("AM", this.mapArray);
+  return this.mapArray;
+};
+AssetManager.prototype.getDialogs = function(){
+  return this.dialogs;
 };

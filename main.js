@@ -13,6 +13,7 @@ var MAP_Y = 750;
 var canvas = null;
 var ctx = null;
 var lastUpdate = Date.now();
+var CT = new CanvasText;
 
 //Creating a layout for the hex map
 var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
@@ -74,6 +75,5 @@ function createCanvas() {
 }
 
 function myFunc() { // TODO REMOVE or make it nice
-  LevelManager.getInstance().showLevel(new LevelGrass());
-  sceneManager.showScene(new LoadScene());
+  sceneManager.showScene(new DialogScene());
 }

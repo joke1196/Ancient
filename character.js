@@ -9,6 +9,14 @@ var RANGE = 2;
 var FIRERANGE = 1;
 var TIMEOFFSET = 100;
 
+/**
+ * Environment is the "Class" representing an entity in on a tile during the play scene
+ * @param {Hex} position  is the position of the entity on the grid
+ * @param {String} sprite   is the path to the image representing the entity
+ * @param {Grid} grid     is the grid on which the battle will take place
+ * @param {int} width    = ENV_WIDTH  is the width of the entity
+ * @param {int} height   = ENV_HEIGHT is the height of the entity 
+ */
 function Environment(position, sprite, grid, width = ENV_WIDTH, height = ENV_HEIGHT){
   this.position = position;
   this.image = new Image();
