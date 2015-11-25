@@ -33,8 +33,15 @@ Environment.prototype.getType = function(){
   return "Environment";
 };
 
+Character.prototype = Object.create(Environment.prototype);
+Character.prototype.constructor = Environment;
+Character.prototype.parent = Environment.prototype;
+
 function Character(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
+  this.base = Environment;
+  this.base(hex, img, grid,
+    width = CHAR_WIDTH, height = CHAR_HEIGHT);
   this.name = name;
   this.max_health = max_health;
   this.max_intel = max_intel;
@@ -45,22 +52,15 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.strength = strength;
   this.range = range;
   this.fireRange = fireRange;
-  this.position = hex;
+
   this.tmp_position = hex;
-  this.width = width;
-  this.height = height;
-  this.image = new Image();
-  this.image.src = img;
+
   this.isAlive = true;
   this.actionsLeft = ACTIONS_PER_TURN;
   this.tmp_actionsLeft = this.actionsLeft;
-  this.grid = grid;
+
   this.td = 0;
 
-  var self = this;
-  (function init(){ // Init is done only once when creating the object setting the tile to occupied
-   self.grid.getHashMap().get(keyCreator(self.position)).occupiedBy = self;
-  })();
 
   return this;
 }
