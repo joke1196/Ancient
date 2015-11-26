@@ -154,65 +154,70 @@ function PlayScene(){
 PlayScene.prototype = Object.create(Scene.prototype);
 
 PlayScene.prototype.update = function(td){
-  // console.log("Update in play");
-
-
-  if(myTest++ === 200){
-    isVictorious = true;
-  }
 
   if(this.state === gameStates.PLAYERSTURN){
-
     if(totalAP <= 0){
       //computersTurn
-      // console.log("To computersTurn");
       this.state = gameStates.COMPUTERSTURN;
     }
   }else{
-    console.log("CompsTurns");
+    //Computers turn
     var selectedEnemy = this.enemies[selectedEnemyID];
+    //Making one computer at a time play
     if(selectedEnemy.getActionsLeft() > 0){
       selectedEnemy.play(td);
     }else{
       selectedEnemyID++;
     }
-    //If computers turn is finished
-    // console.log("Computer's turn");
-
   }
+  //End of turn
+  //Reset of actions per turn to default value
   if(compTotalAP === 0 && totalAP === 0){
     for(var ally in this.allies){
-      this.allies[ally].setActionsLeft(ACTIONS_PER_TURN);
+      if(this.allies[ally].isAlive){
+        this.allies[ally].setActionsLeft(ACTIONS_PER_TURN);
+      }
     }
     for(var enemy in this.enemies){
-      this.enemies[enemy].setActionsLeft(ACTIONS_PER_TURN);
+      if(this.enemies[enemy].isAlive){
+        this.enemies[enemy].setActionsLeft(ACTIONS_PER_TURN);
+      }
     }
     selectedEnemyID = 0;
     this.state = gameStates.PLAYERSTURN;
 
   }
-   //Example of commands
-  //  this.allies[0].execute(new AttackCommand(this.allies[0].strength, this.allies[1]));
 
-  //  this.allies[0].execute(new HealCommand(this.allies[0].intel, this.allies[0]));
-  //  //Update the state of the character
-  //  tom.update();
+  //Recount of actions points
   totalAP = 0;
   compTotalAP = 0 ;
   for(var index in this.allies){
+    isGameOver = true;
     this.allies[index].update(td);
+    //As long as someone lives it's not game over
+    if(this.allies[index].isAlive){
+      isGameOver = false;
+    }
     totalAP += this.allies[index].getActionsLeft();
   }
   for(var enemy in this.enemies){
+    isVictorious = true;
     this.enemies[enemy].update(td);
+    //As long as one enemy lives it's not a victory
+    if(this.enemies[enemy].isAlive){
+      isVictorious = false;
+    }
     compTotalAP += this.enemies[enemy].getActionsLeft();
   }
 
-  // if(isVictorious){
-  if(false){ // TODO REMOVE
+  //End of game check
+  if(isVictorious){
     isVictorious = false;
     levelManager.setCurrentLevelToNext();
-    sceneManager.showScene(new LoadScene());
+    sceneManager.showScene(new DialogScene());
+  }
+  if(isGameOver){
+    sceneManager.showScene(new GameOverScene());
   }
 };
 
@@ -445,4 +450,18 @@ DialogScene.prototype.dialogNext = function(evt){
       sceneManager.showScene(new LoadScene());
     }
   }
+};
+
+function GameOverScene(){
+  return this;
+}
+
+GameOverScene.prototype = Object.create(Scene.prototype);
+
+GameOverScene.prototype.draw = function(){
+  ctx.fillStyle = "red";
+  ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.font="60px Georgia";
+  ctx.fillText("Game Over", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
 };

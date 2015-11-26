@@ -10,6 +10,8 @@ var FIRERANGE = 1;
 var TIMEOFFSET = 100;
 var DAMAGE_YOFFSET = 10;
 var END_TAKE_DAMAGE = 50;
+var ALIVE_SPRITE = 0;
+var DEAD_SPRITE = 1;
 /**
  * Environment is the "Class" representing an entity in on a tile during the play scene
  * @param {Hex} position  is the position of the entity on the grid
@@ -30,6 +32,7 @@ function Environment(position, sprite, grid, width = ENV_WIDTH, height = ENV_HEI
    self.grid.getHashMap().get(keyCreator(self.position)).occupiedBy = self;
   })();
 }
+
 Environment.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
   var self = this;
@@ -132,16 +135,22 @@ Character.prototype.decActionsNum = function(){
 Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
   var self = this;
-  ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
-  if(this.takingDamage.isDamaged){
-    console.log("Taking Damage", this.takingDamage.value);
-    if(mod(this.takingDamage.damageFrameIndex, 5)===0){
-      ctx.fillStyle = "white";
-    }else{
-      ctx.fillStyle = "red";
+  if(this.isAlive){
+    ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
+    if(this.takingDamage.isDamaged){
+      console.log("Taking Damage", this.takingDamage.value);
+      if(mod(this.takingDamage.damageFrameIndex, 5)===0){
+        ctx.fillStyle = "white";
+      }else{
+        ctx.fillStyle = "red";
+      }
+      ctx.fillText(this.takingDamage.value, pos.x, pos.y - this.height + mod(this.takingDamage.damageFrameIndex *DAMAGE_YOFFSET, 10));
     }
-    ctx.fillText(this.takingDamage.value, pos.x, pos.y - this.height + mod(this.takingDamage.damageFrameIndex *DAMAGE_YOFFSET, 10));
+  }else{
+    ctx.drawImage(self.image, DEAD_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
   }
+
+
 };
 
 Character.prototype.execute = function(command){
@@ -159,19 +168,22 @@ Character.prototype.onTakeDamage = function(value){
 };
 
 Character.prototype.update = function(td){
-  this.health = this.tmp_health;
-  this.actionsLeft = this.tmp_actionsLeft;
-  this.intel = this.tmp_intel;
-  this.position = this.tmp_position;
-  if(this.health <= 0 ){
-    this.isAlive = false;
-  }
-  this.td++;
-  if(this.takingDamage.isDamaged){
-    if(this.takingDamage.damageFrameIndex++ > END_TAKE_DAMAGE){
-      this.takingDamage.isDamaged = false;
-      this.takingDamage.damageFrameIndex = 0;
-      this.takingDamage.value = 0;
+  if(this.isAlive){
+    this.health = this.tmp_health;
+    this.actionsLeft = this.tmp_actionsLeft;
+    this.intel = this.tmp_intel;
+    this.position = this.tmp_position;
+    if(this.health <= 0 ){
+      this.isAlive = false;
+      this.actionsLeft = 0;
+    }
+    this.td++;
+    if(this.takingDamage.isDamaged){
+      if(this.takingDamage.damageFrameIndex++ > END_TAKE_DAMAGE){
+        this.takingDamage.isDamaged = false;
+        this.takingDamage.damageFrameIndex = 0;
+        this.takingDamage.value = 0;
+      }
     }
   }
 };
@@ -192,49 +204,32 @@ Enemy.prototype.update = function(td){
   this.parent.update.call(this, td);
 };
 Enemy.prototype.play = function(){
-  if(this.td >= TIMEOFFSET){
-    this.td = 0;
-    console.log("OKays");
-    if(this.actionsLeft > 0){
-      var inAttackDist = this.getInFireRange();
-      console.log("Range:", inAttackDist.length);
-      if(inAttackDist.length > 0){
-        if(inAttackDist.length >= 1){
-          //Attack the character in range with the less health
-          this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+  if(this.isAlive){
+    if(this.td >= TIMEOFFSET){
+      this.td = 0;
+      if(this.actionsLeft > 0){
+        var inAttackDist = this.getInFireRange();
+        console.log("Range:", inAttackDist.length);
+        if(inAttackDist.length > 0){
+          if(inAttackDist.length >= 1){
+            //Attack the character in range with the less health
+            this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+          }
+        }else {
+          //Find the closest character and move in its direction
+          var char = this.getClosestCharacter();
+          var inRange = this.getInRange(this.range);
+          var tile = this.getClosestTileToChar(inRange, char);
+          this.execute(new MoveCommand(tile.hex, this, this));
         }
-      }else {
-        //Find the closest character and move in its direction
-        var char = this.getClosestCharacter();
-        var inRange = this.getInRange(this.range);
-        var tile = this.getClosestTileToChar(inRange, char);
-        this.execute(new MoveCommand(tile.hex, this, this));
       }
+
     }
-
   }
-
 };
 
 Enemy.prototype.draw = function(layout, ctx){
   this.parent.draw.call(this, layout,ctx);
-  // var radius = this.getInFiringRange();
-  // var polygons = [];
-  //
-  // for(var index in radius){
-  //    polygons.push(polygon_corners(layout, radius[index]));
-  // }
-  // ctx.fillStyle = "red";
-  // console.log("Poly", polygons);
-  // for(var poly in polygons){
-  // ctx.beginPath();
-  //   for(var i in polygons[poly]){
-  //     ctx.lineTo(polygons[poly][i].x ,polygons[poly][i].y);
-  //   }
-  // ctx.closePath();
-  // ctx.stroke();
-  // ctx.fill();
-  // }
 };
 
 Enemy.prototype.getType = function(){

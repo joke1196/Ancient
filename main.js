@@ -37,6 +37,7 @@ var grid = undefined;
 
 //Setting globals // TODO move to Scene
 var isVictorious = false;
+var isGameOver = false;
 var totalAP = 0;
 var compTotalAP = 0;
 var myTest = 0;

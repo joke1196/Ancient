@@ -94,8 +94,8 @@ LevelGrass.prototype.init = function(){
   LevelManager.getInstance().setNextLevel(new LevelAsh());
 };
 LevelGrass.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
-  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 100, 100, "img/spriteSheet_test.png", 3, grid));
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 10, 100, "img/spriteSheet_test.png", 3, grid));
+  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "img/spriteSheet_test.png", 3, grid));
   return this.enemies;
 };
 
