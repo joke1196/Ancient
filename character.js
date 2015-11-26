@@ -8,14 +8,15 @@ var ACTIONS_PER_TURN = 2;
 var RANGE = 2;
 var FIRERANGE = 1;
 var TIMEOFFSET = 100;
-
+var DAMAGE_YOFFSET = 10;
+var END_TAKE_DAMAGE = 50;
 /**
  * Environment is the "Class" representing an entity in on a tile during the play scene
  * @param {Hex} position  is the position of the entity on the grid
  * @param {String} sprite   is the path to the image representing the entity
  * @param {Grid} grid     is the grid on which the battle will take place
  * @param {int} width    = ENV_WIDTH  is the width of the entity
- * @param {int} height   = ENV_HEIGHT is the height of the entity 
+ * @param {int} height   = ENV_HEIGHT is the height of the entity
  */
 function Environment(position, sprite, grid, width = ENV_WIDTH, height = ENV_HEIGHT){
   this.position = position;
@@ -60,6 +61,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.strength = strength;
   this.range = range;
   this.fireRange = fireRange;
+  this.takingDamage = { "isDamaged" : false, "value": 0, "damageFrameIndex" : 0 };
 
   this.tmp_position = hex;
 
@@ -131,6 +133,15 @@ Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
   var self = this;
   ctx.drawImage(self.image, NUM_POS_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
+  if(this.takingDamage.isDamaged){
+    console.log("Taking Damage", this.takingDamage.value);
+    if(mod(this.takingDamage.damageFrameIndex, 5)===0){
+      ctx.fillStyle = "white";
+    }else{
+      ctx.fillStyle = "red";
+    }
+    ctx.fillText(this.takingDamage.value, pos.x, pos.y - this.height + mod(this.takingDamage.damageFrameIndex *DAMAGE_YOFFSET, 10));
+  }
 };
 
 Character.prototype.execute = function(command){
@@ -141,8 +152,13 @@ Character.prototype.execute = function(command){
     console.log("Not enough actions left");
   }
 };
+Character.prototype.onTakeDamage = function(value){
+  this.takingDamage.isDamaged = true;
+  this.takingDamage.value = value ;
+  this.takingDamage.damageFrameIndex = 0;
+};
 
-Character.prototype.update = function(){
+Character.prototype.update = function(td){
   this.health = this.tmp_health;
   this.actionsLeft = this.tmp_actionsLeft;
   this.intel = this.tmp_intel;
@@ -151,6 +167,13 @@ Character.prototype.update = function(){
     this.isAlive = false;
   }
   this.td++;
+  if(this.takingDamage.isDamaged){
+    if(this.takingDamage.damageFrameIndex++ > END_TAKE_DAMAGE){
+      this.takingDamage.isDamaged = false;
+      this.takingDamage.damageFrameIndex = 0;
+      this.takingDamage.value = 0;
+    }
+  }
 };
 
 
@@ -165,14 +188,16 @@ function Enemy(name, hex, max_health, max_intel, img, strength, grid,
 Enemy.prototype = Object.create(Character.prototype);
 Enemy.prototype.constructor = Character;
 Enemy.prototype.parent = Character.prototype;
-
+Enemy.prototype.update = function(td){
+  this.parent.update.call(this, td);
+};
 Enemy.prototype.play = function(){
   if(this.td >= TIMEOFFSET){
     this.td = 0;
     console.log("OKays");
     if(this.actionsLeft > 0){
       var inAttackDist = this.getInFireRange();
-      console.log("Range:",inAttackDist.length);
+      console.log("Range:", inAttackDist.length);
       if(inAttackDist.length > 0){
         if(inAttackDist.length >= 1){
           //Attack the character in range with the less health
@@ -242,7 +267,7 @@ Enemy.prototype.getInFireRange = function(){
     var tile = this.grid.getHashMap().get(keyCreator(range[hex]));
     if(tile !== undefined){
       char = tile.occupiedBy;
-      if(char !== null && char.getType === "Character"){
+      if(char !== null && char.getType() === "Character"){
         charInRange.push(char);
       }
     }

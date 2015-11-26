@@ -1,5 +1,8 @@
 // --------------- Command design pattern without undo --------------------------
-function attack(value, target, self) { target.setHealth(target.health - value); self.decActionsNum();}
+function attack(value, target, self) { target.setHealth(target.health - value);
+  target.onTakeDamage(value);
+  self.decActionsNum();
+}
 function heal(value, target, self) { target.setHealth(target.health + value); self.decActionsNum();}
 function move(value, target, self){
   if(target.getActionsLeft() > 0){

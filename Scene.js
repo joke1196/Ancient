@@ -200,11 +200,11 @@ PlayScene.prototype.update = function(td){
   totalAP = 0;
   compTotalAP = 0 ;
   for(var index in this.allies){
-    this.allies[index].update();
+    this.allies[index].update(td);
     totalAP += this.allies[index].getActionsLeft();
   }
   for(var enemy in this.enemies){
-    this.enemies[enemy].update();
+    this.enemies[enemy].update(td);
     compTotalAP += this.enemies[enemy].getActionsLeft();
   }
 
