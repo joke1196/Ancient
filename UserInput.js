@@ -47,10 +47,7 @@ function getTileMove(grid, mouse, tileInRange){
   var hex = pixel_to_hex(layout, mouse);
   var hexes = getHexInRadius(selectedChar.range, selectedChar.position);
   for(var index in hexes){
-    console.log("hex", hex);
-  console.log("Hexes",   hexes[index]);
     if(hexCompare(hexes[index], hex)){
-      console.log("OKEASy");
       var tile = grid.getHashMap().get(keyCreator(hex));
       console.log("tiles", tile);
       if(tile !== undefined){

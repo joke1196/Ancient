@@ -370,7 +370,9 @@ PlayScene.prototype.clickFunction = function(evt){
       var hex = getTileMove(grid, mouse);
       console.log(hex);
       if(hex !== null){
-        selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
+        if(selectedChar.getActionsLeft() > 0){
+          selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
+        }
         action = null;
         resetOverlay(selectedChar.getGrid().getHashMap());
         selectedChar.getGrid().updateMap();
@@ -401,11 +403,12 @@ PlayScene.prototype.clickFunction = function(evt){
       for(var index in tiles){
         if(tiles[index].occupiedBy === target){
           validTarget = true;
-          console.log("Valid Target");
         }
       }
       if(validTarget){
-        selectedChar.execute(new AttackCommand(selectedChar.strength, target, selectedChar));
+        if(selectedChar.getActionsLeft() > 0){
+          selectedChar.execute(new AttackCommand(selectedChar.strength, target, selectedChar));
+        }
         action = null;
         tmpSelectedChar = null;
         resetOverlay(selectedChar.getGrid().getHashMap());
