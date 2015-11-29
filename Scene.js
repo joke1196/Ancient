@@ -14,6 +14,9 @@ var START_MENU_BTNY = 480;
 var START_MENU_BTN_WIDTH = 600;
 var START_MENU_BTNX_HEIGHT = 40;
 
+/**
+ * This Singleton manages the different scenes
+ */
 var SceneManager = new function SceneManager(){
   var instance = this;
   this.currentScene = undefined;
@@ -24,6 +27,10 @@ var SceneManager = new function SceneManager(){
   return SceneManager;
 }();
 
+/**
+ * Switches from scene to the next
+ * @param  {Scene} scene is the new scene to be shown
+ */
 SceneManager.prototype.showScene = function(scene){
   if(this.currentScene !== undefined){
     this.currentScene.onExitScene();
@@ -31,21 +38,40 @@ SceneManager.prototype.showScene = function(scene){
   this.currentScene = scene;
   scene.onEnterScene();
 };
+
+/**
+ * returns the current scene
+ * @return {Scene} the current scene
+ */
 SceneManager.prototype.getCurrentScene = function(){
   return this.currentScene;
 };
+/**
+ * Returns the next Scene
+ * @return {Scene} the next scene
+ */
 SceneManager.prototype.getNextScene = function(){
   return this.nextScene;
 };
+/**
+ * Setting the next scene
+ * @param  {Scene} scene is the next scene to be displayed
+ */
 SceneManager.prototype.setNextScene = function(scene){
   this.nextScene = scene;
 };
+
+/**
+ * Switching from scene to the next
+ */
 SceneManager.prototype.setCurrentSceneToNext = function(){
   this.currentScene = this.nextScene;
 };
 
 
-
+/**
+ * Main class for all the different scene
+ */
 function Scene(){
   return this;
 }
@@ -54,24 +80,29 @@ Scene.prototype.update = function(td){};
 Scene.prototype.draw = function(){};
 Scene.prototype.onEnterScene = function(){};
 
-
+/**
+ * This scene is used to load everything needed in the MenuScene
+ */
 function PreloaderScene(){
   return this;
 }
 
+//Setting the inheritance
 PreloaderScene.prototype = Object.create(Scene.prototype);
+//When every asset is loaded change to the MenuScene
 PreloaderScene.prototype.update = function(td){
-  console.log(AssetManager.getInstance().update());
   if(AssetManager.getInstance().update() >= 100){
     SoundManager.getInstance().setSoundMap(AssetManager.getInstance().getSoundMap());
     SceneManager.getInstance().showScene(new MenuScene());
   }
 };
+//Display during the loading
 PreloaderScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.font="60px Georgia";
   ctx.fillText("Preloading",300,300);
 };
+//Loading all the needed assets
 PreloaderScene.prototype.onEnterScene = function(){
   var assets = AssetManager.getInstance();
   assets.queueSoundFiles(LevelManager.getInstance().getCurrentLevel().getSounds(), audioCtx);
@@ -81,11 +112,15 @@ PreloaderScene.prototype.onEnterScene = function(){
 };
 PreloaderScene.prototype.onExitScene = function(){};
 
+/**
+ * This scene displays the menu and starts the main theme song
+ */
 function MenuScene(){
   this.background = new Image();
   this.background.src = "assets/Menu_screen/menu_screen.png";
   this.eventClick = function(evt){
     var mouse = { x: evt.pageX, y: evt.pageY};
+    //Switching when the Start adventure is clicked
     if(mouse.x <= (START_MENU_BTNX + START_MENU_BTN_WIDTH) && mouse.x >= START_MENU_BTNX && mouse.y <= START_MENU_BTNY + START_MENU_BTNX_HEIGHT && mouse.y >= START_MENU_BTNY){
       sceneManager.showScene(new DialogScene());
     }
@@ -99,17 +134,17 @@ MenuScene.prototype.update = function(td){
 MenuScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.drawImage(this.background, 0,0, STAGE_WIDTH, STAGE_HEIGHT);
-
 };
+
 MenuScene.prototype.onEnterScene = function(){
   canvas.addEventListener("click", this.eventClick, false);
   soundManager.play("Ancient_Theme_V1_1.m4a");
 };
 MenuScene.prototype.onExitScene = function(){
-
   canvas.removeEventListener('click', this.eventClick, false); // TODO REMOVE
 };
 
+//This scene is generic and used in between every level in order to load the needed assets
 function LoadScene(){
   return this;
 }
@@ -117,26 +152,22 @@ function LoadScene(){
 LoadScene.prototype = Object.create(Scene.prototype);
 
 LoadScene.prototype.update = function(td){
-
-
-  console.log("Update in load");
-  // Example of progress behavior
-
   if(AssetManager.getInstance().update() === 100){
     mapArray = AssetManager.getInstance().getMapArray();
     sceneManager.showScene(new PlayScene());
   }
 };
+
+//Drawing the loading bar
 LoadScene.prototype.draw = function(td){
   ctx.fillStyle = "red";
   ctx.fillRect(0 ,0, AssetManager.getInstance().update() * STAGE_WIDTH / 100, 10 );
   ctx.font="20px Georgia";
   ctx.fillText("Loading",10,50);
 };
+//Telling the asset manager to load the current level assets
 LoadScene.prototype.onEnterScene = function(){
   var assetManager = AssetManager.getInstance();
-
-  // state.setCurrentState(State.load);
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   assetManager.queueDownload(levelManager.getCurrentLevel().getSprites());
   var mapPath = levelManager.getCurrentLevel().getMap();
@@ -147,13 +178,16 @@ LoadScene.prototype.onEnterScene = function(){
 };
 LoadScene.prototype.onExitScene = function(){};
 
+//This enum is used the switch between the computer's and player's turn
 var gameStates = {
   PLAYERSTURN: 0,
   COMPUTERSTURN: 1
 };
 
+//Main scene is where the battles of the game take place
 function PlayScene(){
   this.state = gameStates.PLAYERSTURN;
+  //Array of all the elements to be drawn
   this.drawElements= [];
   this.eventClick;
 
@@ -168,6 +202,7 @@ function PlayScene(){
 
 PlayScene.prototype = Object.create(Scene.prototype);
 
+//Play sequence
 PlayScene.prototype.update = function(td){
 
   if(this.state === gameStates.PLAYERSTURN){
@@ -242,7 +277,7 @@ PlayScene.prototype.draw = function(){
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   grid.draw(ctx);
-
+  //Sorting the elements from back to front
   this.drawElements = this.drawElements.sort(function(a, b){
     return (a.getXY().y + a.height) - (b.getXY().y + b.height);
   });
@@ -253,10 +288,11 @@ PlayScene.prototype.draw = function(){
   ctx.font= "25px Georgia";
   ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", 10,30 );
 
-
+  //Drawing sorted elements
   for(var index in this.drawElements){
     this.drawElements[index].draw(layout, ctx);
   }
+  //Changing the UI with user inputs
   if(selectedChar !== undefined && selectedChar !== null){
     ctx.fillStyle = "black";
     ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
@@ -267,6 +303,7 @@ PlayScene.prototype.draw = function(){
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
     ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
     ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
+    //Displaying commands only if the entity selected is playable
     if(selectedChar.getType() === "Character"){
       ctx.fillStyle = "orange";
       ctx.fillRect(ACTION_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
@@ -278,8 +315,8 @@ PlayScene.prototype.draw = function(){
       ctx.fillText("FIRE",1090, 775);
     }
   }
-
 };
+
 PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
@@ -287,6 +324,7 @@ PlayScene.prototype.onEnterScene = function(){
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  this.allies = [];
  this.drawElements = [];
+ //Resteting all the arrays containing different entities
  this.allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "assets/characters/kuragoBack.png", 2, grid));
  this.allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "assets/characters/belaback.png", 3, grid));
  this.enemies = levelManager.getCurrentLevel().getEnemies();
@@ -352,8 +390,10 @@ PlayScene.prototype.clickFunction = function(evt){
     }
 
   }else if(selectedChar !== null && tmpSelectedChar !== null && action === ACTION_FIRE){
+    //Getting the target from a fire action
     var target = this.getCharFromClick(mouse);
     var validTarget = false;
+    //Cannot attack the environment and another playable character for now
     if(target.getType() === "Enemy"){
       var hexes = getHexInRadius(selectedChar.fireRange, selectedChar.position);
       var tiles = getTilesFromHex(grid, hexes);
@@ -380,7 +420,7 @@ PlayScene.prototype.clickFunction = function(evt){
 
 /**
  * Return the character clicked by the mouse
- * @param  {Oject} mouse mouse coordinates
+ * @param  {x, y} mouse coordinates
  * @return {Character}      the character clicked
  */
 PlayScene.prototype.getCharFromClick = function(mouse){
@@ -398,7 +438,9 @@ PlayScene.prototype.getCharFromClick = function(mouse){
   }
   return null;
 };
-
+/**
+ * This Scene is used in between battle to display dialogs
+ */
 function DialogScene(){
   this.dialogs = AssetManager.getInstance().getDialogs().dialogs;
   console.log("Dialogs", this.dialogs);
@@ -415,6 +457,7 @@ DialogScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.fillStyle = "black";
   ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  //Using a external library for the text to be displayed easily
   CT.drawText({
     text:self.currentDialog,
     x: 20,
@@ -430,6 +473,7 @@ DialogScene.prototype.draw = function(){
 
 DialogScene.prototype.onEnterScene = function(){
   var self = this;
+  //Creating an object to display easily text on the canvas
   CT.config({
     canvas: canvas,
     context: ctx,
@@ -449,24 +493,24 @@ DialogScene.prototype.onExitScene = function(){
   canvas.removeEventListener("mousedown", this.eventClick);
 };
 
+//Managin the next button when a dialog is displayed
 DialogScene.prototype.dialogNext = function(evt){
-  console.log("This", this);
   evt.preventDefault();
   var mouse = { x: evt.pageX, y: evt.pageY};
   if(mouse.x <= RIGHT_BTN_POSX + BTN_WIDTH && mouse.x >= RIGHT_BTN_POSX && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT && mouse.y >= ACTION_BTN_POSY){
     this.dialogIndex++;
-    console.log("Dialogs", this.dialogs);
     if(this.dialogIndex < this.dialogs.length){
-      console.log("IN", this.dialogs);
       this.currentDialog = this.dialogs[this.dialogIndex];
     }else{
-      console.log("Change Scene");
+      //If the last dialog page is displayed we switch to the new level and load scene
       LevelManager.getInstance().setCurrentLevelToNext();
       sceneManager.showScene(new LoadScene());
     }
   }
 };
-
+/**
+ * The scene displays Game Over if every entity in the allies array is dead
+ */
 function GameOverScene(){
   return this;
 }
