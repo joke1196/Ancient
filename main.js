@@ -74,7 +74,3 @@ function createCanvas() {
   // Our drawing handle
   ctx = canvas.getContext("2d");
 }
-
-function myFunc() { // TODO REMOVE or make it nice
-  sceneManager.showScene(new DialogScene());
-}

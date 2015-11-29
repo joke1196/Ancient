@@ -7,6 +7,13 @@ var BTN_MARGIN = 10;
 var RIGHT_BTN_POSX = ACTION_BTN_POSX + BTN_WIDTH + BTN_MARGIN;
 var ACTION_MOVE = 0;
 var ACTION_FIRE = 1;
+
+//Start Menu
+var START_MENU_BTNX = 220;
+var START_MENU_BTNY = 480;
+var START_MENU_BTN_WIDTH = 600;
+var START_MENU_BTNX_HEIGHT = 40;
+
 var SceneManager = new function SceneManager(){
   var instance = this;
   this.currentScene = undefined;
@@ -76,23 +83,31 @@ PreloaderScene.prototype.onExitScene = function(){};
 
 function MenuScene(){
   this.background = new Image();
+  this.background.src = "assets/Menu_screen/menu_screen.png";
+  this.eventClick = function(evt){
+    var mouse = { x: evt.pageX, y: evt.pageY};
+    if(mouse.x <= (START_MENU_BTNX + START_MENU_BTN_WIDTH) && mouse.x >= START_MENU_BTNX && mouse.y <= START_MENU_BTNY + START_MENU_BTNX_HEIGHT && mouse.y >= START_MENU_BTNY){
+      sceneManager.showScene(new DialogScene());
+    }
+  };
   return this;
 }
 MenuScene.prototype = Object.create(Scene.prototype);
 
 MenuScene.prototype.update = function(td){
 };
-MenuScene.prototype.draw = function(td){
+MenuScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  ctx.font="60px Georgia";
-  ctx.fillText("Click to begin!",300,300);
+  ctx.drawImage(this.background, 0,0, STAGE_WIDTH, STAGE_HEIGHT);
+
 };
 MenuScene.prototype.onEnterScene = function(){
-  canvas.addEventListener("click", myFunc, false);
+  canvas.addEventListener("click", this.eventClick, false);
   soundManager.play("Ancient_Theme_V1_1.m4a");
 };
 MenuScene.prototype.onExitScene = function(){
-  canvas.removeEventListener('click', myFunc, false); // TODO REMOVE
+
+  canvas.removeEventListener('click', this.eventClick, false); // TODO REMOVE
 };
 
 function LoadScene(){
@@ -272,8 +287,8 @@ PlayScene.prototype.onEnterScene = function(){
  grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
  this.allies = [];
  this.drawElements = [];
- this.allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "img/spriteSheet_test.png", 2, grid));
- this.allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "img/spriteSheet_test.png", 3, grid));
+ this.allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "assets/characters/kuragoBack.png", 2, grid));
+ this.allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "assets/characters/belaback.png", 3, grid));
  this.enemies = levelManager.getCurrentLevel().getEnemies();
  this.environment = levelManager.getCurrentLevel().getEnvironment();
  totalAP = 0;

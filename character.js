@@ -1,6 +1,6 @@
 //GLOBALS
-var CHAR_WIDTH = 90;
-var CHAR_HEIGHT = 140;
+var CHAR_WIDTH = 100;
+var CHAR_HEIGHT = 100;
 var ENV_WIDTH = 400;
 var ENV_HEIGHT = 500;
 var NUM_POS_SPRITE = 5; //TODO Remove
