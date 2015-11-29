@@ -4,18 +4,24 @@ var TILE_HEIGHT = 150;
 var DEFAULT = 0;
 var MOVE_OVERLAY = 1;
 var FIRE_OVERLAY = 2;
-
-function Grid(layout, level, mapArray){
+/**
+ * The class represent the grid of the game
+ * @param {Layout} layout   is the position and orientation of the tiles
+ * @param {Array} mapArray is the representation of the Grid in a 2D array
+ */
+function Grid(layout, mapArray){
   this.layout = layout;
   this.X_OFFSET = this.layout.size.x - 7;
   this.mapArray = mapArray;
   this.MAP_HEIGHT = this.mapArray.height;
   this.MAP_WIDTH = this.mapArray.width;
-  this.level = level;
+  //This hashMap is used to acces everytile by giving an Hex object as key
   this.hashMap = new Map();
   this.polygons = [];
   this.textures = new Image();
+  //Sprit sheet of all the textures for the grid
   this.textures.src = this.mapArray.textures;
+  //Array of all the tiles that cannot be wlaked on
   this.unwalkableTiles = this.mapArray.unwalkableTiles;
   var self = this;
 
@@ -29,7 +35,6 @@ function Grid(layout, level, mapArray){
 Grid.prototype.getHashMap = function(){
   return this.hashMap;
 };
-
 
 Grid.prototype.draw = function(ctx){
     for(var index in this.polygons){
@@ -47,6 +52,7 @@ Grid.prototype.draw = function(ctx){
 
 
 //------------- GRID  init functions ------------------
+//Creating the hashMap
 Grid.prototype.getHexMap = function(){
   var hashMap = new Map();
   if(this.mapArray == null){
@@ -59,13 +65,14 @@ Grid.prototype.getHexMap = function(){
         //Because of tile disposition, have to negate the row and stay in the array width
         //If the tile is not walkable
         var unwalkable = this.unwalkableTiles.indexOf(this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)]) > -1;
-        hashMap.put(keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : !unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)], occupiedBy: null, isSelected: DEFAULT});//TODO Clean
+        hashMap.put(keyCreator(Hex(q, -q-s,s)) ,{hex : Hex(q, -q-s,s), isWalkable : !unwalkable, value : this.mapArray.map[axialCoord.col][mod(-axialCoord.row, this.MAP_WIDTH)], occupiedBy: null, isSelected: DEFAULT});
 
       }
   }
   return hashMap;
 };
-
+//Finding all the angles of the hexgon from one tile
+//returning an array of object containing the angles and also some carateristics
 Grid.prototype.hexToPoly = function(){
   var polygon = [];
   for(var i = 0; i++ < this.hashMap.size; this.hashMap.next()){
@@ -73,7 +80,8 @@ Grid.prototype.hexToPoly = function(){
   }
   return polygon;
 };
-
+//This method is called when the Grid drawing is changed
+//For example when in order to display an overlay on a tile
 Grid.prototype.updateMap = function(){
   this.polygons = this.hexToPoly();
 };
