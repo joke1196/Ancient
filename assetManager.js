@@ -1,6 +1,11 @@
-//---------- CODE BY Seth Ladd ------------------------
-//---------- http://www.html5rocks.com/en/tutorials/games/assetmanager/
 
+//Base code from
+////---------- CODE BY Seth Ladd ------------------------
+//---------- http://www.html5rocks.com/en/tutorials/games/assetmanager/
+// Lot of modification have been made
+/**
+ * This singletong manages the loading of the assets of the game
+ */
 var AssetManager =  new function AssetManager() {
   var instance = this;
   this.successCount = 0;
@@ -24,21 +29,24 @@ var AssetManager =  new function AssetManager() {
   return AssetManager;
 }();
 
-
+//Every images that should be loaded
 AssetManager.prototype.queueDownload = function(paths) {
     this.downloadQueue = paths;
 };
+//Sounds that should be loaded
 AssetManager.prototype.queueSoundFiles = function(paths, context){
   this.soundQueue = paths;
   this.audioCtx = context;
 };
+//Map file to be loaded
 AssetManager.prototype.queueMap = function(path) {
     this.mapQueue = path;
 };
+//Dialog file to be loaded
 AssetManager.prototype.queueDialog = function(path) {
     this.dialogQueue = path;
 };
-
+//Loading all the assest
 AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination) {
   this.successCount = 0;
   this.errorCount = 0;
@@ -48,12 +56,13 @@ AssetManager.prototype.downloadAll = function(downloadCallback, fileDestination)
       downloadCallback();
   }else {
     var self = this;
+    //Making an array of promises to be resolve
     var promises = Array.concat(this.getImagesPromisePool(), this.getSoundsPromisePool(), this.getMapPromise(fileDestination), this.getDialogPromise());
-    console.log("Promises",promises);
     Promise.all(promises).then(function(){
       this.downloadQueue = [];
       this.fileQueue = [];
       this.soundQueue = [];
+      //Call back after the competion of the pormises
       downloadCallback();
     });
   }
@@ -68,12 +77,10 @@ AssetManager.prototype.getImagesPromisePool = function(){
       var img = new Image();
       img.addEventListener("load", function() {
         self.cache[path] = img;
-        console.log("Success!", img);
         self.successCount += 1;
         resolve(img);
       }, false);
       img.addEventListener("error", function() {
-        console.log("Error", img);
         self.errorCount += 1;
         reject(img);
       }, false);
@@ -88,14 +95,11 @@ AssetManager.prototype.getMapPromise = function(){
   var client = new XMLHttpRequest();
   var path = this.mapQueue[0];
   return new Promise(function(resolve, reject){
-      console.log("The QUeue", path);
       if(self.mapQueue.length > 0){
         client.open('GET', path,true);
         client.onreadystatechange = function() {
-          console.log("The QUeue IN", path);
           if(client.readyState === 4){ // done
             if(client.status === 200){
-              console.log("Success!");
               self.successCount += 1;
               var response = JSON.parse(client.responseText);
               self.mapArray = response;
@@ -118,14 +122,11 @@ AssetManager.prototype.getDialogPromise = function(){
   var client = new XMLHttpRequest();
   var path = this.dialogQueue[0];
   return new Promise(function(resolve, reject){
-      console.log("The QUeue", path);
       if(self.dialogQueue.length > 0){
         client.open('GET', path,true);
         client.onreadystatechange = function() {
-          console.log("The QUeue IN", path);
           if(client.readyState === 4){ // done
             if(client.status === 200){
-              console.log("Success!");
               self.successCount += 1;
               var response = JSON.parse(client.responseText);
               self.dialogs = response;
@@ -188,11 +189,11 @@ AssetManager.prototype.getSoundsPromisePool = function(){
 
   return promisePool;
 };
-
+//Returning the name the the resources loaded
 AssetManager.prototype.getAsset = function(path) {
     return this.cache[path];
 };
-
+//Returning the name the the resources loaded
 AssetManager.prototype.getSoundMap = function(){
   return this.soundMap;
 };
@@ -200,18 +201,18 @@ AssetManager.prototype.getSoundMap = function(){
 AssetManager.prototype.isDone = function() {
     return (this.downloadQueue.length == this.successCount + this.errorCount);
 };
-//Modification by FooBar
+
 AssetManager.prototype.update = function(){
   if(this.downloadQueue.length !== 0 || this.mapQueue !== 0 || this.soundQueue !== 0 || this.dialogQueue !== 0){
     return   ((this.successCount + this.errorCount) * 100) / (this.downloadQueue.length + this.soundQueue.length + this.mapQueue.length + this.dialogQueue.length) ;
   }
   return 0;
 };
-
+//Returning the name the the resources loaded
 AssetManager.prototype.getMapArray = function(){
-  console.log("AM", this.mapArray);
   return this.mapArray;
 };
+//Returning the name the the resources loaded
 AssetManager.prototype.getDialogs = function(){
   return this.dialogs;
 };
