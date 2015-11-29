@@ -1,3 +1,8 @@
+/**
+ * This Singleton manages the different levels
+ * Each level contain an array of ennemies and an array of environment entities
+ * Each level posses the path to each asset
+ */
 var LevelManager =  new function LevelManager() {
   var instance = this;
   this.currentLevel = undefined;
@@ -26,7 +31,7 @@ LevelManager.prototype.setCurrentLevelToNext = function(){
   this.currentLevel = this.nextLevel;
   this.currentLevel.init();
 };
-
+//Main class for the levels
 function Level(){
   this.name = "";
   this.enemies = [];
@@ -42,7 +47,7 @@ Level.prototype.getName = function(){
   return this.name;
 };
 
-
+//Inheritance
 LevelAsh.prototype = Object.create(Level.prototype);
 LevelAsh.prototype.constructor = Level;
 LevelAsh.prototype.parent = Level.prototype;

@@ -321,7 +321,7 @@ PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
- grid = new Grid(layout, levelManager.getCurrentLevel().getName(), mapArray);
+ grid = new Grid(layout, mapArray);
  this.allies = [];
  this.drawElements = [];
  //Resteting all the arrays containing different entities

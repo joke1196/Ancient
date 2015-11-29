@@ -38,6 +38,8 @@ Environment.prototype.draw = function(layout, ctx){
   var self = this;
   ctx.drawImage(self.image, 0, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
 };
+//Return the position as X Y coordinates from an Entity
+//this is used to sort the entities before drawing them
 Environment.prototype.getXY = function(){
   return hex_to_pixel(layout, this.position);
 };
@@ -138,7 +140,7 @@ Character.prototype.draw = function(layout, ctx){
   if(this.isAlive){
     ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
     if(this.takingDamage.isDamaged){
-      console.log("Taking Damage", this.takingDamage.value);
+      //Showing the damage
       if(mod(this.takingDamage.damageFrameIndex, 5)===0){
         ctx.fillStyle = "white";
       }else{
@@ -149,10 +151,8 @@ Character.prototype.draw = function(layout, ctx){
   }else{
     ctx.drawImage(self.image, DEAD_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
   }
-
-
 };
-
+//Executing a command
 Character.prototype.execute = function(command){
   if(this.actionsLeft >= 0){
     command.execute(command.value, command.target, command.self);
@@ -161,12 +161,13 @@ Character.prototype.execute = function(command){
     console.log("Not enough actions left");
   }
 };
+//This method is call when a character is taking damage
 Character.prototype.onTakeDamage = function(value){
   this.takingDamage.isDamaged = true;
   this.takingDamage.value = value ;
   this.takingDamage.damageFrameIndex = 0;
 };
-
+//Modifiying setting the character attributes
 Character.prototype.update = function(td){
   if(this.isAlive){
     this.health = this.tmp_health;
@@ -188,7 +189,7 @@ Character.prototype.update = function(td){
   }
 };
 
-
+//This class represent the AI
 function Enemy(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){
   this.base = Character;
@@ -203,6 +204,8 @@ Enemy.prototype.parent = Character.prototype;
 Enemy.prototype.update = function(td){
   this.parent.update.call(this, td);
 };
+//The sequence of the AI is to fire the weakest enemy if there is one in the range of fire
+//If not the AI moves to the closest character
 Enemy.prototype.play = function(){
   if(this.isAlive){
     if(this.td >= TIMEOFFSET){
@@ -235,6 +238,7 @@ Enemy.prototype.draw = function(layout, ctx){
 Enemy.prototype.getType = function(){
   return "Enemy";
 };
+//Return the closest character
 Enemy.prototype.getClosestCharacter = function(){
   var characters = SceneManager.getInstance().getCurrentScene().getAllies();
   var self = this;
@@ -252,7 +256,7 @@ Enemy.prototype.getClosestCharacter = function(){
     console.error("Error: Allies array is empty!");
   }
 };
-
+//Return an array of all the characters in range of fire
 Enemy.prototype.getInFireRange = function(){
 
   var range = getHexInRadius(this.fireRange, this.position);
@@ -270,7 +274,7 @@ Enemy.prototype.getInFireRange = function(){
   }
   return charInRange;
 };
-
+//Returns an array of the possible tiles to move to
 Enemy.prototype.getInRange = function(){
   var range = getHexInRadius(this.range, this.position);
   var hexInRange = [];

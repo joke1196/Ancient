@@ -194,6 +194,12 @@ function polygon_corners(layout, h)
 }
 
 //--------------------END CODE FROM REDBLOGAMES---------------------
+/**
+ * From a radius return all the available tiles
+ * @param  {int} radius is the range of accessible tiles
+ * @param  {Hex} center the center of the "circle"
+ * @return {Array}        an array of all the tile that are accessible
+ */
 function getHexInRadius(radius, center){
   var results = [];
   for(var dx = - radius; dx <= radius; dx++){
@@ -206,7 +212,10 @@ function getHexInRadius(radius, center){
   }
   return results;
 }
-
+/**
+ * Utility function comparing to tiles
+ * @return {boolean}     returns true if the two tiles have the same coordinates
+ */
 function hexCompare(hex1, hex2){
   return (hex1.q === hex2.q && hex1.r === hex2.r && hex1.s === hex2.s);
 }
