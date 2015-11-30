@@ -325,8 +325,9 @@ PlayScene.prototype.onEnterScene = function(){
  this.allies = [];
  this.drawElements = [];
  //Resteting all the arrays containing different entities
- this.allies.push(new Character("Tom", Hex(0, 0, 0), 100, 100, "assets/characters/kuragoBack.png", 2, grid));
- this.allies.push(new Character("John", Hex(1, -1, 0), 100, 100, "assets/characters/belaback.png", 3, grid));
+ this.allies.push(new Character("Kurago", Hex(0, 0, 0), 100, 100, "assets/characters/kurago.png", 3, grid));
+ this.allies.push(new Character("Bela", Hex(1, -1, 0), 50, 100, "assets/characters/bela.png", 4, grid));
+ this.allies.push(new Character("Rebel", Hex(2, -2, 0), 100, 100, "assets/characters/rebel.png", 3, grid));
  this.enemies = levelManager.getCurrentLevel().getEnemies();
  this.environment = levelManager.getCurrentLevel().getEnvironment();
  totalAP = 0;

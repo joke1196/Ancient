@@ -70,7 +70,7 @@ LevelAsh.prototype.getEnvironment = function(){
 };
 
 LevelAsh.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "img/spriteSheet_test.png"];
+  var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png"];
   return sprites;
 };
 LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
@@ -99,13 +99,13 @@ LevelGrass.prototype.init = function(){
   LevelManager.getInstance().setNextLevel(new LevelIce());
 };
 LevelGrass.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 10, 100, "assets/characters/kuragoBack.png", 3, grid));
-  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "assets/characters/kuragoBack.png", 3, grid));
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 10, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "assets/characters/kroganpx.png", 3, grid));
   return this.enemies;
 };
 
 LevelGrass.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/characters/kuragoBack.png", "assets/characters/belaback.png","assets/characters/octopus_final.png","assets/characters/darker3.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
+  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/darker3.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
 LevelGrass.prototype.getEnvironment = function(){
@@ -173,7 +173,7 @@ LevelIce.prototype.getSounds = function(){
 };
 
 LevelIce.prototype.getSprites = function(){
-  var sprites = ["assets/map/textures/Ice_Planet/Ice_planet_bitmap.png", "img/spriteSheet_test.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
+  var sprites = ["assets/map/textures/Ice_Planet/Ice_planet_bitmap.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
 
@@ -206,7 +206,7 @@ LevelPoison.prototype.getSounds = function(){
 };
 
 LevelPoison.prototype.getSprites = function(){ //TODO Complete
-  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "img/spriteSheet_test.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];;
+  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
 
