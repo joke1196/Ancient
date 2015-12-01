@@ -144,7 +144,7 @@ Character.prototype.draw = function(layout, ctx){
       if(mod(this.takingDamage.damageFrameIndex, 5)===0){
         ctx.fillStyle = "white";
       }else{
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "red" + DEFAULT_FONT;
       }
       ctx.fillText(this.takingDamage.value, pos.x, pos.y - this.height + mod(this.takingDamage.damageFrameIndex *DAMAGE_YOFFSET, 10));
     }

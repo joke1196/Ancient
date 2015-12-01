@@ -5,8 +5,13 @@ var BTN_WIDTH = 180;
 var BTN_HEIGHT = 50;
 var BTN_MARGIN = 10;
 var RIGHT_BTN_POSX = ACTION_BTN_POSX + BTN_WIDTH + BTN_MARGIN;
+var TOP_BTNY = 10;
+var DES_BTNY = 650;
 var ACTION_MOVE = 0;
 var ACTION_FIRE = 1;
+
+var BTN_FONT = "25px TW Cen MT";
+var DEFAULT_FONT = "20px TW Cen MT";
 
 //Start Menu
 var START_MENU_BTNX = 220;
@@ -99,7 +104,7 @@ PreloaderScene.prototype.update = function(td){
 //Display during the loading
 PreloaderScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  ctx.font="60px Georgia";
+  ctx.font="60px TW Cen MT";
   ctx.fillText("Preloading",300,300);
 };
 //Loading all the needed assets
@@ -162,7 +167,7 @@ LoadScene.prototype.update = function(td){
 LoadScene.prototype.draw = function(td){
   ctx.fillStyle = "red";
   ctx.fillRect(0 ,0, AssetManager.getInstance().update() * STAGE_WIDTH / 100, 10 );
-  ctx.font="20px Georgia";
+  ctx.font= DEFAULT_FONT;
   ctx.fillText("Loading",10,50);
 };
 //Telling the asset manager to load the current level assets
@@ -263,7 +268,6 @@ PlayScene.prototype.update = function(td){
   //End of game check
   if(isVictorious){
     isVictorious = false;
-    levelManager.setCurrentLevelToNext();
     sceneManager.showScene(new DialogScene());
   }
   if(isGameOver){
@@ -283,9 +287,9 @@ PlayScene.prototype.draw = function(){
   });
 
   ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, BTN_WIDTH * 1.5, BTN_HEIGHT);
+  ctx.fillRect(0, TOP_BTNY, BTN_WIDTH * 1.5, BTN_HEIGHT);
   ctx.fillStyle = "orange";
-  ctx.font= "25px Georgia";
+  ctx.font= BTN_FONT;
   ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", 10,30 );
 
   //Drawing sorted elements
@@ -295,14 +299,17 @@ PlayScene.prototype.draw = function(){
   //Changing the UI with user inputs
   if(selectedChar !== undefined && selectedChar !== null){
     ctx.fillStyle = "black";
+    //Selected entity rectangle
     ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
+    //Deselect Rectangle
+    ctx.fillRect(ACTION_BTN_POSX, DES_BTNY, BTN_WIDTH, BTN_HEIGHT);
     ctx.fillStyle = "white";
-    ctx.font="20px Georgia";
-
+    ctx.font= DEFAULT_FONT;
     ctx.fillText("Name: " + selectedChar.getName(),10, 760);
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
     ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
-    ctx.fillText("Intel: " + selectedChar.getIntel(), 160, 790);
+    ctx.font = BTN_FONT;
+    ctx.fillText("DESELECT", 900, 675);
     //Displaying commands only if the entity selected is playable
     if(selectedChar.getType() === "Character"){
       ctx.fillStyle = "orange";
@@ -310,7 +317,7 @@ PlayScene.prototype.draw = function(){
       ctx.fillStyle = "orange";
       ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
       ctx.fillStyle = "black";
-      ctx.font="25px Georgia";
+      ctx.font = BTN_FONT;
       ctx.fillText("MOVE",900, 775);
       ctx.fillText("FIRE",1090, 775);
     }
@@ -321,6 +328,7 @@ PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
+ console.log(mapArray);
  grid = new Grid(layout, mapArray);
  this.allies = [];
  this.drawElements = [];
@@ -352,6 +360,8 @@ PlayScene.prototype.onEnterScene = function(){
 };
 PlayScene.prototype.onExitScene = function(){
   canvas.removeEventListener("mousedown", this.eventClick);
+  selectedChar = null;
+  action = null;
 };
 
 PlayScene.prototype.getAllies = function(){
@@ -362,14 +372,13 @@ PlayScene.prototype.clickFunction = function(evt){
   evt.preventDefault();
   var mouse = { x: evt.pageX, y: evt.pageY};
   var tmpSelectedChar = this.getCharFromClick(mouse);
-
-  if(selectedChar && !tmpSelectedChar){
+  this.deselectChar(mouse);
+  if(selectedChar !== undefined && selectedChar !== null && selectedChar.getType() == "Character" && action !== ACTION_FIRE){
     //check if clicked on move or fire
     var tmpAction = actionSelected(mouse);
     //Clicking on a tile after the action was selected
-    if(action === ACTION_MOVE && tmpAction === null){
+    if(tmpAction === null){
       var hex = getTileMove(grid, mouse);
-      console.log(hex);
       if(hex !== null){
         if(selectedChar.getActionsLeft() > 0){
           selectedChar.execute(new MoveCommand(hex, selectedChar, selectedChar));
@@ -378,7 +387,7 @@ PlayScene.prototype.clickFunction = function(evt){
         resetOverlay(selectedChar.getGrid().getHashMap());
         selectedChar.getGrid().updateMap();
       }
-    }else if(tmpAction !== null){
+    }else{
       //Clicking on an action after selecting a character
       action = tmpAction;
       switch (action) {
@@ -391,10 +400,9 @@ PlayScene.prototype.clickFunction = function(evt){
         default:
       }
     }
-
-  }else if(selectedChar !== null && tmpSelectedChar !== null && action === ACTION_FIRE){
+  }else if(selectedChar !== null && selectedChar !== undefined && selectedChar.getType() == "Character" && tmpSelectedChar !== null && action === ACTION_FIRE){
     //Getting the target from a fire action
-    var target = this.getCharFromClick(mouse);
+    var target = tmpSelectedChar;
     var validTarget = false;
     //Cannot attack the environment and another playable character for now
     if(target.getType() === "Enemy"){
@@ -443,11 +451,25 @@ PlayScene.prototype.getCharFromClick = function(mouse){
   return null;
 };
 /**
+ * This function deselect the character
+ * @param  {x, y} mouse coordinates
+ */
+PlayScene.prototype.deselectChar = function(mouse){
+  if(mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.x >= ACTION_BTN_POSX && mouse.y <= DES_BTNY +BTN_HEIGHT && mouse.y >= DES_BTNY){
+    if(selectedChar !== null && selectedChar !== undefined){
+      resetOverlay(selectedChar.getGrid().getHashMap());
+      selectedChar.getGrid().updateMap();
+      selectedChar = null;
+      action = null;
+      tmpAction = null;
+    }
+  }
+};
+/**
  * This Scene is used in between battle to display dialogs
  */
 function DialogScene(){
   this.dialogs = AssetManager.getInstance().getDialogs().dialogs;
-  console.log("Dialogs", this.dialogs);
   this.dialogIndex = 0;
   this.currentDialog = this.dialogs[0];
   this.eventClick;
@@ -481,7 +503,7 @@ DialogScene.prototype.onEnterScene = function(){
   CT.config({
     canvas: canvas,
     context: ctx,
-    fontFamily: "Georgia",
+    fontFamily: "Tw Cen MT",
     fontSize: "25px",
     fontWeight: "normal",
     fontColor: "white",

@@ -22,6 +22,6 @@
     [0,0,1,0,0,0,0,0,0,0,0,0],
     [0,0,0,1,2,2,1,0,0,0,0,0]
   ],
-  "textures" : "assets/map/textures/Ice_Planet/ice_planet_bitmap.png",
+  "textures" : "assets/map/textures/Ice_Planet/Ice_planet_bitmap.png",
   "unwalkableTiles" : [2]
 }

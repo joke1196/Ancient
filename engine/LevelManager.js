@@ -62,6 +62,7 @@ LevelAsh.prototype = Object.create(Level.prototype);
 
 LevelAsh.prototype.init = function(){LevelManager.getInstance().setNextLevel(new LevelVictory());};
 LevelAsh.prototype.getEnemies = function(){
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
@@ -99,13 +100,13 @@ LevelGrass.prototype.init = function(){
   LevelManager.getInstance().setNextLevel(new LevelIce());
 };
 LevelGrass.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 10, 100, "assets/characters/criminal.png", 3, grid));
-  this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "assets/characters/kroganpx.png", 3, grid));
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  // this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "assets/characters/kroganpx.png", 3, grid));
   return this.enemies;
 };
 
 LevelGrass.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/darker3.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
+  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/kroganpx.png", "assets/characters/criminal.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
 LevelGrass.prototype.getEnvironment = function(){
@@ -145,8 +146,8 @@ LevelMenu.prototype.getSprites = function(){
 };
 
 
-LevelMenu.prototype.getEnvironement = function(){
-  // return this.environement;
+LevelMenu.prototype.getEnvironment = function(){
+  return [];
 };
 LevelMenu.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
@@ -166,7 +167,8 @@ LevelIce.prototype = Object.create(Level.prototype);
 
 LevelIce.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelPoison());};
 LevelIce.prototype.getEnemies = function(){
-  // return this.enemies;
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  return this.enemies;
 };
 LevelIce.prototype.getSounds = function(){
   return [];
@@ -178,15 +180,16 @@ LevelIce.prototype.getSprites = function(){
 };
 
 
-LevelIce.prototype.getEnvironement = function(){
-  // return this.environement;
+LevelIce.prototype.getEnvironment = function(){
+  return [];
 };
 LevelIce.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
   return dialog;
 };
 LevelIce.prototype.getMap = function(){
-  return "";
+  var map = ["assets/map/levelIce"];
+  return map;
 };
 
 function LevelPoison(){
@@ -199,7 +202,8 @@ LevelPoison.prototype = Object.create(Level.prototype);
 
 LevelPoison.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
 LevelPoison.prototype.getEnemies = function(){ //TODO Complete
-  // return this.enemies;
+  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  return this.enemies;
 };
 LevelPoison.prototype.getSounds = function(){
   return [];
@@ -211,28 +215,29 @@ LevelPoison.prototype.getSprites = function(){ //TODO Complete
 };
 
 
-LevelPoison.prototype.getEnvironement = function(){
-  // return this.environement;
+LevelPoison.prototype.getEnvironment = function(){
+  return [];
 };
 LevelPoison.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
   return dialog;
 };
 LevelPoison.prototype.getMap = function(){
-  return "";
+  var map = ["assets/map/levelPoison"];
+  return map;
 };
 
 function LevelVictory(){
   this.base = Level;
   this.base();
-  this.name = "levelPoison";
+  this.name = "levelVictory";
   return this;
 }
 LevelVictory.prototype = Object.create(Level.prototype);
 
-LevelVictory.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
+LevelVictory.prototype.init = function(){};
 LevelVictory.prototype.getEnemies = function(){
-  // return this.enemies;
+  return [];
 };
 LevelVictory.prototype.getSounds = function(){
   return [];
@@ -244,8 +249,8 @@ LevelVictory.prototype.getSprites = function(){
 };
 
 
-LevelVictory.prototype.getEnvironement = function(){
-  // return this.environement;
+LevelVictory.prototype.getEnvironment = function(){
+  return [];
 };
 LevelVictory.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
