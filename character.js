@@ -47,6 +47,7 @@ Environment.prototype.getType = function(){
   return "Environment";
 };
 
+
 Character.prototype = Object.create(Environment.prototype);
 Character.prototype.constructor = Environment;
 Character.prototype.parent = Environment.prototype;
@@ -94,6 +95,12 @@ Character.prototype.setIntel = function (new_intel){
 };
 Character.prototype.setPosition = function(new_position){
   this.tmp_position = new_position;
+};
+
+//This function has to be called in conjunction with setPosition
+//In order for the hashmap to be updated
+Character.prototype.setGrid = function(grid){
+  this.grid = grid;
 };
 Character.prototype.setActionsLeft = function(new_actionsLeft){
   this.tmp_actionsLeft = new_actionsLeft;
@@ -173,7 +180,9 @@ Character.prototype.update = function(td){
     this.health = this.tmp_health;
     this.actionsLeft = this.tmp_actionsLeft;
     this.intel = this.tmp_intel;
+    this.grid.getHashMap().get(keyCreator(this.position)).occupiedBy = null;
     this.position = this.tmp_position;
+    this.grid.getHashMap().get(keyCreator(this.position)).occupiedBy = this;
     if(this.health <= 0 ){
       this.isAlive = false;
       this.actionsLeft = 0;

@@ -10,8 +10,6 @@ function move(value, target, self){
     var targetMap = target.getGrid().getHashMap();
     var tile = targetMap.get(keyCreator(value)); //TODO clean
     if( tile !== undefined && tile.isWalkable && tile.occupiedBy === null){
-      targetMap.get(keyCreator(target.getPosition())).occupiedBy = null;
-      targetMap.get(keyCreator(value)).occupiedBy = target;
       target.setPosition(value);
       self.decActionsNum();
     }else{

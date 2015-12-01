@@ -196,8 +196,7 @@ function PlayScene(){
   //Array of all the elements to be drawn
   this.drawElements= [];
   this.eventClick;
-  //Boolean saying true is the second ending will be chosen
-  this.isBranch = false;
+
 
   //Creating arrays for enemies and allies
   this.allies = [];
@@ -257,7 +256,7 @@ PlayScene.prototype.update = function(td){
       isGameOver = false;
     }
     if(this.allies[index].getName() == "Rebel" && !this.allies[index].isAlive){
-      this.isBranch = true;
+      isBranch = true;
     }
     totalAP += this.allies[index].getActionsLeft();
   }
@@ -275,7 +274,7 @@ PlayScene.prototype.update = function(td){
   if(isVictorious){
     isVictorious = false;
     //Branching of the story
-    if(true && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
+    if(this.isBranch && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
       sceneManager.showScene(new AlternateEndingScene());
     }else{
       sceneManager.showScene(new DialogScene());
@@ -340,12 +339,18 @@ PlayScene.prototype.onEnterScene = function(){
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
  grid = new Grid(layout, mapArray);
- this.allies = [];
+ if(levelManager.getCurrentLevel().getName() === "levelGrass"){
+   instanciateAllies();
+ }else{
+   for(var index in allies){
+     allies[index].setGrid(grid);
+     allies[index].setPosition(defaultPositions[index]);
+     allies[index].update();
+   }
+ }
+ //Resetting all the arrays containing different entities
+ this.allies = allies;
  this.drawElements = [];
- //Resteting all the arrays containing different entities
- this.allies.push(new Character("Kurago", Hex(0, 0, 0), 100, 100, "assets/characters/kurago.png", 3, grid));
- this.allies.push(new Character("Bela", Hex(1, -1, 0), 50, 100, "assets/characters/bela.png", 4, grid));
- this.allies.push(new Character("Rebel", Hex(2, -2, 0), 100, 100, "assets/characters/rebel.png", 3, grid));
  this.enemies = levelManager.getCurrentLevel().getEnemies();
  this.environment = levelManager.getCurrentLevel().getEnvironment();
  totalAP = 0;
@@ -373,6 +378,23 @@ PlayScene.prototype.onExitScene = function(){
   SoundManager.getInstance().stop("Ancient_Battle_Loop.m4a");
   selectedChar = null;
   action = null;
+  allies = [];
+  for(var index in this.allies){
+    var ally = this.allies[index];
+    if(ally.isAlive){
+      ally.setHealth(ally.max_health);
+      ally.setActionsLeft(ACTIONS_PER_TURN);
+      //Saving living characters for next battle
+      ally.update();
+      allies.push(ally);
+    }else{
+      //If the rebel died before enter the Poison Level
+      //The alternate ending will be chosen
+      if(ally.getName() === "Rebel"){
+        isBranch = true;
+      }
+    }
+  }
 };
 
 PlayScene.prototype.getAllies = function(){
