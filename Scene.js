@@ -11,6 +11,7 @@ var ACTION_MOVE = 0;
 var ACTION_FIRE = 1;
 
 var BTN_FONT = "25px TW Cen MT";
+var TITLE_FONT = "60px TW Cen MT";
 var DEFAULT_FONT = "20px TW Cen MT";
 
 //Start Menu
@@ -104,7 +105,7 @@ PreloaderScene.prototype.update = function(td){
 //Display during the loading
 PreloaderScene.prototype.draw = function(){
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  ctx.font="60px TW Cen MT";
+  ctx.font= TITLE_FONT;
   ctx.fillText("Preloading",300,300);
 };
 //Loading all the needed assets
@@ -195,6 +196,8 @@ function PlayScene(){
   //Array of all the elements to be drawn
   this.drawElements= [];
   this.eventClick;
+  //Boolean saying true is the second ending will be chosen
+  this.isBranch = false;
 
   //Creating arrays for enemies and allies
   this.allies = [];
@@ -253,6 +256,9 @@ PlayScene.prototype.update = function(td){
     if(this.allies[index].isAlive){
       isGameOver = false;
     }
+    if(this.allies[index].getName() == "Rebel" && !this.allies[index].isAlive){
+      this.isBranch = true;
+    }
     totalAP += this.allies[index].getActionsLeft();
   }
   for(var enemy in this.enemies){
@@ -268,7 +274,12 @@ PlayScene.prototype.update = function(td){
   //End of game check
   if(isVictorious){
     isVictorious = false;
-    sceneManager.showScene(new DialogScene());
+    //Branching of the story
+    if(true && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
+      sceneManager.showScene(new AlternateEndingScene());
+    }else{
+      sceneManager.showScene(new DialogScene());
+    }
   }
   if(isGameOver){
     sceneManager.showScene(new GameOverScene());
@@ -328,7 +339,6 @@ PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
- console.log(mapArray);
  grid = new Grid(layout, mapArray);
  this.allies = [];
  this.drawElements = [];
@@ -360,6 +370,7 @@ PlayScene.prototype.onEnterScene = function(){
 };
 PlayScene.prototype.onExitScene = function(){
   canvas.removeEventListener("mousedown", this.eventClick);
+  SoundManager.getInstance().stop("Ancient_Battle_Loop.m4a");
   selectedChar = null;
   action = null;
 };
@@ -464,6 +475,7 @@ PlayScene.prototype.deselectChar = function(mouse){
     }
   }
 };
+
 /**
  * This Scene is used in between battle to display dialogs
  */
@@ -546,6 +558,20 @@ GameOverScene.prototype.draw = function(){
   ctx.fillStyle = "red";
   ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.fillStyle = "black";
-  ctx.font="60px Georgia";
+  ctx.font= TITLE_FONT;
   ctx.fillText("Game Over", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
+};
+
+function AlternateEndingScene(){
+  return this;
+}
+
+AlternateEndingScene.prototype = Object.create(Scene.prototype);
+
+AlternateEndingScene.prototype.draw = function(){
+  ctx.fillStyle = "black";
+  ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillStyle = "white";
+  ctx.font= TITLE_FONT;
+  ctx.fillText("Alternate Ending", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
 };
