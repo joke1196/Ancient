@@ -377,7 +377,7 @@ PlayScene.prototype.clickFunction = function(evt){
     //check if clicked on move or fire
     var tmpAction = actionSelected(mouse);
     //Clicking on a tile after the action was selected
-    if(tmpAction === null){
+    if(tmpAction === null && action === ACTION_MOVE){
       var hex = getTileMove(grid, mouse);
       if(hex !== null){
         if(selectedChar.getActionsLeft() > 0){
@@ -408,7 +408,6 @@ PlayScene.prototype.clickFunction = function(evt){
     if(target.getType() === "Enemy"){
       var hexes = getHexInRadius(selectedChar.fireRange, selectedChar.position);
       var tiles = getTilesFromHex(grid, hexes);
-      console.log("Tiles", tiles);
       for(var index in tiles){
         if(tiles[index].occupiedBy === target){
           validTarget = true;
