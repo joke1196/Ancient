@@ -6,7 +6,7 @@ var BTN_HEIGHT = 50;
 var BTN_MARGIN = 10;
 var RIGHT_BTN_POSX = ACTION_BTN_POSX + BTN_WIDTH + BTN_MARGIN;
 var TOP_BTNY = 10;
-var DES_BTNY = 650;
+var DES_BTNY = 670;
 var ACTION_MOVE = 0;
 var ACTION_FIRE = 1;
 
@@ -236,7 +236,7 @@ PlayScene.prototype.update = function(td){
     //Computers turn
     var selectedEnemy = this.enemies[selectedEnemyID];
     //Making one computer at a time play
-    if(selectedEnemy.getActionsLeft() > 0){
+    if(selectedEnemy && selectedEnemy.getActionsLeft() > 0){
       selectedEnemy.play(td);
     }else{
       selectedEnemyID++;
@@ -314,7 +314,9 @@ PlayScene.prototype.draw = function(){
   ctx.fillRect(0, TOP_BTNY, BTN_WIDTH * 1.5, BTN_HEIGHT);
   ctx.fillStyle = "orange";
   ctx.font= BTN_FONT;
-  ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", 10,30 );
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", BTN_WIDTH * 0.75,TOP_BTNY + BTN_HEIGHT / 2);
 
   //Drawing sorted elements
   for(var index in this.drawElements){
@@ -327,13 +329,19 @@ PlayScene.prototype.draw = function(){
     ctx.fillRect(0, 730, STAGE_WIDTH, STAGE_HEIGHT-730);
     //Deselect Rectangle
     ctx.fillRect(ACTION_BTN_POSX, DES_BTNY, BTN_WIDTH, BTN_HEIGHT);
+    //Skip turn Rectangle
+    ctx.fillRect(RIGHT_BTN_POSX, DES_BTNY, BTN_WIDTH, BTN_HEIGHT);
     ctx.fillStyle = "white";
     ctx.font= DEFAULT_FONT;
+    ctx.textAlign = 'start';
     ctx.fillText("Name: " + selectedChar.getName(),10, 760);
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
     ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
     ctx.font = BTN_FONT;
-    ctx.fillText("DESELECT", 900, 675);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText("DESELECT", ACTION_BTN_POSX + BTN_WIDTH / 2, DES_BTNY + BTN_HEIGHT / 2);
+    ctx.fillText("SKIP TURN", RIGHT_BTN_POSX + BTN_WIDTH / 2, DES_BTNY + BTN_HEIGHT / 2);
     //Displaying commands only if the entity selected is playable
     if(selectedChar.getType() === "Character"){
       ctx.fillStyle = "orange";
@@ -342,8 +350,8 @@ PlayScene.prototype.draw = function(){
       ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
       ctx.fillStyle = "black";
       ctx.font = BTN_FONT;
-      ctx.fillText("MOVE",900, 775);
-      ctx.fillText("FIRE",1090, 775);
+      ctx.fillText("MOVE",ACTION_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
+      ctx.fillText("FIRE",RIGHT_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
     }
   }
 };
@@ -432,6 +440,7 @@ PlayScene.prototype.clickFunction = function(evt){
   var mouse = { x: evt.pageX, y: evt.pageY};
   var tmpSelectedChar = this.getCharFromClick(mouse);
   this.deselectChar(mouse);
+  this.skipturn(mouse);
   if(selectedChar !== undefined && selectedChar !== null && selectedChar.getType() == "Character" && action !== ACTION_FIRE){
     //check if clicked on move or fire
     var tmpAction = actionSelected(mouse);
@@ -523,6 +532,25 @@ PlayScene.prototype.deselectChar = function(mouse){
     }
   }
 };
+/**
+ * This function end the turn of the player
+ * @param  {x, y} mouse coordinates
+ */
+PlayScene.prototype.skipturn = function(mouse){
+  if(mouse.x <= RIGHT_BTN_POSX + BTN_WIDTH && mouse.x >= ACTION_BTN_POSX && mouse.y <= DES_BTNY +BTN_HEIGHT && mouse.y >= DES_BTNY){
+    if(selectedChar !== null && selectedChar !== undefined){
+      resetOverlay(selectedChar.getGrid().getHashMap());
+      selectedChar.getGrid().updateMap();
+      selectedChar = null;
+      action = null;
+      tmpAction = null;
+      for(var index in this.allies){
+        this.allies[index].setActionsLeft(0);
+        this.allies[index].update();
+      }
+    }
+  }
+};
 
 /**
  * This Scene is used in between battle to display dialogs
@@ -552,8 +580,10 @@ DialogScene.prototype.draw = function(){
   ctx.fillStyle = "white";
   ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
   ctx.fillStyle = "black";
-  ctx.font= DEFAULT_FONT;
-  ctx.fillText("NEXT",1090, 775);
+  ctx.font= BTN_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("NEXT", RIGHT_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
 };
 
 DialogScene.prototype.onEnterScene = function(){
