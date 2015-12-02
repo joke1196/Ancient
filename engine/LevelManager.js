@@ -82,8 +82,10 @@ LevelAsh.prototype.getMap = function(){ // TODO Complete
   var map = ["assets/map/levelAsh"];
   return map;
 };
-
-
+LevelAsh.prototype.getSounds = function(){
+  var sounds = ["assets/sounds/lava.mp3"];
+  return sounds;
+};
 LevelGrass.prototype = Object.create(Level.prototype);
 LevelGrass.prototype.constructor = Level;
 LevelGrass.prototype.parent = Level.prototype;
@@ -114,14 +116,19 @@ LevelGrass.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(7, -10, 3), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
   return this.environment;
 };
-LevelGrass.prototype.getDialogsPath = function(){ // TODO Complete
+LevelGrass.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/levelGrass"];
   return dialog;
 };
-LevelGrass.prototype.getMap = function(){ // TODO Complete
+LevelGrass.prototype.getMap = function(){
   var map = ["assets/map/levelGrass"];
   return map;
 };
+LevelGrass.prototype.getSounds = function(){
+  var sounds = ["assets/sounds/Forest_Night.mp3"];
+  return sounds;
+};
+
 
 function LevelMenu(){
   this.base = Level;
@@ -171,7 +178,8 @@ LevelIce.prototype.getEnemies = function(){
   return this.enemies;
 };
 LevelIce.prototype.getSounds = function(){
-  return [];
+  var sounds = ["assets/sounds/Ice_Cavern.mp3"];
+  return sounds;
 };
 
 LevelIce.prototype.getSprites = function(){
@@ -206,7 +214,8 @@ LevelPoison.prototype.getEnemies = function(){ //TODO Complete
   return this.enemies;
 };
 LevelPoison.prototype.getSounds = function(){
-  return [];
+  var sounds = ["assets/sounds/Goblins_Cave.mp3"];
+  return sounds;
 };
 
 LevelPoison.prototype.getSprites = function(){ //TODO Complete

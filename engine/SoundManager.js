@@ -20,13 +20,18 @@ SoundManager.prototype.setContext = function(audioCtx){
   this.context = audioCtx;
 };
 
+SoundManager.prototype.concatSoundMap = function(soundMap){
+  for(var i = 0; i++ < soundMap.size; soundMap.next()){
+    this.bufferMap.put(soundMap.key(), soundMap.value());
+  }
+};
 SoundManager.prototype.setSoundMap = function(bufferMap){
   this.bufferMap = bufferMap;
 };
 SoundManager.prototype.getSoundMap = function(){
   return this.bufferMap;
 };
-SoundManager.prototype.play = function(fileName,volume = 1.0, loop = false){
+SoundManager.prototype.play = function(fileName, volume = 1.0, loop = false){
   var source = this.context.createBufferSource();
   var gainNode = this.context.createGain();
   source.buffer = this.bufferMap.get(fileName);

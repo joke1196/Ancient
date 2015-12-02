@@ -168,7 +168,6 @@ AssetManager.prototype.getSoundsPromisePool = function(){
             }
 
             self.soundMap.put(name, buffer);
-            console.log("in promise", self.soundMap);
             self.successCount += 1;
             resolve(buffer);
           },

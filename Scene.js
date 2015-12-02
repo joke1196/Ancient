@@ -178,6 +178,7 @@ LoadScene.prototype.onEnterScene = function(){
   assetManager.queueDownload(levelManager.getCurrentLevel().getSprites());
   var mapPath = levelManager.getCurrentLevel().getMap();
   var dialogPath = levelManager.getCurrentLevel().getDialogsPath();
+  assetManager.queueSoundFiles(levelManager.getCurrentLevel().getSounds(), audioCtx);
   assetManager.queueMap(mapPath);
   assetManager.queueDialog(dialogPath);
   assetManager.downloadAll();
@@ -338,6 +339,13 @@ PlayScene.prototype.onEnterScene = function(){
  var self = this;
  SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
  SoundManager.getInstance().play("Ancient_Battle_Loop.m4a", 0.2, true);
+ SoundManager.getInstance().concatSoundMap(AssetManager.getInstance().getSoundMap());
+ var sounds = LevelManager.getInstance().getCurrentLevel().getSounds();
+ //Start playing the sounds from the current level
+ for(var index in sounds){
+   var name = sounds[index].replace("assets/sounds/", "");
+   SoundManager.getInstance().play(name, 0.2, true);
+ }
  grid = new Grid(layout, mapArray);
  if(levelManager.getCurrentLevel().getName() === "levelGrass"){
    instanciateAllies();
@@ -376,6 +384,11 @@ PlayScene.prototype.onEnterScene = function(){
 PlayScene.prototype.onExitScene = function(){
   canvas.removeEventListener("mousedown", this.eventClick);
   SoundManager.getInstance().stop("Ancient_Battle_Loop.m4a");
+  var sounds = LevelManager.getInstance().getCurrentLevel().getSounds();
+  for(var index in sounds){
+    var name = sounds[index].replace("assets/sounds/", "");
+    SoundManager.getInstance().stop(name);
+  }
   selectedChar = null;
   action = null;
   allies = [];
@@ -526,7 +539,7 @@ DialogScene.prototype.draw = function(){
   ctx.fillStyle = "white";
   ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
   ctx.fillStyle = "black";
-  ctx.font="25px Georgia";
+  ctx.font= DEFAULT_FONT;
   ctx.fillText("NEXT",1090, 775);
 };
 
