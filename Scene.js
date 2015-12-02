@@ -90,6 +90,8 @@ Scene.prototype.onEnterScene = function(){};
  * This scene is used to load everything needed in the MenuScene
  */
 function PreloaderScene(){
+  this.backgroundImage = new Image();
+  this.backgroundImage.src = "assets/menu_screen/preloading.png";
   return this;
 }
 
@@ -104,9 +106,10 @@ PreloaderScene.prototype.update = function(td){
 };
 //Display during the loading
 PreloaderScene.prototype.draw = function(){
+
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
-  ctx.font= TITLE_FONT;
-  ctx.fillText("Preloading",300,300);
+  ctx.font = TITLE_FONT;
+  ctx.fillText("Preloading", 10, 50);
 };
 //Loading all the needed assets
 PreloaderScene.prototype.onEnterScene = function(){
@@ -123,7 +126,7 @@ PreloaderScene.prototype.onExitScene = function(){};
  */
 function MenuScene(){
   this.background = new Image();
-  this.background.src = "assets/Menu_screen/menu_screen.png";
+  this.background.src = "assets/menu_screen/menu_screen.png";
   this.eventClick = function(evt){
     var mouse = { x: evt.pageX, y: evt.pageY};
     //Switching when the Start adventure is clicked
@@ -152,6 +155,8 @@ MenuScene.prototype.onExitScene = function(){
 
 //This scene is generic and used in between every level in order to load the needed assets
 function LoadScene(){
+  this.backgroundImage = new Image();
+  this.backgroundImage.src = "assets/menu_screen/loading.png";
   return this;
 }
 
@@ -166,10 +171,16 @@ LoadScene.prototype.update = function(td){
 
 //Drawing the loading bar
 LoadScene.prototype.draw = function(td){
-  ctx.fillStyle = "red";
-  ctx.fillRect(0 ,0, AssetManager.getInstance().update() * STAGE_WIDTH / 100, 10 );
-  ctx.font= DEFAULT_FONT;
-  ctx.fillText("Loading",10,50);
+  ctx.clearRect(0,0,STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.drawImage(this.backgroundImage, 0,0,STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+  ctx.arc(10,10,5,0,2*Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(STAGE_WIDTH -20,10,5,0,2*Math.PI);
+  ctx.fill();
+  ctx.fillRect(10 ,9, AssetManager.getInstance().update() * (STAGE_WIDTH -20) / 100, 2 );
 };
 //Telling the asset manager to load the current level assets
 LoadScene.prototype.onEnterScene = function(){
@@ -197,6 +208,9 @@ function PlayScene(){
   //Array of all the elements to be drawn
   this.drawElements= [];
   this.eventClick;
+
+  this.backgroundImage = new Image();
+  this.backgroundImage.src = "assets/map/textures/backgrounds/bg_" + LevelManager.getInstance().getCurrentLevel().getName() + ".png";
 
 
   //Creating arrays for enemies and allies
@@ -287,9 +301,8 @@ PlayScene.prototype.update = function(td){
 };
 
 PlayScene.prototype.draw = function(){
-  // Filling the screen with powder blue
-  ctx.fillStyle = "#B4D8E7";
-  ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+  // Filling the screen with background image
+  ctx.drawImage(this.backgroundImage,0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   grid.draw(ctx);
   //Sorting the elements from back to front

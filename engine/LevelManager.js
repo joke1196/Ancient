@@ -71,7 +71,7 @@ LevelAsh.prototype.getEnvironment = function(){
 };
 
 LevelAsh.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png"];
+  var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "assets/map/textures/backgrounds/bg_levelAsh.png",];
   return sprites;
 };
 LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
@@ -108,7 +108,7 @@ LevelGrass.prototype.getEnemies = function(){
 };
 
 LevelGrass.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/kroganpx.png", "assets/characters/criminal.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
+  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/map/textures/backgrounds/bg_levelGrass.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/kroganpx.png", "assets/characters/criminal.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
 LevelGrass.prototype.getEnvironment = function(){
@@ -148,7 +148,7 @@ LevelMenu.prototype.getSounds = function(){
 };
 
 LevelMenu.prototype.getSprites = function(){
-  var sprites = ["assets/Menu_screen/menu_screen.png"];
+  var sprites = ["assets/menu_screen/menu_screen.png", "assets/menu_screen/loading.png"];
   return sprites;
 };
 
@@ -183,7 +183,7 @@ LevelIce.prototype.getSounds = function(){
 };
 
 LevelIce.prototype.getSprites = function(){
-  var sprites = ["assets/map/textures/Ice_Planet/Ice_planet_bitmap.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
+  var sprites = ["assets/map/textures/Ice_Planet/Ice_planet_bitmap.png","assets/map/textures/backgrounds/bg_levelIce.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
 
@@ -219,7 +219,7 @@ LevelPoison.prototype.getSounds = function(){
 };
 
 LevelPoison.prototype.getSprites = function(){ //TODO Complete
-  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
+  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png","assets/map/textures/backgrounds/bg_levelPoison.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
 
@@ -253,7 +253,7 @@ LevelVictory.prototype.getSounds = function(){
 };
 
 LevelVictory.prototype.getSprites = function(){
-  var sprites = ["assets/Menu_screen/menu_screen.png"];
+  var sprites = ["assets/menu_screen/menu_screen.png"];
   return sprites;
 };
 

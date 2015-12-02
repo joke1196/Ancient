@@ -7,7 +7,7 @@ var MAP_WIDTH = 12;
 var HEX_HEIGHT = 50;
 var HEX_WIDTH = 25;
 var MAP_X = 300;
-var MAP_Y = 750;
+var MAP_Y = 775;
 
 
 var canvas = null;
