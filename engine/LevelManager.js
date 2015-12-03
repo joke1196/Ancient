@@ -107,7 +107,7 @@ LevelGrass.prototype.getEnemies = function(){
   return this.enemies;
 };
 
-LevelGrass.prototype.getSprites = function(){ // TODO Complete
+LevelGrass.prototype.getSprites = function(){ 
   var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/map/textures/backgrounds/bg_levelGrass.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/kroganpx.png", "assets/characters/criminal.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
@@ -206,7 +206,8 @@ LevelIce.prototype.getSprites = function(){
 
 
 LevelIce.prototype.getEnvironment = function(){
-  return [];
+  this.environment.push(new Environment(Hex(0, -2, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
