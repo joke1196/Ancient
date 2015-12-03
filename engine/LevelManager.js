@@ -114,6 +114,23 @@ LevelGrass.prototype.getSprites = function(){ // TODO Complete
 LevelGrass.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(8, -10, 2), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
   this.environment.push(new Environment(Hex(7, -10, 3), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(6, -10, 4), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(6, -10, 4), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(8, -11, 3), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(7, -11, 4), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(6, -13, 7), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(6, -14, 8), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(11, -10, -1), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(2, -10, 8), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(3, -11, 8), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(1, -9, 8), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(11, -12, 1), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(15, -17, 2), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(14, -16, 2), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(16, -12, -4), "assets/map/textures/Grass_planet/environments/tree.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(16, -11, -5), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(11, -6, -5), "assets/map/textures/Grass_planet/environments/bush.png", grid,100, 125));
   return this.environment;
 };
 LevelGrass.prototype.getDialogsPath = function(){
