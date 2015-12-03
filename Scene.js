@@ -13,6 +13,7 @@ var ACTION_FIRE = 1;
 var BTN_FONT = "25px TW Cen MT";
 var TITLE_FONT = "60px TW Cen MT";
 var DEFAULT_FONT = "20px TW Cen MT";
+var VICTORY_FONT = "120px TW Cen MT";
 
 //Start Menu
 var START_MENU_BTNX = 220;
@@ -295,7 +296,7 @@ PlayScene.prototype.update = function(td){
     if(this.isBranch && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
       sceneManager.showScene(new AlternateEndingScene());
     }else{
-      sceneManager.showScene(new DialogScene());
+      sceneManager.showScene(new VictoryScene());
     }
   }
   if(isGameOver){
@@ -659,4 +660,36 @@ AlternateEndingScene.prototype.draw = function(){
   ctx.fillStyle = "white";
   ctx.font= TITLE_FONT;
   ctx.fillText("Alternate Ending", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
+};
+
+function VictoryScene(){
+  this.eventClick;
+  return this;
+}
+
+VictoryScene.prototype = Object.create(Scene.prototype);
+
+VictoryScene.prototype.draw = function(){
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 200, STAGE_WIDTH, 400);
+  ctx.fillStyle = "white";
+  ctx.font= VICTORY_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("VICTORY", STAGE_WIDTH / 2, 200 + 400/2);
+};
+VictoryScene.prototype.onEnterScene = function(){
+  var self = this;
+
+  this.eventClick = function(evt){
+    self.clickToSkip(evt);
+  };
+  canvas.addEventListener("mousedown", this.eventClick , false);
+
+};
+VictoryScene.prototype.clickToSkip = function(evt){
+  SceneManager.getInstance().showScene(new DialogScene);
+};
+VictoryScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
 };
