@@ -10,10 +10,15 @@ var DES_BTNY = 670;
 var ACTION_MOVE = 0;
 var ACTION_FIRE = 1;
 
+//Fonts
 var BTN_FONT = "25px TW Cen MT";
 var TITLE_FONT = "60px TW Cen MT";
 var DEFAULT_FONT = "20px TW Cen MT";
 var VICTORY_FONT = "120px TW Cen MT";
+
+//Victory panel size
+var VICTORY_POSY = 200;
+var VICTORY_HEIGHT = 400;
 
 //Start Menu
 var START_MENU_BTNX = 220;
@@ -622,13 +627,22 @@ DialogScene.prototype.dialogNext = function(evt){
       this.currentDialog = this.dialogs[this.dialogIndex];
     }else{
       //If the last dialog page is displayed we switch to the new level and load scene
-      LevelManager.getInstance().setCurrentLevelToNext();
-      sceneManager.showScene(new LoadScene());
+      if(LevelManager.getInstance().getCurrentLevel().name == "levelAsh"){
+        sceneManager.showScene(new EndScene());
+      }else{
+        LevelManager.getInstance().setCurrentLevelToNext();
+        sceneManager.showScene(new LoadScene());
+      }
     }
   }
   if(mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.x >= ACTION_BTN_POSX && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT && mouse.y >= ACTION_BTN_POSY){
-    LevelManager.getInstance().setCurrentLevelToNext();
-    sceneManager.showScene(new LoadScene());
+    if(LevelManager.getInstance().getCurrentLevel().name == "levelAsh"){
+      sceneManager.showScene(new EndScene());
+    }else{
+      LevelManager.getInstance().setCurrentLevelToNext();
+      sceneManager.showScene(new LoadScene());
+    }
+
   }
 };
 /**
@@ -670,13 +684,14 @@ function VictoryScene(){
 VictoryScene.prototype = Object.create(Scene.prototype);
 
 VictoryScene.prototype.draw = function(){
+  ctx.clearRect(0,VICTORY_POSY, STAGE_WIDTH, VICTORY_HEIGHT);
   ctx.fillStyle = "black";
-  ctx.fillRect(0, 200, STAGE_WIDTH, 400);
+  ctx.fillRect(0, VICTORY_POSY, STAGE_WIDTH, VICTORY_HEIGHT);
   ctx.fillStyle = "white";
   ctx.font= VICTORY_FONT;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText("VICTORY", STAGE_WIDTH / 2, 200 + 400/2);
+  ctx.fillText("VICTORY", STAGE_WIDTH / 2, VICTORY_POSY + VICTORY_HEIGHT/2);
 };
 VictoryScene.prototype.onEnterScene = function(){
   var self = this;
@@ -688,8 +703,31 @@ VictoryScene.prototype.onEnterScene = function(){
 
 };
 VictoryScene.prototype.clickToSkip = function(evt){
-  SceneManager.getInstance().showScene(new DialogScene);
+  SceneManager.getInstance().showScene(new DialogScene());
 };
 VictoryScene.prototype.onExitScene = function(){
   canvas.removeEventListener("mousedown", this.eventClick);
+};
+
+function EndScene(){
+  this.eventClick;
+  return this;
+}
+
+EndScene.prototype = Object.create(Scene.prototype);
+
+EndScene.prototype.draw = function(){
+  ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, VICTORY_POSY, STAGE_WIDTH, VICTORY_HEIGHT);
+  ctx.fillStyle = "white";
+  ctx.font= TITLE_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("Thank you for playing Ancient", STAGE_WIDTH / 2, VICTORY_POSY + VICTORY_HEIGHT/2);
+};
+EndScene.prototype.onEnterScene = function(){
+};
+
+EndScene.prototype.onExitScene = function(){
 };
