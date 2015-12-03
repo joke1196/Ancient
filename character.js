@@ -1,9 +1,8 @@
 //GLOBALS
 var CHAR_WIDTH = 100;
 var CHAR_HEIGHT = 100;
-var ENV_WIDTH = 400;
-var ENV_HEIGHT = 500;
-var NUM_POS_SPRITE = 5; //TODO Remove
+var ENV_WIDTH = 100;
+var ENV_HEIGHT = 125;
 var ACTIONS_PER_TURN = 2;
 var RANGE = 2;
 var FIRERANGE = 1;

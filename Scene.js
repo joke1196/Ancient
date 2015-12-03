@@ -284,7 +284,10 @@ PlayScene.prototype.update = function(td){
     }
     compTotalAP += this.enemies[enemy].getActionsLeft();
   }
-
+  //Sorting the elements from back to front
+  this.drawElements = this.drawElements.sort(function(a, b){
+    return a.getXY().y - b.getXY().y;
+  });
   //End of game check
   if(isVictorious){
     isVictorious = false;
@@ -305,10 +308,11 @@ PlayScene.prototype.draw = function(){
   ctx.drawImage(this.backgroundImage,0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
   grid.draw(ctx);
-  //Sorting the elements from back to front
-  this.drawElements = this.drawElements.sort(function(a, b){
-    return (a.getXY().y + a.height) - (b.getXY().y + b.height);
-  });
+
+  //Drawing sorted elements
+  for(var index in this.drawElements){
+    this.drawElements[index].draw(layout, ctx);
+  }
 
   ctx.fillStyle = "black";
   ctx.fillRect(0, TOP_BTNY, BTN_WIDTH * 1.5, BTN_HEIGHT);
@@ -318,10 +322,7 @@ PlayScene.prototype.draw = function(){
   ctx.textBaseline = 'middle';
   ctx.fillText(this.state === gameStates.PLAYERSTURN? "Player's turn" : "Computer's turn", BTN_WIDTH * 0.75,TOP_BTNY + BTN_HEIGHT / 2);
 
-  //Drawing sorted elements
-  for(var index in this.drawElements){
-    this.drawElements[index].draw(layout, ctx);
-  }
+
   //Changing the UI with user inputs
   if(selectedChar !== undefined && selectedChar !== null){
     ctx.fillStyle = "black";
@@ -394,7 +395,7 @@ PlayScene.prototype.onEnterScene = function(){
  this.drawElements.push(this.environment);
  this.drawElements = [].concat.apply([], this.drawElements);
  this.drawElements = this.drawElements.sort(function(a, b){
-   return (a.getXY().y + a.height) - (b.getXY().y + b.height);
+   return a.getXY().y  - b.getXY().y;
  });
  this.eventClick = function (evt){
    self.clickFunction(evt);
@@ -579,10 +580,12 @@ DialogScene.prototype.draw = function(){
   });
   ctx.fillStyle = "white";
   ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
+  ctx.fillRect(ACTION_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
   ctx.fillStyle = "black";
   ctx.font= BTN_FONT;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.fillText("SKIP", ACTION_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
   ctx.fillText("NEXT", RIGHT_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
 };
 
@@ -621,6 +624,10 @@ DialogScene.prototype.dialogNext = function(evt){
       LevelManager.getInstance().setCurrentLevelToNext();
       sceneManager.showScene(new LoadScene());
     }
+  }
+  if(mouse.x <= ACTION_BTN_POSX + BTN_WIDTH && mouse.x >= ACTION_BTN_POSX && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT && mouse.y >= ACTION_BTN_POSY){
+    LevelManager.getInstance().setCurrentLevelToNext();
+    sceneManager.showScene(new LoadScene());
   }
 };
 /**
