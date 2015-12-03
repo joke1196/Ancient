@@ -394,7 +394,7 @@ PlayScene.prototype.onEnterScene = function(){
  this.drawElements.push(this.environment);
  this.drawElements = [].concat.apply([], this.drawElements);
  this.drawElements = this.drawElements.sort(function(a, b){
-   return a.getXY().y - b.getXY().y;
+   return (a.getXY().y + a.height) - (b.getXY().y + b.height);
  });
  this.eventClick = function (evt){
    self.clickFunction(evt);
