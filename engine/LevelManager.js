@@ -280,7 +280,7 @@ LevelPoison.prototype.getEnvironment = function(){
 	
 };
 LevelPoison.prototype.getDialogsPath = function(){
-  var dialog = ["assets/dialog/intro"];
+  var dialog = ["assets/dialog/levelPoison"];
   return dialog;
 };
 LevelPoison.prototype.getMap = function(){
