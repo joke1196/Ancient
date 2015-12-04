@@ -384,6 +384,9 @@ PlayScene.prototype.onEnterScene = function(){
      allies[index].update();
    }
  }
+ if(levelManager.getCurrentLevel().getName() === "levelIce"){
+   allies.push(new Character("Last Ancestor", Hex(0, 0, 0), 90, 100, "assets/characters/ancestor.png", 6, grid));
+ }
  //Resetting all the arrays containing different entities
  this.allies = allies;
  this.drawElements = [];

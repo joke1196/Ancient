@@ -62,7 +62,12 @@ LevelAsh.prototype = Object.create(Level.prototype);
 
 LevelAsh.prototype.init = function(){};
 LevelAsh.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+    this.enemies.push(new Enemy("Krodux", Hex(8, -8, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid, 125, 125));
+    this.enemies.push(new Enemy("Krodux", Hex(6, -6, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+    this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+    this.enemies.push(new Enemy("Krodux", Hex(5, -5, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+    this.enemies.push(new Enemy("Krodux", Hex(4, -4, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+    this.enemies.push(new Enemy("Krodux", Hex(3, -3, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
@@ -83,7 +88,7 @@ LevelAsh.prototype.getEnvironment = function(){
 };
 
 LevelAsh.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png", "assets/map/textures/backgrounds/bg_levelAsh.png",];
+  var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png","assets/characters/kroganpx.png", "assets/map/textures/Ash_Planet/environments/lava_chimney.png","assets/map/textures/Ash_Planet/environments/gemstone_rock.png","assets/map/textures/backgrounds/bg_levelAsh.png",];
   return sprites;
 };
 LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
@@ -168,7 +173,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());}; 
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());};
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
@@ -202,9 +207,14 @@ function LevelIce(){
 }
 LevelIce.prototype = Object.create(Level.prototype);
 
-LevelIce.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelPoison());};
+LevelIce.prototype.init = function(){
+  LevelManager.getInstance().setNextLevel(new LevelPoison());
+};
 LevelIce.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(5, -5, 0), 1, 100, "assets/characters/criminal.png", 4, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(6, -6, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(7, -7, 0), 1, 100, "assets/characters/criminal.png", 4, grid));
   return this.enemies;
 };
 LevelIce.prototype.getSounds = function(){
@@ -222,21 +232,21 @@ LevelIce.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(0, -2, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
   this.environment.push(new Environment(Hex(0, -5, 5), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
   this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(8, -15, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(7, -15, 8), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(8, -15, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(7, -15, 8), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
   this.environment.push(new Environment(Hex(7, -14, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(16, -17, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 125));
- this.environment.push(new Environment(Hex(16, -18, 2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
- this.environment.push(new Environment(Hex(15, -16, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 300));
- this.environment.push(new Environment(Hex(12, -13, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(13, -15, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(16, -17, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(16, -18, 2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(15, -16, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(12, -13, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(13, -15, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
   this.environment.push(new Environment(Hex(13, -16, 3), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
- this.environment.push(new Environment(Hex(17, -17, 0), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
- this.environment.push(new Environment(Hex(17, -16, -1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 90));
- this.environment.push(new Environment(Hex(16, -14, -2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 100));
- this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
- this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(17, -17, 0), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(17, -16, -1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 90));
+  this.environment.push(new Environment(Hex(16, -14, -2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 100));
+  this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
   return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
@@ -257,8 +267,12 @@ function LevelPoison(){
 LevelPoison.prototype = Object.create(Level.prototype);
 
 LevelPoison.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
-LevelPoison.prototype.getEnemies = function(){ //TODO Complete
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
+LevelPoison.prototype.getEnemies = function(){
+  this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+  this.enemies.push(new Enemy("007x", Hex(8, -8, 0), 1, 100, "assets/characters/007.png", 4, grid));
+  this.enemies.push(new Enemy("007x", Hex(6, -6, 0), 1, 100, "assets/characters/007.png", 4, grid));
+  this.enemies.push(new Enemy("Octo", Hex(5, -5, 0), 1, 100, "assets/characters/octo.png", 4, grid));
+  this.enemies.push(new Enemy("Astro", Hex(4, -4, 0), 1, 100, "assets/characters/astro.png", 4, grid));
   return this.enemies;
 };
 LevelPoison.prototype.getSounds = function(){
@@ -267,7 +281,7 @@ LevelPoison.prototype.getSounds = function(){
 };
 
 LevelPoison.prototype.getSprites = function(){ //TODO Complete
-  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png","assets/map/textures/backgrounds/bg_levelPoison.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
+  var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "assets/characters/astro.png","assets/characters/octo.png","assets/characters/007.png","assets/characters/kroganpx.png","assets/map/textures/backgrounds/bg_levelPoison.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
 
