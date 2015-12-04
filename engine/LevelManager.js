@@ -260,7 +260,24 @@ LevelPoison.prototype.getSprites = function(){ //TODO Complete
 
 
 LevelPoison.prototype.getEnvironment = function(){
-  return [];
+   this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+ 	this.environment.push(new Environment(Hex(13, -12, -1), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 150));
+	this.environment.push(new Environment(Hex(16, -11, -5), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 200));
+	this.environment.push(new Environment(Hex(15, -11, -4), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(16, -12, -4), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(16, -13, -3), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(8, -8, 0), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(8, -6, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(9, -7, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(10, -13, 3), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(11, -13, 2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(10, -11, 1), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(3, -9, 6), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 200));
+	this.environment.push(new Environment(Hex(4, -10, 6), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(4, -9, 5), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+  return this.environment;
+	
 };
 LevelPoison.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
