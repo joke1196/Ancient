@@ -281,8 +281,8 @@ PlayScene.prototype.update = function(td){
     }
     totalAP += this.allies[index].getActionsLeft();
   }
+  isVictorious = true;
   for(var enemy in this.enemies){
-    isVictorious = true;
     this.enemies[enemy].update(td);
     //As long as one enemy lives it's not a victory
     if(this.enemies[enemy].isAlive){
@@ -628,11 +628,6 @@ DialogScene.prototype.onEnterScene = function(){
 
   CT.defineClass("TheLastAncestor", {
       fontColor:"#CC3399",
-      fontFamily:"Tw Cen MT"
-      });
-
-  CT.defineClass("white", {
-      fontColor:"#FFFFFF",
       fontFamily:"Tw Cen MT"
       });
 
