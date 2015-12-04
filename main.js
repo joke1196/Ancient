@@ -15,6 +15,7 @@ var ctx = null;
 var lastUpdate = Date.now();
 var CT = new CanvasText;
 
+
 //Creating a layout for the hex map
 var layout = Layout(layout_pointy, Point(HEX_HEIGHT, HEX_WIDTH), Point(MAP_X,MAP_Y) );
 layout.origin;
@@ -90,3 +91,57 @@ function createCanvas() {
   // Our drawing handle
   ctx = canvas.getContext("2d");
 }
+
+//Defining Classes for dialogs
+ CT.config({
+    canvas: canvas,
+    context: ctx,
+    fontFamily: "Tw Cen MT",
+    fontSize: "25px",
+    fontWeight: "normal",
+    fontColor: "white",
+    lineHeight: "24"
+  });
+
+CT.defineClass("blue", {
+    fontColor:"#3399CC",
+    fontFamily:"Tw Cen MT"
+    });
+
+
+ CT.defineClass("red", {
+    fontColor:"#FF0000",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("act", {
+    fontSize: "30px",
+    fontColor:"#339900",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("TheLastAncestor", {
+    fontColor:"#CC3399",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("white", {
+    fontColor:"#FFFFFF",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("Cef", {
+    fontColor:"#66FFFF",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("bold", {
+    fontWeight:"bold",
+    fontFamily:"Tw Cen MT"
+    });
+
+CT.defineClass("italic", {
+    fontStyle:"italic",
+    fontColor:"#FFFFFF",
+    fontFamily:"Tw Cen MT"
+    });
