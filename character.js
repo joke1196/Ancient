@@ -8,6 +8,7 @@ var RANGE = 2;
 var FIRERANGE = 1;
 var TIMEOFFSET = 100;
 var DAMAGE_YOFFSET = 10;
+var DAMAGE_XOFFSET = 5;
 var END_TAKE_DAMAGE = 50;
 var ALIVE_SPRITE = 0;
 var DEAD_SPRITE = 1;
@@ -144,15 +145,20 @@ Character.prototype.draw = function(layout, ctx){
   var pos = hex_to_pixel(layout, this.position);
   var self = this;
   if(this.isAlive){
-    ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
+
     if(this.takingDamage.isDamaged){
       //Showing the damage
       if(mod(this.takingDamage.damageFrameIndex, 5)===0){
         ctx.fillStyle = "white";
+        ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2) + DAMAGE_XOFFSET, pos.y - self.height, self.width, self.height);
       }else{
         ctx.fillStyle = "red" + DEFAULT_FONT;
+        ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2) - DAMAGE_XOFFSET, pos.y - self.height, self.width, self.height);
+
       }
       ctx.fillText(this.takingDamage.value, pos.x, pos.y - this.height + mod(this.takingDamage.damageFrameIndex *DAMAGE_YOFFSET, 10));
+    }else{
+      ctx.drawImage(self.image, ALIVE_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);
     }
   }else{
     ctx.drawImage(self.image, DEAD_SPRITE * CHAR_WIDTH, 0, self.width, self.height, pos.x - Math.floor(self.width / 2), pos.y - self.height, self.width, self.height);

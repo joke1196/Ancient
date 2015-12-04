@@ -34,15 +34,16 @@ sceneManager.showScene(new PreloaderScene());
 //Creating array of playable characters
 
 var allies = [];
-var defaultPositions = [Hex(0, 0, 0), Hex(1, -1, 0),Hex(2, -2, 0)];
+var defaultPositions = [Hex(0, 0, 0), Hex(1, -1, 0),Hex(2, -2, 0), Hex()];
 /**
  * This function is called only once when entering the first level.
  * It creates an array of all the playable characters
  */
 function instanciateAllies(){
-  allies.push(new Character("Kurago", Hex(0, 0, 0), 100, 100, "assets/characters/kurago.png", 3, grid));
-  allies.push(new Character("Bela", Hex(1, -1, 0), 50, 100, "assets/characters/bela.png", 4, grid));
+  allies.push(new Character("Kurago", Hex(4, -6, 2), 100, 100, "assets/characters/kurago.png", 3, grid));
+  allies.push(new Character("Bela", Hex(1, -6, 5), 50, 100, "assets/characters/bela.png", 4, grid));
   allies.push(new Character("Rebel", Hex(2, -2, 0), 100, 100, "assets/characters/rebel.png", 3, grid));
+  allies.push(new Character("Suspicious guy", Hex(1, -3, 2), 100, 100, "assets/characters/spio.png", 3, grid));
 }
 
 //Boolean saying true if the second ending will be chosen

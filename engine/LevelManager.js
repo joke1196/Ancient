@@ -168,7 +168,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());}; //TODO Correct to levelGrass
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());}; 
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
@@ -240,7 +240,7 @@ LevelIce.prototype.getEnvironment = function(){
   return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
-  var dialog = ["assets/dialog/intro"];
+  var dialog = ["assets/dialog/levelIce"];
   return dialog;
 };
 LevelIce.prototype.getMap = function(){
@@ -293,7 +293,7 @@ LevelPoison.prototype.getEnvironment = function(){
 
 };
 LevelPoison.prototype.getDialogsPath = function(){
-  var dialog = ["assets/dialog/intro"];
+  var dialog = ["assets/dialog/levelPoison"];
   return dialog;
 };
 LevelPoison.prototype.getMap = function(){
