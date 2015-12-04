@@ -66,12 +66,24 @@ LevelAsh.prototype.getEnemies = function(){
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
-
+  this.environment.push(new Environment(Hex(6, -14, 8), "assets/map/textures/Ash_Planet/environments/lava_chimney.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(11, -6, -5), "assets/map/textures/Ash_Planet/environments/lava_chimney.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(5, -13, 8), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(6, -13, 7), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(7, -14, 7), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(6, -9, 3), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(11, -7, -4), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(12, -6, -6), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(10, -12, 2), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(13, -17, 4), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(13, -18, 5), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(15, -16, 1), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(10, -5, -5), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   return this.environment;
 };
 
 LevelAsh.prototype.getSprites = function(){ // TODO Complete
-  var sprites = ["assets/map/textures/Ash_planet/Ash_planet_bitmap.png", "assets/map/textures/backgrounds/bg_levelAsh.png",];
+  var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png", "assets/map/textures/backgrounds/bg_levelAsh.png",];
   return sprites;
 };
 LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
@@ -102,13 +114,14 @@ LevelGrass.prototype.init = function(){
   LevelManager.getInstance().setNextLevel(new LevelIce());
 };
 LevelGrass.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Bill", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
-  // this.enemies.push(new Enemy("Helmut", Hex(7, -6, -1), 10, 100, "assets/characters/kroganpx.png", 3, grid));
+  this.enemies.push(new Enemy("Wild Animal", Hex(12, -9, -3), 5, 100, "assets/characters/rex.png", 3, grid));
+  this.enemies.push(new Enemy("Wild Animal", Hex(10, -13, 3), 7, 100, "assets/characters/rex.png", 3, grid));
+  this.enemies.push(new Enemy("Wild Animal", Hex(8, -7, -1), 6, 100, "assets/characters/rex.png", 3, grid));
   return this.enemies;
 };
 
 LevelGrass.prototype.getSprites = function(){
-  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/map/textures/backgrounds/bg_levelGrass.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/kroganpx.png", "assets/characters/criminal.png" , "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
+  var sprites = ["assets/map/textures/Grass_planet/grass_bitmap.png", "assets/map/textures/backgrounds/bg_levelGrass.png","assets/characters/spio.png", "assets/characters/kurago.png","assets/characters/rebel.png", "assets/characters/bela.png", "assets/characters/rex.png",  "assets/map/textures/Grass_planet/environments/bush.png","assets/map/textures/Grass_planet/environments/tree.png"];
   return sprites;
 };
 LevelGrass.prototype.getEnvironment = function(){
@@ -155,7 +168,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());};
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());}; //TODO Correct to levelGrass
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
@@ -277,7 +290,7 @@ LevelPoison.prototype.getEnvironment = function(){
 	this.environment.push(new Environment(Hex(4, -10, 6), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
 	this.environment.push(new Environment(Hex(4, -9, 5), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
   return this.environment;
-	
+
 };
 LevelPoison.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
