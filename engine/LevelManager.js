@@ -227,7 +227,7 @@ LevelIce.prototype.getEnvironment = function(){
   return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
-  var dialog = ["assets/dialog/intro"];
+  var dialog = ["assets/dialog/levelIce"];
   return dialog;
 };
 LevelIce.prototype.getMap = function(){
