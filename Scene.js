@@ -372,7 +372,7 @@ PlayScene.prototype.onEnterScene = function(){
  //Start playing the sounds from the current level
  for(var index in sounds){
    var name = sounds[index].replace("assets/sounds/", "");
-   SoundManager.getInstance().play(name, 0.2, true);
+   SoundManager.getInstance().play(name, 0.3, true);
  }
  grid = new Grid(layout, mapArray);
  if(levelManager.getCurrentLevel().getName() === "levelGrass"){
