@@ -207,6 +207,23 @@ LevelIce.prototype.getSprites = function(){
 
 LevelIce.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(0, -2, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(0, -5, 5), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(8, -15, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(7, -15, 8), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(7, -14, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(16, -17, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(16, -18, 2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(15, -16, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 300));
+ this.environment.push(new Environment(Hex(12, -13, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(13, -15, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(13, -16, 3), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(17, -17, 0), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(17, -16, -1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 90));
+ this.environment.push(new Environment(Hex(16, -14, -2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 100));
+ this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
   return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
@@ -243,7 +260,24 @@ LevelPoison.prototype.getSprites = function(){ //TODO Complete
 
 
 LevelPoison.prototype.getEnvironment = function(){
-  return [];
+   this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+ 	this.environment.push(new Environment(Hex(13, -12, -1), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 150));
+	this.environment.push(new Environment(Hex(16, -11, -5), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 200));
+	this.environment.push(new Environment(Hex(15, -11, -4), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(16, -12, -4), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(16, -13, -3), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(8, -8, 0), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(8, -6, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(9, -7, -2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(10, -13, 3), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(11, -13, 2), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(10, -11, 1), "assets/map/textures/Poison_planet/environments/Gem_rock.png", grid,100, 125));
+	this.environment.push(new Environment(Hex(3, -9, 6), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 200));
+	this.environment.push(new Environment(Hex(4, -10, 6), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+	this.environment.push(new Environment(Hex(4, -9, 5), "assets/map/textures/Poison_planet/environments/giant_mushroom.png", grid,100, 300));
+  return this.environment;
+	
 };
 LevelPoison.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/intro"];
