@@ -136,7 +136,7 @@ function MenuScene(){
   this.eventClick = function(evt){
     var mouse = { x: evt.pageX, y: evt.pageY};
     //Switching when the Start adventure is clicked
-    if(mouse.x <= (START_MENU_BTNX + START_MENU_BTN_WIDTH) && mouse.x >= START_MENU_BTNX && mouse.y <= START_MENU_BTNY + START_MENU_BTNX_HEIGHT && mouse.y >= START_MENU_BTNY){
+    if( mouse.x <= (START_MENU_BTNX + START_MENU_BTN_WIDTH) && mouse.x >= START_MENU_BTNX && mouse.y <= START_MENU_BTNY + START_MENU_BTNX_HEIGHT && mouse.y >= START_MENU_BTNY){
       sceneManager.showScene(new DialogScene());
     }
   };
@@ -389,6 +389,7 @@ PlayScene.prototype.onEnterScene = function(){
  this.drawElements = [];
  this.enemies = levelManager.getCurrentLevel().getEnemies();
  this.environment = levelManager.getCurrentLevel().getEnvironment();
+ console.log("Environment", this.environment);
  totalAP = 0;
  for(var index in this.allies){
    totalAP += this.allies[index].getActionsLeft();
@@ -431,7 +432,7 @@ PlayScene.prototype.onExitScene = function(){
     }else{
       //If the rebel died before enter the Poison Level
       //The alternate ending will be chosen
-      if(ally.getName() === "Rebel"){
+      if(ally.getName() === "Suspicious guy"){
         isBranch = true;
       }
     }
