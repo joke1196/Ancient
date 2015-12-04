@@ -207,6 +207,23 @@ LevelIce.prototype.getSprites = function(){
 
 LevelIce.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(0, -2, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(0, -5, 5), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+  this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(5, -6, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(8, -15, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(7, -15, 8), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(7, -14, 7), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(16, -17, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(16, -18, 2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(15, -16, 1), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 300));
+ this.environment.push(new Environment(Hex(12, -13, 1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(13, -15, 2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(13, -16, 3), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 125));
+ this.environment.push(new Environment(Hex(17, -17, 0), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(17, -16, -1), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 90));
+ this.environment.push(new Environment(Hex(16, -14, -2), "assets/map/textures/Ice_Planet/environments/pile_of_snow.png", grid,100, 100));
+ this.environment.push(new Environment(Hex(11, -9, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
+ this.environment.push(new Environment(Hex(12, -10, -2), "assets/map/textures/Ice_Planet/environments/ice_pilar.png", grid,100, 200));
   return this.environment;
 };
 LevelIce.prototype.getDialogsPath = function(){
