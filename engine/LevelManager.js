@@ -88,7 +88,7 @@ LevelAsh.prototype.getEnvironment = function(){
 };
 
 LevelAsh.prototype.getSprites = function(){
-  var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png","assets/characters/kroganpx.png", "assets/map/textures/Ash_Planet/environments/lava_chimney.png","assets/map/textures/Ash_Planet/environments/gemstone_rock.png","assets/map/textures/backgrounds/bg_levelAsh.png",];
+  var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png","assets/characters/kroganpx.png", "assets/map/textures/Ash_Planet/environments/lava_chimney.png","assets/map/textures/Ash_Planet/environments/gemstone_rock.png","assets/map/textures/backgrounds/bg_levelAsh.png"];
   return sprites;
 };
 LevelAsh.prototype.getDialogsPath = function(){
@@ -281,7 +281,7 @@ LevelPoison.prototype.getSounds = function(){
   return sounds;
 };
 
-LevelPoison.prototype.getSprites = function(){ 
+LevelPoison.prototype.getSprites = function(){
   var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "assets/characters/astro.png","assets/characters/octo.png","assets/characters/007.png","assets/characters/kroganpx.png","assets/map/textures/backgrounds/bg_levelPoison.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };
