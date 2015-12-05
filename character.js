@@ -228,7 +228,6 @@ Enemy.prototype.play = function(){
       this.td = 0;
       if(this.actionsLeft > 0){
         var inAttackDist = this.getInFireRange();
-        console.log("Range:", inAttackDist.length);
         if(inAttackDist.length > 0){
           if(inAttackDist.length >= 1){
             //Attack the character in range with the less health
@@ -282,7 +281,7 @@ Enemy.prototype.getInFireRange = function(){
     var tile = this.grid.getHashMap().get(keyCreator(range[hex]));
     if(tile !== undefined){
       char = tile.occupiedBy;
-      if(char !== null && char.getType() === "Character"){
+      if(char !== null && char.getType() === "Character" && char.isAlive){
         charInRange.push(char);
       }
     }
