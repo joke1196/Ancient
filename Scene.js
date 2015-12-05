@@ -387,14 +387,13 @@ PlayScene.prototype.onEnterScene = function(){
    }
  }
  if(levelManager.getCurrentLevel().getName() === "levelIce"){
-   allies.push(new Character("Last Ancestor",  Hex(1,-4,3), 50, 100, "assets/characters/ancestor.png", 10, grid, 100, 100, 4, 2));
+   allies.push(new Character("Last Ancestor",  Hex(1,-4,3), 30, 100, "assets/characters/ancestor.png", 10, grid, 100, 100, 4, 2));
  }
  //Resetting all the arrays containing different entities
  this.allies = allies;
  this.drawElements = [];
  this.enemies = levelManager.getCurrentLevel().getEnemies();
  this.environment = levelManager.getCurrentLevel().getEnvironment();
- console.log("Environment", this.environment);
  totalAP = 0;
  for(var index in this.allies){
    totalAP += this.allies[index].getActionsLeft();
@@ -715,7 +714,11 @@ GameOverScene.prototype.draw = function(){
 };
 
 function AlternateEndingScene(){
-  this.dialogs = ["A", "lternative"];
+  this.dialogs =   [
+    "After having killed the members of CP0, the Heroes have now an another problem: the Galactic Army is coming. The Ancestor is almost ready, but they have to beat the vanguard first... <br/>They have to beat them until the Ancestor finish to absorb the Ancient Power!"
+	,
+    "A very bright light appears form the Last Ancestor's body. The Army's spaceship is beginning to land on Venom.<br/><class='red'>The Ancestor! He got it! </class><br/><class='green'>-So this is his real form...</class><br/><class='boldTheLastAncestor'>The Last Ancestor:</class> <class='TheLastAncestor'> I.. am..ready.</class><br/><class='red'>-The Galactic Army! Look! They're coming!</class><br/><class='green'>-Ancestor! We haven't enough time!</class><br/><class='boldTheLastAncestor'>-The Last Ancestor: Come. Come next to me.</class><br/><br/>At these words, the Ancestor raises his hands, and uses his Ancient Power to crush several spaceship. Nobody could understand what is going on..<br/>The Ancestor closes his eyes. And he disappears with the Heroes...to another galaxy."
+  ];
   this.currentDialog = this.dialogs[0];
   this.eventClick;
   this.dialogIndex = 0;

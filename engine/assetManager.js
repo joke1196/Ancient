@@ -153,7 +153,6 @@ AssetManager.prototype.getSoundsPromisePool = function(){
     var request = new XMLHttpRequest();
     promisePool.push(new Promise(function(resolve, reject){
       request.open("GET", self.soundQueue[index], true);
-      console.log("Queue", self.soundQueue[index]);
       var name = self.soundQueue[index].replace("assets/sounds/", "");
       request.responseType = "arraybuffer";
       request.onload = function() {

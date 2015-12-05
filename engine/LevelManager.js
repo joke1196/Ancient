@@ -68,15 +68,15 @@ LevelAsh.prototype.getEnemies = function(){
     this.enemies.push(new Enemy("Krodux", Hex(15, -12, -3), 16, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
     this.enemies.push(new Enemy("Krodux", Hex(12, -9, -3), 16, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
     this.enemies.push(new Enemy("Krodux", Hex(10, -15, 5), 17, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
-  return this.enemies;
+    return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
   this.environment.push(new Environment(Hex(6, -14, 8), "assets/map/textures/Ash_Planet/environments/lava_chimney.png", grid,100, 300));
-  this.environment.push(new Environment(Hex(11, -6, -5), "assets/map/textures/Ash_Planet/environments/lava_chimney.png", grid,100, 300));
+  this.environment.push(new Environment(Hex(11, -6, -5),"assets/map/textures/Ash_Planet/environments/lava_chimney.png", grid,100, 300));
   this.environment.push(new Environment(Hex(5, -13, 8), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   this.environment.push(new Environment(Hex(6, -13, 7), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   this.environment.push(new Environment(Hex(7, -14, 7), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
-  this.environment.push(new Environment(Hex(6, -9, 3), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
+  this.environment.push(new Environment(Hex(6, -9, 3),  "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   this.environment.push(new Environment(Hex(11, -7, -4), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   this.environment.push(new Environment(Hex(12, -6, -6), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
   this.environment.push(new Environment(Hex(10, -12, 2), "assets/map/textures/Ash_Planet/environments/gemstone_rock.png", grid,100, 125));
@@ -87,15 +87,15 @@ LevelAsh.prototype.getEnvironment = function(){
   return this.environment;
 };
 
-LevelAsh.prototype.getSprites = function(){ // TODO Complete
+LevelAsh.prototype.getSprites = function(){
   var sprites = ["assets/map/textures/Ash_Planet/Ash_planet_bitmap.png","assets/characters/kroganpx.png", "assets/map/textures/Ash_Planet/environments/lava_chimney.png","assets/map/textures/Ash_Planet/environments/gemstone_rock.png","assets/map/textures/backgrounds/bg_levelAsh.png",];
   return sprites;
 };
-LevelAsh.prototype.getDialogsPath = function(){ // TODO Complete
+LevelAsh.prototype.getDialogsPath = function(){
   var dialog = ["assets/dialog/levelAsh"];
   return dialog;
 };
-LevelAsh.prototype.getMap = function(){ // TODO Complete
+LevelAsh.prototype.getMap = function(){
   var map = ["assets/map/levelAsh"];
   return map;
 };

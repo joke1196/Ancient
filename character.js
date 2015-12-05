@@ -13,7 +13,7 @@ var END_TAKE_DAMAGE = 50;
 var ALIVE_SPRITE = 0;
 var DEAD_SPRITE = 1;
 /**
- * Environment is the "Class" representing an entity in on a tile during the play scene
+ * Environment is the "Class" representing an entity on a tile during the play scene
  * @param {Hex} position  is the position of the entity on the grid
  * @param {String} sprite   is the path to the image representing the entity
  * @param {Grid} grid     is the grid on which the battle will take place
@@ -258,15 +258,7 @@ Enemy.prototype.getClosestCharacter = function(){
   var characters = SceneManager.getInstance().getCurrentScene().getAllies();
   var self = this;
   if(characters){
-    //Sorting the array to find the closest character from the enemy (this)
-    characters.sort(function(a ,b){ // TODO use find min in array
-      var distSelf = self.getPosition();
-      var distA = hex_distance(a.getPosition(), distSelf);
-      var distB = hex_distance(b.getPosition(), distSelf);
-      return distA - distB;
-    });
-    console.log(characters[0]);
-    return characters[0];
+    return minInArray(characters, Character.prototype.getHealth);
   }else{
     console.error("Error: Allies array is empty!");
   }
