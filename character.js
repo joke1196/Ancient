@@ -53,7 +53,7 @@ Character.prototype.constructor = Environment;
 Character.prototype.parent = Environment.prototype;
 
 function Character(name, hex, max_health, max_intel, img, strength, grid,
-  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){ //TODO Make it proper with constants
+  width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){
   this.base = Environment;
   this.base(hex, img, grid,
     width = CHAR_WIDTH, height = CHAR_HEIGHT);

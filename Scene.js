@@ -343,7 +343,7 @@ PlayScene.prototype.draw = function(){
     ctx.textAlign = 'start';
     ctx.fillText("Name: " + selectedChar.getName(),10, 760);
     ctx.fillText("Actions left: " + selectedChar.getActionsLeft(),10, 790);
-    ctx.fillText("Health: " + selectedChar.getHealth(),160, 760);
+    ctx.fillText("Health: " + selectedChar.getHealth(),160, 790);
     ctx.font = BTN_FONT;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -385,7 +385,7 @@ PlayScene.prototype.onEnterScene = function(){
    }
  }
  if(levelManager.getCurrentLevel().getName() === "levelIce"){
-   allies.push(new Character("Last Ancestor", Hex(0, 0, 0), 90, 100, "assets/characters/ancestor.png", 6, grid));
+   allies.push(new Character("Last Ancestor", Hex(0, 0, 0), 50, 100, "assets/characters/ancestor.png", 10, grid, 100, 100, 4, 2));
  }
  //Resetting all the arrays containing different entities
  this.allies = allies;
