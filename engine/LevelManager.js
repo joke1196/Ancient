@@ -62,12 +62,12 @@ LevelAsh.prototype = Object.create(Level.prototype);
 
 LevelAsh.prototype.init = function(){};
 LevelAsh.prototype.getEnemies = function(){
-    this.enemies.push(new Enemy("Krodux Boss", Hex(8, -8, 0), 20, 100, "assets/characters/kroganpx.png", 7, grid, 125, 125, 3, 2));
-    this.enemies.push(new Enemy("Krodux", Hex(6, -6, 0), 16, 100, "assets/characters/kroganpx.png", 5, grid, 100, 100, 3, 2));
-    this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 16, 100, "assets/characters/kroganpx.png", 6, grid, 100, 100, 3, 2));
-    this.enemies.push(new Enemy("Krodux", Hex(5, -5, 0), 16, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
-    this.enemies.push(new Enemy("Krodux", Hex(4, -4, 0), 16, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
-    this.enemies.push(new Enemy("Krodux", Hex(3, -3, 0), 17, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux Boss", Hex(14, -13, -1), 20, 100, "assets/characters/kroganpx.png", 7, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(12, -14, 2), 16, 100, "assets/characters/kroganpx.png", 5, grid, 60, 60, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(12, -11, -1), 16, 100, "assets/characters/kroganpx.png", 6, grid, 60, 60, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(15, -12, -3), 16, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(12, -9, -3), 16, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(10, -15, 5), 17, 100, "assets/characters/kroganpx.png", 4, grid, 60, 60, 3, 2));
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
@@ -173,7 +173,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelPoison());};
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
