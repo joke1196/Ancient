@@ -173,7 +173,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());};
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
