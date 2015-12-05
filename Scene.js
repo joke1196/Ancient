@@ -115,7 +115,9 @@ PreloaderScene.prototype.draw = function(){
 
   ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.font = TITLE_FONT;
-  ctx.fillText("Preloading", 10, 50);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("Preloading", STAGE_WIDTH/2, STAGE_HEIGHT/2);
 };
 //Loading all the needed assets
 PreloaderScene.prototype.onEnterScene = function(){
