@@ -278,7 +278,7 @@ PlayScene.prototype.update = function(td){
     if(this.allies[index].isAlive){
       isGameOver = false;
     }
-    if(this.allies[index].getName() == "Rebel" && !this.allies[index].isAlive){
+    if(this.allies[index].getName() == "Suspicious guy" && !this.allies[index].isAlive){
       isBranch = true;
     }
     totalAP += this.allies[index].getActionsLeft();

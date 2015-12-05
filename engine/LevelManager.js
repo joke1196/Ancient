@@ -62,12 +62,12 @@ LevelAsh.prototype = Object.create(Level.prototype);
 
 LevelAsh.prototype.init = function(){};
 LevelAsh.prototype.getEnemies = function(){
-    this.enemies.push(new Enemy("Krodux", Hex(8, -8, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid, 125, 125));
-    this.enemies.push(new Enemy("Krodux", Hex(6, -6, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
-    this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
-    this.enemies.push(new Enemy("Krodux", Hex(5, -5, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
-    this.enemies.push(new Enemy("Krodux", Hex(4, -4, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
-    this.enemies.push(new Enemy("Krodux", Hex(3, -3, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
+    this.enemies.push(new Enemy("Krodux Boss", Hex(8, -8, 0), 1, 100, "assets/characters/kroganpx.png", 7, grid, 125, 125, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(6, -6, 0), 1, 100, "assets/characters/kroganpx.png", 5, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 1, 100, "assets/characters/kroganpx.png", 6, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(5, -5, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(4, -4, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
+    this.enemies.push(new Enemy("Krodux", Hex(3, -3, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid, 100, 100, 3, 2));
   return this.enemies;
 };
 LevelAsh.prototype.getEnvironment = function(){
@@ -211,10 +211,10 @@ LevelIce.prototype.init = function(){
   LevelManager.getInstance().setNextLevel(new LevelPoison());
 };
 LevelIce.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Criminal", Hex(4, -4, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
-  this.enemies.push(new Enemy("Criminal", Hex(5, -5, 0), 1, 100, "assets/characters/criminal.png", 4, grid));
-  this.enemies.push(new Enemy("Criminal", Hex(6, -6, 0), 1, 100, "assets/characters/criminal.png", 3, grid));
-  this.enemies.push(new Enemy("Criminal", Hex(7, -7, 0), 1, 100, "assets/characters/criminal.png", 4, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(4, -4, 0), 12, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(5, -5, 0), 12, 100, "assets/characters/criminal.png", 4, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(6, -6, 0), 15, 100, "assets/characters/criminal.png", 3, grid));
+  this.enemies.push(new Enemy("Criminal", Hex(7, -7, 0), 12, 100, "assets/characters/criminal.png", 4, grid));
   return this.enemies;
 };
 LevelIce.prototype.getSounds = function(){
@@ -268,11 +268,11 @@ LevelPoison.prototype = Object.create(Level.prototype);
 
 LevelPoison.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
 LevelPoison.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 1, 100, "assets/characters/kroganpx.png", 4, grid));
-  this.enemies.push(new Enemy("007x", Hex(8, -8, 0), 1, 100, "assets/characters/007.png", 4, grid));
-  this.enemies.push(new Enemy("007x", Hex(6, -6, 0), 1, 100, "assets/characters/007.png", 4, grid));
-  this.enemies.push(new Enemy("Octo", Hex(5, -5, 0), 1, 100, "assets/characters/octo.png", 4, grid));
-  this.enemies.push(new Enemy("Astro", Hex(4, -4, 0), 1, 100, "assets/characters/astro.png", 4, grid));
+  this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 15, 100, "assets/characters/kroganpx.png", 5, grid, 100, 100, 3, 2));
+  this.enemies.push(new Enemy("007x", Hex(8, -8, 0), 13, 100, "assets/characters/007.png", 4, grid, 100, 100, 3));
+  this.enemies.push(new Enemy("007x", Hex(6, -6, 0), 13, 100, "assets/characters/007.png", 5, grid,100,100,3));
+  this.enemies.push(new Enemy("Octo", Hex(5, -5, 0), 13, 100, "assets/characters/octo.png", 6, grid));
+  this.enemies.push(new Enemy("Astro", Hex(4, -4, 0), 13, 100, "assets/characters/astro.png", 3, grid, 100, 100, 4, 5));
   return this.enemies;
 };
 LevelPoison.prototype.getSounds = function(){
