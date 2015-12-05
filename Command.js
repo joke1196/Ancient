@@ -8,7 +8,7 @@ function attack(value, target, self) { target.setHealth(target.health - value);
 function move(value, target, self){
   if(target.getActionsLeft() > 0){
     var targetMap = target.getGrid().getHashMap();
-    var tile = targetMap.get(keyCreator(value)); //TODO clean
+    var tile = targetMap.get(keyCreator(value));
     if( tile !== undefined && tile.isWalkable && tile.occupiedBy === null){
       target.setPosition(value);
       self.decActionsNum();

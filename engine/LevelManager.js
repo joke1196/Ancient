@@ -281,7 +281,7 @@ LevelPoison.prototype.getSounds = function(){
   return sounds;
 };
 
-LevelPoison.prototype.getSprites = function(){ //TODO Complete
+LevelPoison.prototype.getSprites = function(){ 
   var sprites = ["assets/map/textures/Poison_planet/poison_planet_bitmap.png", "assets/characters/astro.png","assets/characters/octo.png","assets/characters/007.png","assets/characters/kroganpx.png","assets/map/textures/backgrounds/bg_levelPoison.png", "assets/map/textures/Ice_Planet/environments/ice_pilar.png","assets/map/textures/Ice_Planet/environments/pile_of_snow.png"];
   return sprites;
 };

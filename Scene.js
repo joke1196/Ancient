@@ -158,7 +158,7 @@ MenuScene.prototype.onEnterScene = function(){
   soundManager.play("Ancient_Theme_V1_1.m4a");
 };
 MenuScene.prototype.onExitScene = function(){
-  canvas.removeEventListener('click', this.eventClick, false); // TODO REMOVE
+  canvas.removeEventListener('click', this.eventClick, false); 
 };
 
 //This scene is generic and used in between every level in order to load the needed assets

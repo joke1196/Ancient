@@ -53,7 +53,7 @@ isBranch = false;
 var mapArray = {};
 var grid = undefined;
 
-//Setting globals // TODO move to Scene
+//Setting globals 
 var isVictorious = false;
 var isGameOver = false;
 var totalAP = 0;
