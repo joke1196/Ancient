@@ -602,6 +602,9 @@ DialogScene.prototype.draw = function(){
 };
 
 DialogScene.prototype.onEnterScene = function(){
+  if(LevelManager.getInstance().getCurrentLevel().name !== "levelMenu"){
+    SoundManager.getInstance().play("Ancient_Theme_V1_1.m4a");
+  }
   var self = this;
   //Creating an object to display easily text on the canvas
   //Defining Classes for dialogs
@@ -660,6 +663,9 @@ DialogScene.prototype.onEnterScene = function(){
 
 };
 DialogScene.prototype.onExitScene = function(){
+  if(LevelManager.getInstance().getCurrentLevel().name !== "levelGrass"){
+    SoundManager.getInstance().stop("Ancient_Theme_V1_1.m4a");
+  }
   canvas.removeEventListener("mousedown", this.eventClick);
 };
 

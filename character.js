@@ -56,7 +56,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   width = CHAR_WIDTH, height = CHAR_HEIGHT, range = RANGE, fireRange = FIRERANGE){
   this.base = Environment;
   this.base(hex, img, grid,
-    width = CHAR_WIDTH, height = CHAR_HEIGHT);
+    width, height);
   this.name = name;
   this.max_health = max_health;
   this.max_intel = max_intel;
@@ -68,9 +68,7 @@ function Character(name, hex, max_health, max_intel, img, strength, grid,
   this.range = range;
   this.fireRange = fireRange;
   this.takingDamage = { "isDamaged" : false, "value": 0, "damageFrameIndex" : 0 };
-
   this.tmp_position = hex;
-
   this.isAlive = true;
   this.actionsLeft = ACTIONS_PER_TURN;
   this.tmp_actionsLeft = this.actionsLeft;
