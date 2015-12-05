@@ -300,7 +300,7 @@ PlayScene.prototype.update = function(td){
   if(isVictorious){
     isVictorious = false;
     //Branching of the story
-    if(this.isBranch && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
+    if(isBranch && LevelManager.getInstance().getNextLevel().name === "levelAsh"){
       sceneManager.showScene(new AlternateEndingScene());
     }else{
       sceneManager.showScene(new VictoryScene());
@@ -387,7 +387,7 @@ PlayScene.prototype.onEnterScene = function(){
    }
  }
  if(levelManager.getCurrentLevel().getName() === "levelIce"){
-   allies.push(new Character("Last Ancestor", Hex(0, 0, 0), 50, 100, "assets/characters/ancestor.png", 10, grid, 100, 100, 4, 2));
+   allies.push(new Character("Last Ancestor",  Hex(1,-4,3), 50, 100, "assets/characters/ancestor.png", 10, grid, 100, 100, 4, 2));
  }
  //Resetting all the arrays containing different entities
  this.allies = allies;

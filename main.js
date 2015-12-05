@@ -34,7 +34,7 @@ sceneManager.showScene(new PreloaderScene());
 //Creating array of playable characters
 
 var allies = [];
-var defaultPositions = [Hex(4, -6, 2), Hex(1, -6, 5),Hex(2, -2, 0), Hex(1, -3, 2), Hex(0,0,0)];
+var defaultPositions = [Hex(4, -6, 2), Hex(3, -8, 5),Hex(3, -2, -1), Hex(1, -5, 4), Hex(1,-4,3)];
 /**
  * This function is called only once when entering the first level.
  * It creates an array of all the playable characters
