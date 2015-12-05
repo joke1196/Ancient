@@ -176,7 +176,11 @@ Character.prototype.execute = function(command){
 //This method is call when a character is taking damage
 Character.prototype.onTakeDamage = function(value){
   this.takingDamage.isDamaged = true;
-  this.takingDamage.value = value ;
+  if(value === 0){
+    this.takingDamage.value = "Miss";
+  }else{
+    this.takingDamage.value = value;
+  }
   this.takingDamage.damageFrameIndex = 0;
 };
 //Modifiying setting the character attributes
@@ -230,7 +234,7 @@ Enemy.prototype.play = function(){
         if(inAttackDist.length > 0){
           if(inAttackDist.length >= 1){
             //Attack the character in range with the less health
-            this.execute(new AttackCommand(this.strength,  minInArray(inAttackDist, Character.prototype.getHealth), this));
+            this.execute(new AttackCommand(Math.floor(Math.random()* this.strength),  minInArray(inAttackDist, Character.prototype.getHealth), this));
           }
         }else {
           //Find the closest character and move in its direction

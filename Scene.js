@@ -494,7 +494,7 @@ PlayScene.prototype.clickFunction = function(evt){
       }
       if(validTarget){
         if(selectedChar.getActionsLeft() > 0){
-          selectedChar.execute(new AttackCommand(selectedChar.strength, target, selectedChar));
+          selectedChar.execute(new AttackCommand(Math.floor(Math.random()* selectedChar.strength), target, selectedChar));
         }
         action = null;
         tmpSelectedChar = null;
