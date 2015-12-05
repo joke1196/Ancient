@@ -709,17 +709,60 @@ GameOverScene.prototype.draw = function(){
 };
 
 function AlternateEndingScene(){
+  this.dialogs = ["A", "lternative"];
+  this.currentDialog = this.dialogs[0];
+  this.eventClick;
+  this.dialogIndex = 0;
   return this;
 }
 
 AlternateEndingScene.prototype = Object.create(Scene.prototype);
 
 AlternateEndingScene.prototype.draw = function(){
+  var self = this;
+  ctx.clearRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.fillStyle = "black";
   ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
+  //Using a external library for the text to be displayed easily
+  CT.drawText({
+    text:self.currentDialog,
+    x: 20,
+    y: 30,
+    boxWidth:STAGE_WIDTH - 20
+  });
   ctx.fillStyle = "white";
-  ctx.font= TITLE_FONT;
-  ctx.fillText("Alternate Ending", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
+  ctx.fillRect(RIGHT_BTN_POSX, ACTION_BTN_POSY, BTN_WIDTH, BTN_HEIGHT);
+  ctx.fillStyle = "black";
+  ctx.font= BTN_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("NEXT", RIGHT_BTN_POSX + BTN_WIDTH / 2, ACTION_BTN_POSY + BTN_HEIGHT / 2);
+};
+
+AlternateEndingScene.prototype.onEnterScene = function(){
+  var self = this;
+  this.eventClick = function(evt){
+    self.dialogNext(evt);
+  };
+  canvas.addEventListener("mousedown", this.eventClick , false);
+
+};
+AlternateEndingScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
+};
+
+//Managin the next button when a dialog is displayed
+AlternateEndingScene.prototype.dialogNext = function(evt){
+  evt.preventDefault();
+  var mouse = { x: evt.pageX, y: evt.pageY};
+  if(mouse.x <= RIGHT_BTN_POSX + BTN_WIDTH && mouse.x >= RIGHT_BTN_POSX && mouse.y <= ACTION_BTN_POSY + BTN_HEIGHT && mouse.y >= ACTION_BTN_POSY){
+    this.dialogIndex++;
+    if(this.dialogIndex < this.dialogs.length){
+      this.currentDialog = this.dialogs[this.dialogIndex];
+    }else{
+      this.currentDialog = "Thank you for playing Ancient";
+    }
+  }
 };
 
 function VictoryScene(){
