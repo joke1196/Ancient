@@ -173,7 +173,7 @@ function LevelMenu(){
 }
 LevelMenu.prototype = Object.create(Level.prototype);
 
-LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelGrass());};
+LevelMenu.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelPoison());};
 LevelMenu.prototype.getEnemies = function(){
   // return this.enemies;
 };
@@ -269,11 +269,11 @@ LevelPoison.prototype = Object.create(Level.prototype);
 
 LevelPoison.prototype.init = function(){ LevelManager.getInstance().setNextLevel(new LevelAsh());};
 LevelPoison.prototype.getEnemies = function(){
-  this.enemies.push(new Enemy("Krodux", Hex(7, -7, 0), 15, 100, "assets/characters/kroganpx.png", 5, grid, 100, 100, 3, 2));
-  this.enemies.push(new Enemy("007x", Hex(8, -8, 0), 13, 100, "assets/characters/007.png", 4, grid, 100, 100, 3));
-  this.enemies.push(new Enemy("007x", Hex(6, -6, 0), 13, 100, "assets/characters/007.png", 5, grid,100,100,3));
-  this.enemies.push(new Enemy("Octo", Hex(5, -5, 0), 13, 100, "assets/characters/octo.png", 6, grid));
-  this.enemies.push(new Enemy("Astro", Hex(4, -4, 0), 13, 100, "assets/characters/astro.png", 3, grid, 100, 100, 4, 5));
+  this.enemies.push(new Enemy("Krodux", Hex(13, -13, 0), 15, 100, "assets/characters/kroganpx.png", 5, grid, 100, 100, 3, 2));
+  this.enemies.push(new Enemy("007x", Hex(13, -9,-4), 13, 100, "assets/characters/007.png", 4, grid, 100, 100, 3));
+  this.enemies.push(new Enemy("007x", Hex(15, -14, -1), 13, 100, "assets/characters/007.png", 5, grid,100,100,3));
+  this.enemies.push(new Enemy("Octo", Hex(10, -10, 0), 13, 100, "assets/characters/octo.png", 6, grid));
+  this.enemies.push(new Enemy("Astro", Hex(10, -15, 5), 13, 100, "assets/characters/astro.png", 3, grid, 100, 100, 4, 5));
   return this.enemies;
 };
 LevelPoison.prototype.getSounds = function(){
