@@ -15,13 +15,13 @@ function max(n, m){
 function min(n , m){
   return n <= m ? n : m;
 }
-//Check for an attribute of an object in an array
-//and returning the object where the attribute is the smallest
+//Check for an attribute of an character in an array
+//and returning the character where the health is the smallest
 //used the return the weakest character for the AI to fire
-function minInArray(array, attribute){
+function minInArray(array){
   var min = array[0];
   for(var i = 1; i < array.length; i++){
-    if(array[i].attribute < min.attribute){
+    if(array[i].getHealth() < min.getHealth()){
       min = array[i];
     }
   }

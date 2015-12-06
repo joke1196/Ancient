@@ -17,7 +17,7 @@ var AssetManager =  new function AssetManager() {
   this.soundQueue = [];
   this.queueLength  = 0;
   this.fileDestination = [];
-  this.mapArray;
+  this.mapArray = [];
   this.dialogs= [];
   this.soundMap = new Map();
   this.audioCtx = undefined;

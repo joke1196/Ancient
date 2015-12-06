@@ -40,20 +40,20 @@ var defaultPositions = [Hex(4, -6, 2), Hex(3, -8, 5),Hex(3, -2, -1), Hex(1, -5, 
  * It creates an array of all the playable characters
  */
 function instanciateAllies(){
-  allies.push(new Character("Kurago", Hex(4, -6, 2), 25, 100, "assets/characters/kurago.png", 9, grid, 100, 100, 3, 2));
+  allies.push(new Character("Kurago", Hex(4, -6, 2), 18, 100, "assets/characters/kurago.png", 9, grid, 100, 100, 3, 2));
   allies.push(new Character("Bela", Hex(1, -6, 5), 12, 100, "assets/characters/bela.png", 5, grid, 100, 100, 3, 4));
-  allies.push(new Character("Rebel", Hex(2, -2, 0), 30, 100, "assets/characters/rebel.png", 7, grid));
-  allies.push(new Character("Suspicious guy", Hex(1, -3, 2), 20, 100, "assets/characters/spio.png", 10, grid));
+  allies.push(new Character("Rebel", Hex(2, -2, 0), 20, 100, "assets/characters/rebel.png", 7, grid));
+  allies.push(new Character("Suspicious guy", Hex(1, -3, 2), 15, 100, "assets/characters/spio.png", 10, grid));
 }
 
 //Boolean saying true if the second ending will be chosen
-isBranch = false;
+var isBranch = false;
 
 //Creating the map
 var mapArray = {};
 var grid = undefined;
 
-//Setting globals 
+//Setting globals
 var isVictorious = false;
 var isGameOver = false;
 var totalAP = 0;

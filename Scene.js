@@ -158,7 +158,7 @@ MenuScene.prototype.onEnterScene = function(){
   soundManager.play("Ancient_Theme_V1_1.m4a");
 };
 MenuScene.prototype.onExitScene = function(){
-  canvas.removeEventListener('click', this.eventClick, false); 
+  canvas.removeEventListener('click', this.eventClick, false);
 };
 
 //This scene is generic and used in between every level in order to load the needed assets
@@ -214,8 +214,11 @@ var gameStates = {
 function PlayScene(){
   this.state = gameStates.PLAYERSTURN;
   //Array of all the elements to be drawn
-  this.drawElements= [];
-  this.eventClick;
+  this.drawElements = [];
+  var self = this;
+  this.eventClick = function (evt){
+    self.clickFunction(evt);
+  };
 
   this.backgroundImage = new Image();
   this.backgroundImage.src = "assets/map/textures/backgrounds/bg_" + LevelManager.getInstance().getCurrentLevel().getName() + ".png";
@@ -271,8 +274,8 @@ PlayScene.prototype.update = function(td){
   //Recount of actions points
   totalAP = 0;
   compTotalAP = 0 ;
+  isGameOver = true;
   for(var index in this.allies){
-    isGameOver = true;
     this.allies[index].update(td);
     //As long as someone lives it's not game over
     if(this.allies[index].isAlive){
@@ -408,9 +411,7 @@ PlayScene.prototype.onEnterScene = function(){
  this.drawElements = this.drawElements.sort(function(a, b){
    return a.getXY().y  - b.getXY().y;
  });
- this.eventClick = function (evt){
-   self.clickFunction(evt);
- };
+
  canvas.addEventListener("mousedown",this.eventClick, false);
 
 };
@@ -555,7 +556,6 @@ PlayScene.prototype.skipturn = function(mouse){
       selectedChar.getGrid().updateMap();
       selectedChar = null;
       action = null;
-      tmpAction = null;
       for(var index in this.allies){
         this.allies[index].setActionsLeft(0);
         this.allies[index].update();
@@ -571,7 +571,10 @@ function DialogScene(){
   this.dialogs = AssetManager.getInstance().getDialogs().dialogs;
   this.dialogIndex = 0;
   this.currentDialog = this.dialogs[0];
-  this.eventClick;
+  var self = this;
+  this.eventClick = function(evt){
+    self.dialogNext(evt);
+  };
   return this;
 }
 
@@ -655,9 +658,7 @@ DialogScene.prototype.onEnterScene = function(){
       fontFamily:"Tw Cen MT"
       });
 
-  this.eventClick = function(evt){
-    self.dialogNext(evt);
-  };
+
   canvas.addEventListener("mousedown", this.eventClick , false);
 
 };
@@ -700,6 +701,10 @@ DialogScene.prototype.dialogNext = function(evt){
  * The scene displays Game Over if every entity in the allies array is dead
  */
 function GameOverScene(){
+  this.eventClick = function(evt){
+    LevelManager.getInstance().setNextLevel(new LevelMenu());
+    SceneManager.getInstance().showScene(new MenuScene());
+  };
   return this;
 }
 
@@ -710,15 +715,25 @@ GameOverScene.prototype.draw = function(){
   ctx.fillRect(0,0, STAGE_WIDTH, STAGE_HEIGHT);
   ctx.fillStyle = "black";
   ctx.font= TITLE_FONT;
-  ctx.fillText("Game Over", STAGE_WIDTH / 3, STAGE_HEIGHT/2 -60);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText("Game Over", STAGE_WIDTH / 2, STAGE_HEIGHT/2);
+};
+GameOverScene.prototype.onEnterScene = function(){
+  canvas.addEventListener("mousedown", this.eventClick , false);
+
+};
+GameOverScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
 };
 
 function AlternateEndingScene(){
   this.dialogs =   [
-    "After having killed the members of CP0, the Heroes have now an another problem: the Galactic Army is coming. The Ancestor is almost ready, but they have to beat the vanguard first... <br/>They have to beat them until the Ancestor finish to absorb the Ancient Power!"
+    "After having killed the members of CP0, the Heroes are facing an another problem now: the Galactic Army is coming. The Ancestor is almost ready, but they have to beat the vanguard first... <br/>...at least until the Ancestor managed to  absorb enough Ancient Power!"
 	,
-    "A very bright light appears form the Last Ancestor's body. The Army's spaceship is beginning to land on Venom.<br/><class='red'>The Ancestor! He got it! </class><br/><class='green'>-So this is his real form...</class><br/><class='boldTheLastAncestor'>The Last Ancestor:</class> <class='TheLastAncestor'> I.. am..ready.</class><br/><class='red'>-The Galactic Army! Look! They're coming!</class><br/><class='green'>-Ancestor! We haven't enough time!</class><br/><class='boldTheLastAncestor'>-The Last Ancestor: Come. Come next to me.</class><br/><br/>At these words, the Ancestor raises his hands, and uses his Ancient Power to crush several spaceship. Nobody could understand what is going on..<br/>The Ancestor closes his eyes. And he disappears with the Heroes...to another galaxy."
-  ];
+    "A very bright light appears from the Last Ancestor's body. The Army's spaceship is beginning to land on Venom.<br/><class='red'>The Ancestor! He got it! </class><br/><class='green'>-So this is his real form...</class><br/><class='boldTheLastAncestor'>The Last Ancestor:</class> <class='TheLastAncestor'> I.. am...ready.</class><br/><class='red'>-The Galactic Army! Look! They're coming!</class><br/><class='green'>-Ancestor! We don't have enough time!</class><br/><class='boldTheLastAncestor'>-The Last Ancestor: Come. Come next to me.</class><br/><br/>At these words, the Ancestor raises his hands, and uses his Ancient Power to crush several spaceships. Nobody understands what's going on...<br/>The Ancestor closes his eyes. And then he disappears with the Heroes...to another galaxy."
+    ]
+;
   this.currentDialog = this.dialogs[0];
   this.eventClick;
   this.dialogIndex = 0;
@@ -769,7 +784,7 @@ AlternateEndingScene.prototype.dialogNext = function(evt){
     if(this.dialogIndex < this.dialogs.length){
       this.currentDialog = this.dialogs[this.dialogIndex];
     }else{
-      this.currentDialog = "Thank you for playing Ancient";
+      SceneManager.getInstance().showScene(new EndScene());
     }
   }
 };
@@ -808,7 +823,10 @@ VictoryScene.prototype.onExitScene = function(){
 };
 
 function EndScene(){
-  this.eventClick;
+  this.eventClick = function(evt){
+    LevelManager.getInstance().setNextLevel(new LevelMenu());
+    SceneManager.getInstance().showScene(new MenuScene());
+  };
   return this;
 }
 
@@ -825,7 +843,9 @@ EndScene.prototype.draw = function(){
   ctx.fillText("Thank you for playing Ancient", STAGE_WIDTH / 2, VICTORY_POSY + VICTORY_HEIGHT/2);
 };
 EndScene.prototype.onEnterScene = function(){
+  canvas.addEventListener("mousedown", this.eventClick, false);
 };
 
 EndScene.prototype.onExitScene = function(){
+  canvas.removeEventListener("mousedown", this.eventClick);
 };

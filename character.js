@@ -231,7 +231,7 @@ Enemy.prototype.play = function(){
         if(inAttackDist.length > 0){
           if(inAttackDist.length >= 1){
             //Attack the character in range with the less health
-            this.execute(new AttackCommand(Math.floor(Math.random()* this.strength),  minInArray(inAttackDist, Character.prototype.getHealth), this));
+            this.execute(new AttackCommand(Math.floor(Math.random()* this.strength),  minInArray(inAttackDist), this));
           }
         }else {
           //Find the closest character and move in its direction
@@ -257,10 +257,16 @@ Enemy.prototype.getType = function(){
 Enemy.prototype.getClosestCharacter = function(){
   var characters = SceneManager.getInstance().getCurrentScene().getAllies();
   var self = this;
-  if(characters){
-    return minInArray(characters, Character.prototype.getHealth);
+  var chars = [];
+  for(var index in characters){
+    if(characters[index].isAlive){
+      chars.push(characters[index]);
+    }
+  }
+  if(chars){
+    return minInArray(chars);
   }else{
-    console.error("Error: Allies array is empty!");
+    console.error("Error: Target array is empty!");
   }
 };
 //Return an array of all the characters in range of fire
